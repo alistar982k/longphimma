@@ -3,97 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LONG PHI MMA | Quản trị nền tảng</title>
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
+    <title>LONG PHI MMA | Quản lý Phòng tập</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: { sans: ['Inter', 'sans-serif'] },
-                    colors: {
-                        primary: '#b91c1c', 
-                        primaryHover: '#991b1b', 
-                        darkbg: '#111827', 
-                    }
+                    colors: { primary: '#dc2626', secondary: '#1e293b' }
                 }
             }
         }
     </script>
-
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-
     <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #334155; }
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-        .glass-panel { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
-        .loader { border-top-color: #b91c1c; -webkit-animation: spinner 1.5s linear infinite; animation: spinner 1.5s linear infinite; }
-        @keyframes spinner { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .toast-enter { animation: slideIn 0.3s ease-out forwards; }
+        .toast-exit { animation: slideOut 0.3s ease-in forwards; }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes slideOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(100%); opacity: 0; } }
+        .module-view { animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800 font-sans antialiased h-screen overflow-hidden flex flex-col">
+<body class="h-screen flex overflow-hidden antialiased">
 
-    <div id="toast-container" class="fixed top-5 right-5 z-[999] flex flex-col gap-2"></div>
-
-    <div id="initial-loading" class="fixed inset-0 bg-white z-[100] flex flex-col items-center justify-center">
-        <div class="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12 mb-4"></div>
-        <h2 class="text-xl font-semibold text-gray-700">Đang tải hệ thống...</h2>
+    <div id="loading-screen" class="fixed inset-0 bg-white z-[9999] flex flex-col items-center justify-center transition-opacity duration-300">
+        <div class="w-16 h-16 border-4 border-red-200 border-t-red-600 rounded-full animate-spin mb-4"></div>
+        <h2 class="text-xl font-bold text-gray-800">LONG PHI MMA</h2>
+        <p class="text-gray-500 text-sm mt-2">Đang khởi tạo hệ thống...</p>
     </div>
 
-    <div id="auth-view" class="hidden h-screen w-full flex items-center justify-center bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?q=80&w=2000&auto=format&fit=crop');">
-        <div class="absolute inset-0 bg-black/70"></div>
-        <div class="glass-panel p-8 rounded-xl shadow-2xl w-full max-w-md relative z-10 border border-gray-200">
+    <div id="login-screen" class="hidden fixed inset-0 bg-gray-900 z-[9990] flex items-center justify-center p-4">
+        <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md">
             <div class="text-center mb-8">
-                <div class="w-16 h-16 bg-primary text-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
-                    <i data-lucide="swords" class="w-8 h-8"></i>
+                <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i data-lucide="shield-check" class="w-8 h-8 text-red-600"></i>
                 </div>
-                <h1 class="text-2xl font-bold text-gray-900 tracking-tight">LONG PHI MMA</h1>
-                <p class="text-sm text-gray-500 mt-1">Hệ thống quản trị nền tảng</p>
+                <h2 class="text-2xl font-bold text-gray-900">Đăng nhập hệ thống</h2>
+                <p class="text-gray-500 text-sm mt-1">Sử dụng tài khoản được cấp để truy cập</p>
             </div>
-
-            <form id="auth-form" class="space-y-5">
+            <form id="login-form" class="space-y-5">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                    <div class="relative">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
-                            <i data-lucide="mail" class="w-5 h-5"></i>
-                        </div>
-                        <input type="email" id="auth-email" value="alistar982k@gmail.com" required class="pl-10 w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" placeholder="admin@longphimma.com">
-                    </div>
+                    <input type="email" id="email" required class="w-full px-4 py-2 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all text-gray-900">
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Mật khẩu</label>
-                    <div class="relative">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
-                            <i data-lucide="lock" class="w-5 h-5"></i>
-                        </div>
-                        <input type="password" id="auth-password" value="123456" required class="pl-10 w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" placeholder="••••••••">
-                    </div>
+                    <input type="password" id="password" required class="w-full px-4 py-2 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all text-gray-900">
                 </div>
-                <button type="submit" id="auth-submit-btn" class="w-full bg-primary hover:bg-primaryHover text-white font-medium py-2.5 rounded-lg shadow-md transition-colors flex justify-center items-center gap-2">
+                <button type="submit" id="btn-login" class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2.5 rounded-lg transition-colors flex justify-center items-center gap-2">
                     <span>Đăng nhập</span>
-                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
                 </button>
             </form>
         </div>
     </div>
 
-    <div id="app-view" class="hidden h-screen w-full flex bg-gray-50">
-        <aside class="w-64 bg-darkbg text-gray-300 flex flex-col shadow-xl flex-shrink-0 z-20">
-            <div class="p-5 flex items-center gap-3 border-b border-gray-800">
-                <div class="w-10 h-10 bg-primary text-white rounded-lg flex items-center justify-center shadow-md">
-                    <i data-lucide="swords" class="w-6 h-6"></i>
-                </div>
-                <div>
-                    <h2 class="text-white font-bold tracking-wider text-lg leading-tight">LONG PHI</h2>
-                    <p class="text-[10px] text-gray-400 uppercase tracking-widest">Management</p>
+    <div id="app-shell" class="hidden w-full h-full flex flex-col md:flex-row">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-secondary text-gray-300 flex flex-col flex-shrink-0 transition-all duration-300 relative z-20 shadow-xl hidden md:flex">
+            <div class="h-16 flex items-center px-6 bg-slate-900 border-b border-slate-700/50">
+                <i data-lucide="swords" class="w-6 h-6 text-red-500 mr-3"></i>
+                <h1 class="text-white font-bold tracking-wider text-lg">LONG PHI</h1>
+            </div>
+            
+            <div class="p-4 border-b border-slate-700/50">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-slate-700 flex items-center justify-center text-white font-bold" id="user-avatar">A</div>
+                    <div class="overflow-hidden">
+                        <p class="text-sm font-semibold text-white truncate" id="user-name">Đang tải...</p>
+                        <p class="text-xs text-red-400 capitalize" id="user-role">...</p>
+                    </div>
                 </div>
             </div>
 
@@ -101,19 +87,9 @@
                 <nav class="space-y-1 px-3" id="sidebar-nav"></nav>
             </div>
 
-            <div class="p-4 border-t border-gray-800">
-                <div class="flex items-center gap-3 mb-4 px-2">
-                    <div class="w-9 h-9 rounded-full bg-gray-700 flex items-center justify-center text-white font-bold" id="user-avatar-initial">U</div>
-                    <div class="overflow-hidden">
-                        <p class="text-sm text-white font-medium truncate" id="current-user-name">User Name</p>
-                        <p class="text-xs text-gray-400 capitalize flex items-center gap-1">
-                            <span class="w-2 h-2 rounded-full bg-green-500 inline-block"></span> 
-                            <span id="current-user-role">Role</span>
-                        </p>
-                    </div>
-                </div>
-                <button onclick="window.openModal('modal-logout-confirm')" class="w-full flex items-center justify-center gap-2 px-4 py-2 bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white rounded-lg transition-colors text-sm font-medium">
-                    <i data-lucide="log-out" class="w-4 h-4"></i> Đăng xuất
+            <div class="p-4 border-t border-slate-700/50">
+                <button onclick="window.openModal('modal-logout')" class="flex items-center gap-3 px-3 py-2 w-full rounded-lg text-sm font-medium text-gray-400 hover:text-white hover:bg-red-600/90 transition-colors group">
+                    <i data-lucide="log-out" class="w-5 h-5 group-hover:text-white transition-colors"></i> Đăng xuất
                 </button>
             </div>
         </aside>
@@ -121,102 +97,97 @@
         <main class="flex-1 flex flex-col h-screen overflow-hidden relative">
             <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6 flex-shrink-0 z-10">
                 <h2 id="page-title" class="text-xl font-semibold text-gray-800 flex items-center gap-2">
-                    <i data-lucide="layout-dashboard" class="w-5 h-5 text-gray-500"></i> Dashboard
+                    <i data-lucide="layout-dashboard" class="w-5 h-5 text-gray-500"></i> Tổng quan
                 </h2>
+                <button class="md:hidden text-gray-500 hover:text-red-600" onclick="document.querySelector('aside').classList.toggle('hidden')">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
             </header>
 
-            <div id="module-container" class="flex-1 overflow-y-auto p-6 bg-gray-50">
+            <div id="module-container" class="flex-1 overflow-y-auto p-4 md:p-6 bg-gray-50">
                 
-                <!-- Dashboard -->
                 <div id="view-dashboard" class="module-view h-full">
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-6">
                         <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 flex items-center gap-4">
                             <div class="p-3 bg-blue-50 text-blue-600 rounded-lg"><i data-lucide="users" class="w-6 h-6"></i></div>
-                            <div><p class="text-sm text-gray-500 font-medium">Học viên hoạt động</p><h3 class="text-2xl font-bold text-gray-900" id="dash-students">--</h3></div>
+                            <div>
+                                <p class="text-sm text-gray-500 font-medium">Học viên hoạt động <span class="text-xs font-normal text-gray-400">(đang có gói tập)</span></p>
+                                <h3 class="text-2xl font-bold text-gray-900" id="dash-students">--</h3>
+                            </div>
                         </div>
                         <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 flex items-center gap-4">
-                            <div class="p-3 bg-green-50 text-green-600 rounded-lg"><i data-lucide="calendar-check" class="w-6 h-6"></i></div>
-                            <div><p class="text-sm text-gray-500 font-medium">Lớp học đang mở</p><h3 class="text-2xl font-bold text-gray-900" id="dash-classes">--</h3></div>
-                        </div>
-                        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 flex items-center gap-4">
-                            <div class="p-3 bg-yellow-50 text-yellow-600 rounded-lg"><i data-lucide="credit-card" class="w-6 h-6"></i></div>
-                            <div><p class="text-sm text-gray-500 font-medium">Doanh thu tháng</p><h3 class="text-lg font-bold text-gray-900" id="dash-income">--</h3></div>
-                        </div>
-                        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 flex items-center gap-4">
-                            <div class="p-3 bg-red-50 text-red-600 rounded-lg"><i data-lucide="trending-up" class="w-6 h-6"></i></div>
-                            <div><p class="text-sm text-gray-500 font-medium">Lợi nhuận ròng</p><h3 class="text-lg font-bold text-gray-900" id="dash-profit">--</h3></div>
+                            <div class="p-3 bg-green-50 text-green-600 rounded-lg"><i data-lucide="trending-up" class="w-6 h-6"></i></div>
+                            <div>
+                                <p class="text-sm text-gray-500 font-medium">Lợi nhuận ròng <span class="text-xs font-normal text-gray-400">(tháng này)</span></p>
+                                <h3 class="text-lg font-bold text-gray-900" id="dash-profit">--</h3>
+                            </div>
                         </div>
                     </div>
                     
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
                         <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
-                            <h3 class="text-base font-bold text-gray-800 mb-4">Tài chính tổng quan</h3>
-                            <div class="h-48 relative w-full"><canvas id="financeChart"></canvas></div>
+                            <h3 class="text-base font-bold text-gray-800 mb-4">Tài chính tháng này</h3>
+                            <div class="h-56 relative w-full"><canvas id="financeChart"></canvas></div>
                         </div>
                         <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
-                            <h3 class="text-base font-bold text-gray-800 mb-4">Cơ cấu Doanh thu</h3>
-                            <div class="h-48 relative w-full"><canvas id="revenueSourceChart"></canvas></div>
+                            <h3 class="text-base font-bold text-gray-800 mb-4">Cơ cấu Doanh thu (Tháng này)</h3>
+                            <div class="h-56 relative w-full flex items-center justify-center"><canvas id="revenueSourceChart"></canvas></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Tài khoản -->
-                <div id="view-users" class="module-view hidden flex-col h-full">
-                    <div class="flex flex-col sm:flex-row justify-between gap-4 mb-6">
-                        <div class="flex gap-2">
-                            <div class="relative">
-                                <i data-lucide="search" class="w-4 h-4 absolute left-3 top-3 text-gray-400"></i>
-                                <input type="text" placeholder="Tìm kiếm..." class="pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm w-64 outline-none">
-                            </div>
+                <div id="view-reports" class="module-view hidden flex-col h-full">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+                        <h3 class="text-lg font-bold text-gray-800">Báo cáo Dòng tiền</h3>
+                        <div class="flex items-center gap-2">
+                            <label for="report-year-select" class="text-sm font-medium text-gray-600 whitespace-nowrap">Chọn năm:</label>
+                            <select id="report-year-select" onchange="window.loadReportsData(this.value)" class="px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-red-500 text-sm bg-white font-medium cursor-pointer shadow-sm">
+                                <!-- JS sẽ tự động điền danh sách năm vào đây -->
+                            </select>
                         </div>
-                        <button onclick="window.openModal('modal-add-user')" class="bg-primary hover:bg-primaryHover text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 shadow-sm transition-colors">
-                            <i data-lucide="user-plus" class="w-4 h-4"></i> Thêm tài khoản
-                        </button>
                     </div>
-
                     <div class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden flex-1 flex flex-col">
                         <div class="overflow-x-auto flex-1">
-                            <table class="w-full text-left text-sm text-gray-600">
+                            <table class="w-full text-left text-sm text-gray-600 whitespace-nowrap">
                                 <thead class="bg-gray-50 text-gray-700 text-xs uppercase font-semibold border-b border-gray-200">
                                     <tr>
-                                        <th class="px-6 py-4">Tài khoản</th>
-                                        <th class="px-6 py-4">Vai trò (Role)</th>
-                                        <th class="px-6 py-4">Trạng thái</th>
-                                        <th class="px-6 py-4">Ngày tạo</th>
-                                        <th class="px-6 py-4 text-right">Thao tác</th>
+                                        <th class="px-6 py-4">Tháng</th>
+                                        <th class="px-6 py-4 text-right text-blue-600">Gói tập</th>
+                                        <th class="px-6 py-4 text-right text-orange-500">Cửa hàng</th>
+                                        <th class="px-6 py-4 text-right text-green-600">Tổng thu</th>
+                                        <th class="px-6 py-4 text-right text-red-500">Tổng chi phí</th>
+                                        <th class="px-6 py-4 text-right font-bold text-gray-900">Lợi nhuận</th>
                                     </tr>
                                 </thead>
-                                <tbody id="users-table-body" class="divide-y divide-gray-100"></tbody>
+                                <tbody id="reports-table-body" class="divide-y divide-gray-100"></tbody>
                             </table>
                         </div>
                     </div>
                 </div>
 
-                <!-- Học viên -->
                 <div id="view-students" class="module-view hidden flex-col h-full">
                     <div class="flex flex-col sm:flex-row justify-between gap-4 mb-6">
                         <div class="flex gap-2">
-                            <div class="relative">
+                            <div class="relative w-full sm:w-auto">
                                 <i data-lucide="search" class="w-4 h-4 absolute left-3 top-3 text-gray-400"></i>
-                                <input type="text" placeholder="Tìm tên, mã HV, SĐT..." class="pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm w-72 outline-none">
+                                <input type="text" id="search-student" onkeyup="window.searchStudents(this.value)" placeholder="Tìm học viên..." class="pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm w-full sm:w-64 outline-none focus:border-red-500 transition-colors">
                             </div>
                         </div>
-                        <button onclick="window.openModal('modal-add-student')" class="bg-primary hover:bg-primaryHover text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 shadow-sm transition-colors">
-                            <i data-lucide="user-plus" class="w-4 h-4"></i> Thêm Học Viên
+                        <button onclick="window.openModal('modal-add-student')" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center justify-center gap-2 shadow-sm transition-colors w-full sm:w-auto">
+                            <i data-lucide="plus" class="w-4 h-4"></i> Thêm Học viên
                         </button>
                     </div>
-
                     <div class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden flex-1 flex flex-col">
                         <div class="overflow-x-auto flex-1">
-                            <table class="w-full text-left text-sm text-gray-600">
+                            <table class="w-full text-left text-sm text-gray-600 whitespace-nowrap">
                                 <thead class="bg-gray-50 text-gray-700 text-xs uppercase font-semibold border-b border-gray-200">
                                     <tr>
                                         <th class="px-6 py-4">Mã HV</th>
-                                        <th class="px-6 py-4">Họ và tên</th>
+                                        <th class="px-6 py-4">Học viên</th>
                                         <th class="px-6 py-4">Độ tuổi / Giới tính</th>
-                                        <th class="px-6 py-4">Trạng thái Gói tập</th>
-                                        <th class="px-6 py-4">Ngày đăng ký</th>
-                                        <th class="px-6 py-4 text-right">Sửa</th>
+                                        <th class="px-6 py-4">Liên hệ</th>
+                                        <th class="px-6 py-4">Tình trạng Gói tập</th>
+                                        <th class="px-6 py-4 text-right">Thao tác</th>
                                     </tr>
                                 </thead>
                                 <tbody id="students-table-body" class="divide-y divide-gray-100"></tbody>
@@ -228,52 +199,28 @@
                     </div>
                 </div>
 
-                <!-- Lớp học -->
-                <div id="view-classes" class="module-view hidden flex-col h-full">
-                    <div class="flex flex-col sm:flex-row justify-between gap-4 mb-6">
-                        <h3 class="text-xl font-bold text-gray-800">Quản lý Lớp học</h3>
-                        <button onclick="window.openModal('modal-add-class')" class="bg-darkbg hover:bg-gray-800 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 shadow-sm transition-colors">
-                            <i data-lucide="plus-circle" class="w-4 h-4"></i> Mở lớp mới
-                        </button>
-                    </div>
-                    <div id="classes-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-                </div>
-
-                <!-- Điểm danh -->
-                <div id="view-attendance" class="module-view hidden flex-col h-full">
-                    <div class="flex flex-col sm:flex-row justify-between gap-4 mb-6">
-                        <h3 class="text-xl font-bold text-gray-800">Điểm danh hôm nay</h3>
-                        <div class="text-sm font-medium text-gray-500 bg-white px-4 py-2 border border-gray-200 rounded-lg shadow-sm">
-                            <i data-lucide="calendar" class="w-4 h-4 inline-block mr-1"></i> <span id="current-date-display"></span>
-                        </div>
-                    </div>
-                    <div id="attendance-container" class="space-y-4 max-w-4xl"></div>
-                </div>
-
-                <!-- Học phí -->
                 <div id="view-membership" class="module-view hidden flex-col h-full">
                     <div class="flex flex-col sm:flex-row justify-between gap-4 mb-6">
                         <div class="flex gap-2">
-                            <div class="relative">
+                            <div class="relative w-full sm:w-auto">
                                 <i data-lucide="search" class="w-4 h-4 absolute left-3 top-3 text-gray-400"></i>
-                                <input type="text" placeholder="Tìm theo tên học viên..." class="pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm w-72 outline-none">
+                                <input type="text" placeholder="Tìm kiếm đăng ký..." class="pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm w-full sm:w-72 outline-none">
                             </div>
                         </div>
-                        <button onclick="window.openModal('modal-add-membership')" class="bg-primary hover:bg-primaryHover text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 shadow-sm transition-colors">
-                            <i data-lucide="plus-circle" class="w-4 h-4"></i> Đăng ký Gói tập
+                        <button onclick="window.openModal('modal-add-membership')" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center justify-center gap-2 shadow-sm transition-colors w-full sm:w-auto">
+                            <i data-lucide="plus" class="w-4 h-4"></i> Đăng ký Gói tập
                         </button>
                     </div>
-
                     <div class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden flex-1 flex flex-col">
                         <div class="overflow-x-auto flex-1">
-                            <table class="w-full text-left text-sm text-gray-600">
+                            <table class="w-full text-left text-sm text-gray-600 whitespace-nowrap">
                                 <thead class="bg-gray-50 text-gray-700 text-xs uppercase font-semibold border-b border-gray-200">
                                     <tr>
                                         <th class="px-6 py-4">Học viên</th>
                                         <th class="px-6 py-4">Gói tập</th>
-                                        <th class="px-6 py-4">Thành tiền</th>
-                                        <th class="px-6 py-4">Thời hạn</th>
-                                        <th class="px-6 py-4">Thao tác</th>
+                                        <th class="px-6 py-4">Trạng thái</th>
+                                        <th class="px-6 py-4">Ngày đăng ký</th>
+                                        <th class="px-6 py-4 text-right">Thao tác</th>
                                     </tr>
                                 </thead>
                                 <tbody id="membership-table-body" class="divide-y divide-gray-100"></tbody>
@@ -282,30 +229,53 @@
                     </div>
                 </div>
 
-                <!-- Cơ sở vật chất -->
-                <div id="view-facilities" class="module-view hidden flex-col h-full">
+                <div id="view-expenses" class="module-view hidden flex-col h-full">
                     <div class="flex flex-col sm:flex-row justify-between gap-4 mb-6">
                         <div class="flex gap-2">
-                            <div class="relative">
+                            <div class="relative w-full sm:w-auto">
                                 <i data-lucide="search" class="w-4 h-4 absolute left-3 top-3 text-gray-400"></i>
-                                <input type="text" placeholder="Tìm tên tài sản, mã..." class="pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm w-72 outline-none">
+                                <input type="text" placeholder="Tìm kiếm khoản chi..." class="pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm w-full sm:w-72 outline-none">
                             </div>
                         </div>
-                        <button onclick="window.openModal('modal-add-asset')" class="bg-primary hover:bg-primaryHover text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 shadow-sm transition-colors">
+                        <button onclick="window.openModal('modal-add-expense')" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center justify-center gap-2 shadow-sm transition-colors w-full sm:w-auto">
+                            <i data-lucide="plus" class="w-4 h-4"></i> Thêm Chi phí
+                        </button>
+                    </div>
+                    <div class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden flex-1 flex flex-col">
+                        <div class="overflow-x-auto flex-1">
+                            <table class="w-full text-left text-sm text-gray-600 whitespace-nowrap">
+                                <thead class="bg-gray-50 text-gray-700 text-xs uppercase font-semibold border-b border-gray-200">
+                                    <tr>
+                                        <th class="px-6 py-4">Ngày chi</th>
+                                        <th class="px-6 py-4">Hạng mục</th>
+                                        <th class="px-6 py-4">Số tiền</th>
+                                        <th class="px-6 py-4">Ghi chú</th>
+                                        <th class="px-6 py-4 text-right">Thao tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="expenses-table-body" class="divide-y divide-gray-100"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="view-facilities" class="module-view hidden flex-col h-full">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+                        <p class="text-gray-500 text-sm">Quản lý trang thiết bị phòng tập</p>
+                        <button onclick="window.openModal('modal-add-asset')" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-medium shadow-sm transition-colors flex items-center justify-center gap-2 w-full sm:w-auto">
                             <i data-lucide="plus" class="w-4 h-4"></i> Thêm Tài sản
                         </button>
                     </div>
-
                     <div class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden flex-1 flex flex-col">
                         <div class="overflow-x-auto flex-1">
-                            <table class="w-full text-left text-sm text-gray-600">
+                            <table class="w-full text-left text-sm text-gray-600 whitespace-nowrap">
                                 <thead class="bg-gray-50 text-gray-700 text-xs uppercase font-semibold border-b border-gray-200">
                                     <tr>
                                         <th class="px-6 py-4">Mã TS</th>
-                                        <th class="px-6 py-4">Tên Tài sản</th>
-                                        <th class="px-6 py-4">Phòng</th>
+                                        <th class="px-6 py-4">Tài sản</th>
+                                        <th class="px-6 py-4">Phòng tập</th>
                                         <th class="px-6 py-4">Tình trạng</th>
-                                        <th class="px-6 py-4 text-right">Sửa</th>
+                                        <th class="px-6 py-4 text-right">Thao tác</th>
                                     </tr>
                                 </thead>
                                 <tbody id="facilities-table-body" class="divide-y divide-gray-100"></tbody>
@@ -314,135 +284,119 @@
                     </div>
                 </div>
 
-                <!-- Cửa hàng (POS) -->
-                <div id="view-shop" class="module-view hidden h-full flex gap-6">
-                    <div class="flex-1 flex flex-col h-full">
-                        <div class="flex justify-between items-center mb-6">
-                            <div class="relative w-full max-w-md">
-                                <i data-lucide="search" class="w-4 h-4 absolute left-3 top-3 text-gray-400"></i>
-                                <input type="text" placeholder="Tìm kiếm sản phẩm hoặc mã SKU..." class="pl-9 pr-4 py-2 w-full border border-gray-300 rounded-lg text-sm outline-none focus:border-primary">
+                <div id="view-shop" class="module-view hidden flex-col h-full">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
+                        <h3 class="text-lg font-bold text-gray-800">Điểm bán hàng (POS)</h3>
+                        <button onclick="window.openModal('modal-add-product')" class="text-sm font-medium text-red-600 hover:bg-red-50 px-3 py-1.5 rounded-lg border border-red-200 transition-colors flex items-center justify-center gap-1 w-full sm:w-auto">
+                            <i data-lucide="package-plus" class="w-4 h-4"></i> Thêm Sản phẩm
+                        </button>
+                    </div>
+                    <div class="flex flex-col lg:flex-row gap-6 h-full min-h-[500px]">
+                        <div class="flex-1 bg-white rounded-xl shadow-sm border border-gray-200 flex flex-col overflow-hidden">
+                            <div class="p-4 border-b border-gray-100 flex gap-2">
+                                <div class="relative flex-1">
+                                    <i data-lucide="search" class="w-4 h-4 absolute left-3 top-2.5 text-gray-400"></i>
+                                    <input type="text" placeholder="Tìm kiếm sản phẩm..." class="pl-9 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm w-full outline-none focus:bg-white focus:border-red-500 transition-colors">
+                                </div>
                             </div>
-                            <div class="flex gap-2">
-                                <button onclick="window.openModal('modal-add-product')" class="bg-darkbg hover:bg-gray-800 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 shadow-sm transition-colors">
-                                    <i data-lucide="plus" class="w-4 h-4"></i> Thêm Sản phẩm
+                            <div class="flex-1 overflow-y-auto p-4 bg-gray-50/50">
+                                <div id="pos-product-grid" class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4"></div>
+                            </div>
+                        </div>
+
+                        <div class="w-full lg:w-80 bg-white rounded-xl shadow-sm border border-gray-200 flex flex-col overflow-hidden shrink-0">
+                            <div class="p-4 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
+                                <h3 class="font-bold text-gray-800 flex items-center gap-2"><i data-lucide="shopping-cart" class="w-4 h-4 text-gray-500"></i> Giỏ hàng</h3>
+                                <button onclick="window.clearPosCart()" class="text-xs text-red-500 hover:underline">Xóa hết</button>
+                            </div>
+                            <div class="flex-1 overflow-y-auto p-2" id="pos-cart-items">
+                                <div class="flex flex-col items-center justify-center h-full text-gray-400 gap-2">
+                                    <i data-lucide="shopping-bag" class="w-10 h-10 opacity-50"></i>
+                                    <span class="text-sm">Chưa có sản phẩm</span>
+                                </div>
+                            </div>
+                            <div class="p-4 bg-gray-50 border-t border-gray-200">
+                                <div class="flex justify-between items-center mb-1 text-sm text-gray-600">
+                                    <span>Tạm tính</span><span class="font-medium" id="pos-subtotal">0đ</span>
+                                </div>
+                                <div class="flex justify-between items-center mb-4 text-base font-bold text-gray-900 border-t border-gray-200 pt-2">
+                                    <span>Tổng thanh toán</span><span class="text-red-600" id="pos-total">0đ</span>
+                                </div>
+                                <button onclick="window.checkoutPos()" class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2.5 rounded-lg transition-colors flex justify-center items-center gap-2 shadow-sm">
+                                    <i data-lucide="credit-card" class="w-4 h-4"></i> Thanh toán
                                 </button>
                             </div>
-                        </div>
-                        <div class="flex-1 overflow-y-auto pr-2">
-                            <div id="pos-products-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
-                        </div>
-                    </div>
-
-                    <div class="w-80 bg-white border border-gray-200 rounded-xl shadow-sm flex flex-col flex-shrink-0 h-full">
-                        <div class="p-4 border-b border-gray-200 bg-gray-50 rounded-t-xl flex justify-between items-center">
-                            <h3 class="font-bold text-gray-800 flex items-center gap-2"><i data-lucide="shopping-cart" class="w-5 h-5 text-primary"></i> Đơn hàng</h3>
-                            <button onclick="window.clearPosCart()" class="text-xs text-red-500 hover:text-red-700 font-medium transition-colors">Xóa hết</button>
-                        </div>
-                        
-                        <div class="p-4 border-b border-gray-200 relative">
-                            <div class="relative" id="pos-customer-search-container">
-                                <i data-lucide="user" class="w-4 h-4 absolute left-3 top-3 text-gray-400"></i>
-                                <input type="text" id="pos-customer-search" oninput="window.searchPosCustomer(this.value)" placeholder="Tên học viên hoặc số điện thoại..." class="pl-9 pr-4 py-2 w-full border border-gray-300 rounded-lg text-sm outline-none bg-gray-50 focus:bg-white transition-colors">
-                            </div>
-                            <div id="pos-selected-customer" class="hidden flex justify-between items-center bg-blue-50 p-2.5 rounded-lg border border-blue-100">
-                                <div class="flex items-center gap-2 text-sm text-blue-800 font-medium">
-                                    <i data-lucide="check-circle" class="w-4 h-4"></i> <span id="pos-customer-name-display"></span>
-                                </div>
-                                <button onclick="window.clearPosCustomer()" class="text-blue-400 hover:text-blue-600"><i data-lucide="x" class="w-4 h-4"></i></button>
-                            </div>
-                            <div id="pos-customer-dropdown" class="hidden absolute top-full left-0 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-48 overflow-y-auto z-50"></div>
-                        </div>
-
-                        <div id="pos-cart-items" class="flex-1 overflow-y-auto p-4 space-y-4"></div>
-
-                        <div class="p-4 border-t border-gray-200 bg-gray-50 rounded-b-xl">
-                            <div class="flex justify-between text-lg mb-4 text-gray-900 font-bold"><span>Tổng cộng</span><span class="text-primary" id="pos-total-price">0 đ</span></div>
-                            <button onclick="window.processPosCheckout()" class="w-full bg-primary hover:bg-primaryHover text-white font-bold py-3 rounded-lg shadow-md transition-colors flex justify-center items-center gap-2">
-                                <i data-lucide="credit-card" class="w-5 h-5"></i> THANH TOÁN
-                            </button>
                         </div>
                     </div>
                 </div>
 
-                <div id="view-placeholder" class="module-view hidden h-full flex flex-col items-center justify-center">
-                    <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center text-gray-400 mb-6">
-                        <i data-lucide="hammer" class="w-12 h-12"></i>
+                <div id="view-users" class="module-view hidden flex-col h-full">
+                    <div class="flex justify-between items-center mb-6">
+                        <p class="text-gray-500 text-sm">Quản lý nhân sự và quyền truy cập</p>
+                        <button onclick="window.openModal('modal-add-user')" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-medium shadow-sm transition-colors flex items-center gap-2">
+                            <i data-lucide="user-plus" class="w-4 h-4"></i> Thêm Tài khoản
+                        </button>
                     </div>
-                    <h2 class="text-2xl font-bold text-gray-700 mb-2">Đang phát triển</h2>
-                    <p class="text-gray-500">Module này sẽ được triển khai trong Phase tiếp theo.</p>
+                    <div class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden flex-1 flex flex-col">
+                        <div class="overflow-x-auto flex-1">
+                            <table class="w-full text-left text-sm text-gray-600 whitespace-nowrap">
+                                <thead class="bg-gray-50 text-gray-700 text-xs uppercase font-semibold border-b border-gray-200">
+                                    <tr>
+                                        <th class="px-6 py-4">Tài khoản / Tên</th>
+                                        <th class="px-6 py-4">Vai trò (Role)</th>
+                                        <th class="px-6 py-4">Trạng thái</th>
+                                        <th class="px-6 py-4 text-right">Thao tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="users-table-body" class="divide-y divide-gray-100"></tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>
     </div>
 
-    <!-- Modal Xác nhận Xóa Dữ Liệu -->
-    <div id="modal-delete-confirm" class="hidden fixed inset-0 bg-black/60 z-[999] flex items-center justify-center p-4">
-        <div class="bg-white rounded-xl shadow-2xl w-full max-w-sm overflow-hidden text-center p-6">
-            <input type="hidden" id="delete-target-id">
-            <input type="hidden" id="delete-target-type">
-            <div class="w-16 h-16 bg-red-100 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                <i data-lucide="alert-triangle" class="w-8 h-8"></i>
+    <!-- MODAL: Xem Ảnh Popup (Lightbox) -->
+    <div id="modal-image-viewer" class="hidden fixed inset-0 bg-black/90 z-[10000] flex items-center justify-center p-4 transition-opacity" onclick="window.closeModal('modal-image-viewer')">
+        <button class="absolute top-6 right-6 text-white/70 hover:text-white bg-black/50 hover:bg-red-600 p-2 rounded-full transition-colors" onclick="window.closeModal('modal-image-viewer')">
+            <i data-lucide="x" class="w-8 h-8"></i>
+        </button>
+        <img id="image-viewer-src" src="" class="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl scale-95 transition-transform duration-300" onclick="event.stopPropagation()">
+    </div>
+
+    <!-- MODAL: Đăng xuất -->
+    <div id="modal-logout" class="hidden fixed inset-0 bg-black/60 z-[999] flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-sm p-6 text-center">
+            <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i data-lucide="log-out" class="w-8 h-8 text-red-600"></i>
             </div>
-            <h3 class="text-lg font-bold text-gray-800 mb-2">Xác nhận xóa?</h3>
-            <p class="text-sm text-gray-500 mb-6" id="delete-target-name">Dữ liệu này sẽ bị xóa vĩnh viễn và không thể hoàn tác.</p>
+            <h3 class="text-xl font-bold text-gray-900 mb-2">Xác nhận Đăng xuất</h3>
+            <p class="text-gray-500 text-sm mb-6">Bạn có chắc chắn muốn đăng xuất không?</p>
             <div class="flex gap-3 justify-center">
-                <button onclick="window.closeModal('modal-delete-confirm')" class="px-5 py-2.5 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">Hủy</button>
-                <button id="btn-confirm-delete" onclick="window.executeDelete()" class="px-5 py-2.5 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg shadow-sm transition-colors">Đồng ý Xóa</button>
+                <button type="button" onclick="window.closeModal('modal-logout')" class="px-6 py-2.5 text-sm font-medium text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg">Hủy bỏ</button>
+                <button type="button" onclick="window.confirmLogout()" class="px-6 py-2.5 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg">Đăng xuất</button>
             </div>
         </div>
     </div>
 
-    <!-- Modal Xác nhận Đăng xuất -->
-    <div id="modal-logout-confirm" class="hidden fixed inset-0 bg-black/60 z-[999] flex items-center justify-center p-4">
-        <div class="bg-white rounded-xl shadow-2xl w-full max-w-sm overflow-hidden text-center p-6">
-            <div class="w-16 h-16 bg-red-100 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                <i data-lucide="log-out" class="w-8 h-8"></i>
+    <!-- MODAL: Xác nhận Xóa -->
+    <div id="modal-confirm-delete" class="hidden fixed inset-0 bg-black/60 z-[999] flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-sm p-6 text-center">
+            <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i data-lucide="alert-triangle" class="w-8 h-8 text-red-600"></i>
             </div>
-            <h3 class="text-lg font-bold text-gray-800 mb-2">Đăng xuất khỏi hệ thống?</h3>
-            <p class="text-sm text-gray-500 mb-6">Bạn có chắc chắn muốn đăng xuất phiên làm việc này không?</p>
+            <h3 class="text-xl font-bold text-gray-900 mb-2">Cảnh báo Xóa</h3>
+            <p class="text-gray-500 text-sm mb-1">Bạn có chắc chắn muốn xóa dữ liệu này?</p>
+            <p class="text-gray-800 font-semibold mb-6 truncate px-4" id="delete-item-name">--</p>
             <div class="flex gap-3 justify-center">
-                <button onclick="window.closeModal('modal-logout-confirm')" class="px-5 py-2.5 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">Hủy</button>
-                <button id="btn-confirm-logout" class="px-5 py-2.5 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg shadow-sm transition-colors">Đăng xuất</button>
+                <button type="button" onclick="window.closeModal('modal-confirm-delete')" class="px-6 py-2.5 text-sm font-medium text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg">Hủy bỏ</button>
+                <button type="button" id="btn-confirm-delete" class="px-6 py-2.5 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg">Xóa vĩnh viễn</button>
             </div>
         </div>
     </div>
 
-    <!-- Modal Thêm Tài khoản -->
-    <div id="modal-add-user" class="hidden fixed inset-0 bg-black/60 z-[999] flex items-center justify-center p-4">
-        <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden">
-            <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
-                <h3 class="font-bold text-gray-800">Thêm Tài khoản (Nhân sự)</h3>
-                <button onclick="window.closeModal('modal-add-user')" class="text-gray-400 hover:text-red-500"><i data-lucide="x" class="w-5 h-5"></i></button>
-            </div>
-            <form id="form-add-user" class="p-6 space-y-4">
-                <p class="text-xs text-blue-600 bg-blue-50 p-2 rounded-lg mb-4 border border-blue-100">
-                    Tài khoản được lưu thẳng vào Cơ sở dữ liệu để chấm công, điểm danh.
-                </p>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Họ và tên</label>
-                    <input type="text" id="inp-user-name" required class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-primary text-sm">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                    <input type="email" id="inp-user-email" required class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-primary text-sm">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Vai trò</label>
-                    <select id="inp-user-role" class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-primary text-sm bg-white">
-                        <option value="trainer">Huấn luyện viên</option>
-                        <option value="receptionist">Lễ tân</option>
-                        <option value="maintenance">Bảo trì</option>
-                    </select>
-                </div>
-                <div class="pt-4 flex gap-3 justify-end">
-                    <button type="button" onclick="window.closeModal('modal-add-user')" class="px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-lg">Hủy</button>
-                    <button type="submit" id="btn-submit-user" class="px-4 py-2 text-sm font-medium text-white bg-primary hover:bg-primaryHover rounded-lg shadow-sm">Lưu tài khoản</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Modal Thêm Học viên -->
+    <!-- MODAL: Thêm Học viên -->
     <div id="modal-add-student" class="hidden fixed inset-0 bg-black/60 z-[999] flex items-center justify-center p-4">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
@@ -451,105 +405,73 @@
             </div>
             <form id="form-add-student" class="p-6 space-y-4">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Họ và tên</label>
-                    <input type="text" id="inp-student-name" required class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-primary text-sm">
-                </div>
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Số điện thoại</label>
-                        <input type="text" id="inp-student-phone" required class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-primary text-sm">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Mã HV (Tự động)</label>
-                        <input type="text" id="inp-student-code" readonly class="w-full px-3 py-2 border border-gray-200 bg-gray-50 rounded-lg outline-none text-sm text-gray-500">
-                    </div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Họ tên Học viên</label>
+                    <input type="text" id="add-st-name" required class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-red-500 text-sm">
                 </div>
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Ngày sinh</label>
-                        <input type="date" id="inp-student-dob" required class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-primary text-sm">
+                        <input type="date" id="add-st-dob" required class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-red-500 text-sm">
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Giới tính</label>
-                        <select id="inp-student-gender" class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-primary text-sm bg-white">
+                        <select id="add-st-gender" class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-red-500 text-sm bg-white">
                             <option value="Nam">Nam</option>
                             <option value="Nữ">Nữ</option>
-                            <option value="Khác">Khác</option>
                         </select>
                     </div>
-                </div>
-                <div class="pt-4 flex gap-3 justify-end">
-                    <button type="button" onclick="window.closeModal('modal-add-student')" class="px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-lg">Hủy</button>
-                    <button type="submit" id="btn-submit-student" class="px-4 py-2 text-sm font-medium text-white bg-primary hover:bg-primaryHover rounded-lg shadow-sm">Tạo Hồ sơ</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Modal Sửa Học viên -->
-    <div id="modal-edit-student" class="hidden fixed inset-0 bg-black/60 z-[999] flex items-center justify-center p-4">
-        <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden">
-            <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
-                <h3 class="font-bold text-gray-800">Chỉnh sửa Học viên</h3>
-                <button onclick="window.closeModal('modal-edit-student')" class="text-gray-400 hover:text-red-500"><i data-lucide="x" class="w-5 h-5"></i></button>
-            </div>
-            <form id="form-edit-student" class="p-6 space-y-4">
-                <input type="hidden" id="edit-student-id">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Họ và tên</label>
-                    <input type="text" id="edit-student-name" required class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-primary text-sm">
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Số điện thoại</label>
-                    <input type="text" id="edit-student-phone" required class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-primary text-sm">
+                    <input type="text" id="add-st-phone" required class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-red-500 text-sm">
+                </div>
+                <div class="pt-4 flex gap-3 justify-end">
+                    <button type="button" onclick="window.closeModal('modal-add-student')" class="px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-lg">Hủy</button>
+                    <button type="submit" id="btn-submit-add-student" class="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg">Lưu Học viên</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: Sửa Học viên -->
+    <div id="modal-edit-student" class="hidden fixed inset-0 bg-black/60 z-[999] flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-blue-50">
+                <h3 class="font-bold text-blue-800">Sửa thông tin Học viên</h3>
+                <button onclick="window.closeModal('modal-edit-student')" class="text-gray-400 hover:text-red-500"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <form id="form-edit-student" class="p-6 space-y-4">
+                <input type="hidden" id="edit-st-id">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Họ tên Học viên</label>
+                    <input type="text" id="edit-st-name" required class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-blue-500 text-sm">
                 </div>
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Ngày sinh</label>
-                        <input type="date" id="edit-student-dob" required class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-primary text-sm">
+                        <input type="date" id="edit-st-dob" required class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-blue-500 text-sm">
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Giới tính</label>
-                        <select id="edit-student-gender" class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-primary text-sm bg-white">
+                        <select id="edit-st-gender" class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-blue-500 text-sm bg-white">
                             <option value="Nam">Nam</option>
                             <option value="Nữ">Nữ</option>
-                            <option value="Khác">Khác</option>
                         </select>
                     </div>
                 </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Số điện thoại</label>
+                    <input type="text" id="edit-st-phone" required class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-blue-500 text-sm">
+                </div>
                 <div class="pt-4 flex gap-3 justify-end">
                     <button type="button" onclick="window.closeModal('modal-edit-student')" class="px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-lg">Hủy</button>
-                    <button type="submit" id="btn-submit-edit-student" class="px-4 py-2 text-sm font-medium text-white bg-primary hover:bg-primaryHover rounded-lg shadow-sm">Lưu cập nhật</button>
+                    <button type="submit" id="btn-submit-edit-student" class="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg">Lưu thay đổi</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Modal Thêm Lớp học -->
-    <div id="modal-add-class" class="hidden fixed inset-0 bg-black/60 z-[999] flex items-center justify-center p-4">
-        <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden">
-            <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
-                <h3 class="font-bold text-gray-800">Mở lớp học mới</h3>
-                <button onclick="window.closeModal('modal-add-class')" class="text-gray-400 hover:text-red-500"><i data-lucide="x" class="w-5 h-5"></i></button>
-            </div>
-            <form id="form-add-class" class="p-6 space-y-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Tên lớp học</label>
-                    <input type="text" id="inp-class-name" required placeholder="VD: MMA Sáng 3-5-7" class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-primary text-sm">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Sức chứa tối đa (Học viên)</label>
-                    <input type="number" id="inp-class-capacity" required value="20" class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-primary text-sm">
-                </div>
-                <div class="pt-4 flex gap-3 justify-end">
-                    <button type="button" onclick="window.closeModal('modal-add-class')" class="px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-lg">Hủy</button>
-                    <button type="submit" id="btn-submit-class" class="px-4 py-2 text-sm font-medium text-white bg-primary hover:bg-primaryHover rounded-lg shadow-sm">Mở lớp</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Modal Đăng ký Gói tập -->
+    <!-- MODAL: Đăng ký Gói tập -->
     <div id="modal-add-membership" class="hidden fixed inset-0 bg-black/60 z-[999] flex items-center justify-center p-4">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
@@ -558,35 +480,111 @@
             </div>
             <form id="form-add-membership" class="p-6 space-y-4">
                 <div class="relative">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Tìm học viên</label>
-                    <div class="relative">
-                        <i data-lucide="search" class="w-4 h-4 absolute left-3 top-3 text-gray-400"></i>
-                        <input type="text" id="mem-search-student" oninput="window.searchMembershipStudent(this.value)" placeholder="Tên hoặc mã HV..." class="pl-9 pr-4 py-2 w-full border border-gray-300 rounded-lg text-sm outline-none focus:border-primary">
-                    </div>
-                    <div id="mem-student-dropdown" class="hidden absolute top-full left-0 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-48 overflow-y-auto z-50"></div>
-                    <div id="mem-selected-student" class="hidden mt-2 p-3 bg-green-50 border border-green-200 rounded-lg flex justify-between items-center">
-                        <div class="text-sm text-green-800 font-medium flex items-center gap-2">
-                            <i data-lucide="user-check" class="w-4 h-4"></i> <span id="mem-student-display"></span>
-                        </div>
-                        <button type="button" onclick="window.clearMemStudent()" class="text-green-600 hover:text-green-800"><i data-lucide="x" class="w-4 h-4"></i></button>
-                    </div>
-                    <input type="hidden" id="inp-mem-student-id" required>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Tìm Học viên (Chưa có gói tập)</label>
+                    <input type="text" id="mem-search-student" onkeyup="window.searchMembershipStudent(this.value)" autocomplete="off" placeholder="Nhập tên học viên..." class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-red-500 text-sm">
+                    <input type="hidden" id="add-mem-student-id" required>
+                    <div id="mem-student-dropdown" class="hidden absolute top-full left-0 w-full bg-white border border-gray-200 shadow-lg rounded-lg mt-1 max-h-40 overflow-y-auto z-10 divide-y divide-gray-100"></div>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Gói tập (Membership Plan)</label>
-                    <select id="inp-mem-plan" required class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-primary text-sm bg-white">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Chọn Gói tập</label>
+                    <select id="add-mem-plan-id" required class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-red-500 text-sm bg-white">
                         <option value="">Đang tải bảng giá...</option>
                     </select>
                 </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Ngày bắt đầu</label>
+                    <input type="date" id="add-mem-start-date" required class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-red-500 text-sm">
+                </div>
                 <div class="pt-4 flex gap-3 justify-end">
                     <button type="button" onclick="window.closeModal('modal-add-membership')" class="px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-lg">Hủy</button>
-                    <button type="submit" id="btn-submit-membership" class="px-4 py-2 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-lg shadow-sm">Xác nhận Đăng ký</button>
+                    <button type="submit" id="btn-submit-add-membership" class="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg">Đăng ký</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Modal Thêm Tài sản -->
+    <!-- MODAL: Thêm Chi phí -->
+    <div id="modal-add-expense" class="hidden fixed inset-0 bg-black/60 z-[999] flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+                <h3 class="font-bold text-gray-800">Thêm Khoản Chi phí</h3>
+                <button onclick="window.closeModal('modal-add-expense')" class="text-gray-400 hover:text-red-500"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <form id="form-add-expense" class="p-6 space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Số tiền (VNĐ)</label>
+                    <input type="number" id="add-expense-amount" required class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-red-500 text-sm">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Hạng mục</label>
+                    <select id="add-expense-category" required class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-red-500 text-sm bg-white">
+                        <option value="salary">Lương nhân viên</option>
+                        <option value="rent">Thuê mặt bằng</option>
+                        <option value="electricity">Điện / Nước</option>
+                        <option value="marketing">Marketing & Quảng cáo</option>
+                        <option value="maintenance">Bảo trì thiết bị</option>
+                        <option value="shop">Nhập hàng Shop</option>
+                        <option value="other">Chi phí khác</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Ngày chi</label>
+                    <input type="date" id="add-expense-date" required class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-red-500 text-sm">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Ghi chú</label>
+                    <textarea id="add-expense-note" rows="2" class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-red-500 text-sm resize-none"></textarea>
+                </div>
+                <div class="pt-4 flex gap-3 justify-end">
+                    <button type="button" onclick="window.closeModal('modal-add-expense')" class="px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-lg">Hủy</button>
+                    <button type="submit" id="btn-submit-add-expense" class="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg">Lưu khoản chi</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: Sửa Chi phí -->
+    <div id="modal-edit-expense" class="hidden fixed inset-0 bg-black/60 z-[999] flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-blue-50">
+                <h3 class="font-bold text-blue-800">Chỉnh sửa Chi phí</h3>
+                <button onclick="window.closeModal('modal-edit-expense')" class="text-gray-400 hover:text-blue-500"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <form id="form-edit-expense" class="p-6 space-y-4">
+                <input type="hidden" id="edit-expense-id">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Số tiền (VNĐ)</label>
+                    <input type="number" id="edit-expense-amount" required class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-blue-500 text-sm">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Hạng mục</label>
+                    <select id="edit-expense-category" required class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-blue-500 text-sm bg-white">
+                        <option value="salary">Lương nhân viên</option>
+                        <option value="rent">Thuê mặt bằng</option>
+                        <option value="electricity">Điện / Nước</option>
+                        <option value="marketing">Marketing & Quảng cáo</option>
+                        <option value="maintenance">Bảo trì thiết bị</option>
+                        <option value="shop">Nhập hàng Shop</option>
+                        <option value="other">Chi phí khác</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Ngày chi</label>
+                    <input type="date" id="edit-expense-date" required class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-blue-500 text-sm">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Ghi chú</label>
+                    <textarea id="edit-expense-note" rows="2" class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-blue-500 text-sm resize-none"></textarea>
+                </div>
+                <div class="pt-4 flex gap-3 justify-end">
+                    <button type="button" onclick="window.closeModal('modal-edit-expense')" class="px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-lg">Hủy</button>
+                    <button type="submit" id="btn-submit-edit-expense" class="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg">Lưu thay đổi</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: Thêm Tài sản -->
     <div id="modal-add-asset" class="hidden fixed inset-0 bg-black/60 z-[999] flex items-center justify-center p-4">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
@@ -595,309 +593,233 @@
             </div>
             <form id="form-add-asset" class="p-6 space-y-4">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Tên tài sản / Thiết bị</label>
-                    <input type="text" id="inp-asset-name" required placeholder="VD: Đích đấm Fairtex" class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-primary text-sm">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Mã Tài sản</label>
+                    <input type="text" id="add-asset-code" required placeholder="VD: MMA-B01" class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-red-500 text-sm uppercase">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Tên Thiết bị</label>
+                    <input type="text" id="add-asset-name" required class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-red-500 text-sm">
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Hình ảnh thiết bị</label>
-                    <input type="file" id="inp-asset-file" accept="image/*" class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-primary text-sm bg-white">
+                    <input type="file" id="add-asset-img" accept="image/*" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-red-50 file:text-red-700 hover:file:bg-red-100">
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Tình trạng</label>
-                    <select id="inp-asset-condition" class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-primary text-sm bg-white">
-                        <option value="good">Tốt (Mới)</option>
-                        <option value="fair">Khá (Đang sử dụng)</option>
-                        <option value="poor">Kém (Cần bảo trì)</option>
-                    </select>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Giá trị (VNĐ)</label>
+                        <input type="number" id="add-asset-price" required class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-red-500 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Tình trạng</label>
+                        <select id="add-asset-condition" class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-red-500 text-sm bg-white">
+                            <option value="good">Tốt</option>
+                            <option value="fair">Khá</option>
+                            <option value="poor">Kém</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="pt-4 flex gap-3 justify-end">
                     <button type="button" onclick="window.closeModal('modal-add-asset')" class="px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-lg">Hủy</button>
-                    <button type="submit" id="btn-submit-asset" class="px-4 py-2 text-sm font-medium text-white bg-primary hover:bg-primaryHover rounded-lg shadow-sm">Nhập kho</button>
+                    <button type="submit" id="btn-submit-add-asset" class="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg">Lưu Tài sản</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Modal Thêm Sản phẩm Shop -->
+    <!-- MODAL: Thêm Sản phẩm Shop -->
     <div id="modal-add-product" class="hidden fixed inset-0 bg-black/60 z-[999] flex items-center justify-center p-4">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
-                <h3 class="font-bold text-gray-800">Thêm Sản phẩm POS</h3>
+                <h3 class="font-bold text-gray-800">Thêm Sản phẩm Shop</h3>
                 <button onclick="window.closeModal('modal-add-product')" class="text-gray-400 hover:text-red-500"><i data-lucide="x" class="w-5 h-5"></i></button>
             </div>
             <form id="form-add-product" class="p-6 space-y-4">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Tên sản phẩm</label>
-                    <input type="text" id="inp-prod-name" required placeholder="VD: Áo thun CLB" class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-primary text-sm">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Tên Sản phẩm</label>
+                    <input type="text" id="add-prod-name" required placeholder="VD: Găng Boxing Venum" class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-red-500 text-sm">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Hình ảnh sản phẩm</label>
-                    <input type="file" id="inp-prod-file" accept="image/*" class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-primary text-sm bg-white">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Mã SKU</label>
+                    <input type="text" id="add-prod-sku" required placeholder="VD: VENUM-12OZ" class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-red-500 text-sm uppercase">
                 </div>
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Size (Biến thể)</label>
-                        <input type="text" id="inp-prod-size" required value="Freesize" class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-primary text-sm">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Kích cỡ / Size</label>
+                        <input type="text" id="add-prod-size" required placeholder="VD: 12oz hoặc M" class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-red-500 text-sm">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Tồn kho</label>
-                        <input type="number" id="inp-prod-stock" required value="10" class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-primary text-sm">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Số lượng Tồn kho</label>
+                        <input type="number" id="add-prod-stock" required class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-red-500 text-sm">
                     </div>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Giá bán (VNĐ)</label>
-                    <input type="number" id="inp-prod-price" required value="250000" class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-primary text-sm">
+                    <input type="number" id="add-prod-price" required class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-red-500 text-sm">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Hình ảnh sản phẩm</label>
+                    <input type="file" id="add-prod-img" accept="image/*" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-red-50 file:text-red-700 hover:file:bg-red-100">
                 </div>
                 <div class="pt-4 flex gap-3 justify-end">
                     <button type="button" onclick="window.closeModal('modal-add-product')" class="px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-lg">Hủy</button>
-                    <button type="submit" id="btn-submit-product" class="px-4 py-2 text-sm font-medium text-white bg-primary hover:bg-primaryHover rounded-lg shadow-sm">Lưu lên kệ</button>
+                    <button type="submit" id="btn-submit-add-product" class="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg">Lưu Sản phẩm</button>
                 </div>
             </form>
         </div>
     </div>
 
+    <!-- MODAL: Thêm Tài khoản -->
+    <div id="modal-add-user" class="hidden fixed inset-0 bg-black/60 z-[999] flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+                <h3 class="font-bold text-gray-800">Thêm Tài khoản Nội bộ</h3>
+                <button onclick="window.closeModal('modal-add-user')" class="text-gray-400 hover:text-red-500"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <form id="form-add-user" class="p-6 space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Họ tên nhân sự</label>
+                    <input type="text" id="add-user-name" required class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-red-500 text-sm">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Email đăng nhập</label>
+                    <input type="email" id="add-user-email" required class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-red-500 text-sm">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Mật khẩu</label>
+                    <input type="text" id="add-user-pass" value="123456" class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-red-500 text-sm">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Vai trò</label>
+                    <select id="add-user-role" class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-red-500 text-sm bg-white">
+                        <option value="manager">Quản lý (Manager)</option>
+                        <option value="trainer">Huấn luyện viên</option>
+                        <option value="receptionist">Lễ tân / Thu ngân</option>
+                        <option value="maintenance">Bảo trì</option>
+                    </select>
+                </div>
+                <div class="pt-4 flex gap-3 justify-end">
+                    <button type="button" onclick="window.closeModal('modal-add-user')" class="px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-lg">Hủy</button>
+                    <button type="submit" id="btn-submit-add-user" class="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg">Tạo tài khoản</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: Sửa Tài khoản -->
+    <div id="modal-edit-user" class="hidden fixed inset-0 bg-black/60 z-[999] flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-blue-50">
+                <h3 class="font-bold text-blue-800">Chỉnh sửa Tài khoản</h3>
+                <button onclick="window.closeModal('modal-edit-user')" class="text-gray-400 hover:text-blue-500"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <form id="form-edit-user" class="p-6 space-y-4">
+                <input type="hidden" id="edit-user-id">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Họ tên nhân sự</label>
+                    <input type="text" id="edit-user-name" required class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-blue-500 text-sm">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Email đăng nhập</label>
+                    <input type="email" id="edit-user-email" class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-blue-500 text-sm bg-gray-50" readonly>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Mật khẩu mới (Để trống nếu giữ nguyên)</label>
+                    <input type="text" id="edit-user-pass" placeholder="Nhập mật khẩu mới..." class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-blue-500 text-sm">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Vai trò</label>
+                    <select id="edit-user-role" class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-blue-500 text-sm bg-white">
+                        <option value="manager">Quản lý (Manager)</option>
+                        <option value="trainer">Huấn luyện viên</option>
+                        <option value="receptionist">Lễ tân / Thu ngân</option>
+                        <option value="maintenance">Bảo trì</option>
+                    </select>
+                </div>
+                <div class="pt-4 flex gap-3 justify-end">
+                    <button type="button" onclick="window.closeModal('modal-edit-user')" class="px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-lg">Hủy</button>
+                    <button type="submit" id="btn-submit-edit-user" class="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg">Lưu thay đổi</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Container Toast Thông báo -->
+    <div id="toast-container" class="fixed top-5 right-5 z-[9999] flex flex-col gap-2 pointer-events-none"></div>
+
     <script type="module">
         import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 
-        // Cấu hình Supabase
+        // URL Google Apps Script cập nhật mới theo yêu cầu
+        const GAS_URL = 'https://script.google.com/macros/s/AKfycbw5DVHoeULhEsFk6YFJJQ-__NZ1NQz77isHyZIeHnKdYX1rDzzQxDiQ-xW1HYp66J_4IQ/exec';
+        
         const SUPABASE_URL = 'https://obrcrvquowgwewobljxe.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_kCQynTQsFmmDKor1EJogIg_fk5GmUi5';
         const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        
-        // CHÚ Ý: DÁN URL GOOGLE APPS SCRIPT CỦA BẠN VÀO ĐÂY SAU KHI LÀM BƯỚC 2
-        const GAS_URL = 'https://script.google.com/macros/s/AKfycbykuQFoSmOM7jAmspHuUaa3U196MZy3I0nljnC-EvpkB0eckvJ39FuopDwlN6aTck6v/exec';
 
         let currentUser = null;
-        let currentUserProfile = null;
         let activeModule = 'dashboard';
-        let chartInstances = {};
-        
-        let posCart = [];
-        let posSelectedCustomer = null;
         let allStudentsCache = [];
+        let posCart = [];
+        window.expensesCache = [];
+        window.usersCache = [];
 
-        lucide.createIcons();
-
-        // Hàm hỗ trợ chuyển đổi Link Google Drive để hiển thị trực tiếp
-        window.getDisplayImg = function(url) {
-            if(!url) return '';
-            const match = url.match(/id=([^&]+)/);
-            if(match && url.includes('export=view')) return `https://drive.google.com/thumbnail?id=${match[1]}&sz=w800`;
-            return url;
-        }
-
-        // Helpers
-        window.showToast = function(message, type = 'info') {
+        function showToast(message, type = 'success') {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
-            const colors = { success: 'bg-green-100 border-green-500 text-green-800', error: 'bg-red-100 border-red-500 text-red-800', info: 'bg-blue-100 border-blue-500 text-blue-800' };
-            const icons = { success: 'check-circle', error: 'alert-circle', info: 'info' };
-            toast.className = `flex items-center gap-3 px-4 py-3 rounded-lg border-l-4 shadow-lg min-w-[300px] transform transition-all duration-300 translate-x-full opacity-0 ${colors[type]}`;
-            toast.innerHTML = `<i data-lucide="${icons[type]}" class="w-5 h-5 shrink-0"></i><span class="text-sm font-medium flex-1">${message}</span><button onclick="this.parentElement.remove()" class="text-gray-400"><i data-lucide="x" class="w-4 h-4"></i></button>`;
+            const colors = { success: 'bg-green-100 border-green-200 text-green-800', error: 'bg-red-100 border-red-200 text-red-800', info: 'bg-blue-100 border-blue-200 text-blue-800' };
+            const icons = { success: '<i data-lucide="check-circle-2" class="w-5 h-5 text-green-600"></i>', error: '<i data-lucide="alert-circle" class="w-5 h-5 text-red-600"></i>', info: '<i data-lucide="info" class="w-5 h-5 text-blue-600"></i>' };
+            toast.className = `flex items-center gap-3 px-4 py-3 rounded-lg border shadow-lg toast-enter min-w-[300px] ${colors[type]} pointer-events-auto max-w-sm`;
+            toast.innerHTML = `${icons[type]} <span class="font-medium text-sm flex-1">${message}</span> <button class="text-gray-400 hover:text-gray-600" onclick="this.parentElement.remove()"><i data-lucide="x" class="w-4 h-4"></i></button>`;
             container.appendChild(toast);
-            lucide.createIcons({ root: toast });
-            setTimeout(() => toast.classList.remove('translate-x-full', 'opacity-0'), 10);
-            setTimeout(() => { toast.classList.add('translate-x-full', 'opacity-0'); setTimeout(() => toast.remove(), 300); }, 3000);
+            lucide.createIcons();
+            setTimeout(() => { toast.classList.replace('toast-enter', 'toast-exit'); setTimeout(() => toast.remove(), 300); }, 5000);
         }
 
-        window.openModal = async function(modalId) {
-            document.getElementById(modalId).classList.remove('hidden');
-            if (modalId === 'modal-add-membership') {
-                const planSelect = document.getElementById('inp-mem-plan');
-                planSelect.innerHTML = '<option>Đang tải bảng giá...</option>';
-                const { data } = await supabase.from('membership_plans').select('*').order('price', { ascending: true });
-                if(data) planSelect.innerHTML = data.map(p => `<option value="${p.id}">${p.name} - ${new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(p.price)}</option>`).join('');
-            }
-            if (modalId === 'modal-add-expense') {
-                document.getElementById('inp-expense-date').valueAsDate = new Date();
-            }
-        }
+        window.openModal = function(id) { document.getElementById(id).classList.remove('hidden'); }
         window.closeModal = function(id) { document.getElementById(id).classList.add('hidden'); }
-
-        // Cảnh báo & Thực thi Xóa
-        window.openDeleteModal = function(id, type, name) {
-            document.getElementById('delete-target-id').value = id;
-            document.getElementById('delete-target-type').value = type;
-            document.getElementById('delete-target-name').innerText = `Bạn có chắc muốn xóa "${name}" không?`;
-            window.openModal('modal-delete-confirm');
+        
+        window.viewImage = function(url) {
+            if(!url) return;
+            document.getElementById('image-viewer-src').src = url;
+            window.openModal('modal-image-viewer');
         }
 
-        window.executeDelete = async function() {
-            const id = document.getElementById('delete-target-id').value;
-            const type = document.getElementById('delete-target-type').value;
-            const btn = document.getElementById('btn-confirm-delete');
-            btn.innerText = "Đang xóa..."; btn.disabled = true;
-
-            let table = '';
-            if(type === 'user') table = 'users';
-            if(type === 'student') table = 'students';
-            if(type === 'class') table = 'classes';
-            if(type === 'asset') table = 'assets';
-            if(type === 'product_variant') table = 'shop_product_variants';
-            if(type === 'membership') table = 'memberships';
-            if(type === 'expense') table = 'finance_transactions';
-
-            if(table) {
-                const { error } = await supabase.from(table).delete().eq('id', id);
-                if(!error) {
-                    showToast("Xóa dữ liệu thành công!", "success");
-                    window.closeModal('modal-delete-confirm');
-                    if(type === 'user') loadUsersList();
-                    if(type === 'student') loadStudentsList();
-                    if(type === 'class') loadClassesList();
-                    if(type === 'asset') loadFacilitiesList();
-                    if(type === 'product_variant') loadShopList();
-                    if(type === 'membership') loadMembershipList();
-                    if(type === 'expense') { loadExpensesList(); loadDashboardData(); }
-                } else {
-                    // Dịch lỗi Cascade sang Tiếng Việt
-                    if(error.code === '23503') {
-                        showToast("Không thể xóa: Dữ liệu này đang được liên kết ở mục khác (VD: Đã có hóa đơn, thanh toán).", "error");
-                    } else {
-                        showToast("Lỗi khi xóa: " + error.message, "error");
-                    }
-                }
-            }
-            btn.innerText = "Đồng ý Xóa"; btn.disabled = false;
+        window.confirmLogout = async function() {
+            window.closeModal('modal-logout');
+            localStorage.removeItem('lp_custom_user');
+            await supabase.auth.signOut();
+            currentUser = null;
+            document.getElementById('app-shell').classList.add('hidden');
+            document.getElementById('login-screen').classList.remove('hidden');
+            showToast("Đã đăng xuất hệ thống", "info");
         }
 
-        // Hàm Upload ảnh lên Google Drive qua GAS
-        window.uploadImageToDrive = async function(fileInputId) {
-            const fileInput = document.getElementById(fileInputId);
-            if (!fileInput.files || fileInput.files.length === 0) return null;
-            
-            const file = fileInput.files[0];
-            const reader = new FileReader();
-
-            return new Promise((resolve, reject) => {
-                reader.onload = async () => {
-                    const base64Data = reader.result.split(',')[1];
-                    try {
-                        const response = await fetch(GAS_URL, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                            body: JSON.stringify({ name: file.name, mimeType: file.type, data: base64Data })
-                        });
-                        const result = await response.json();
-                        if(result && result.url) {
-                            // Chuyển đổi link Drive dạng View sang dạng Thumbnail Image để chèn vào thẻ <img>
-                            const match = result.url.match(/id=([^&]+)/);
-                            if (match) {
-                                resolve(`https://drive.google.com/thumbnail?id=${match[1]}&sz=w800`);
-                            } else {
-                                resolve(result.url);
-                            }
-                        }
-                        else resolve(null);
-                    } catch(e) {
-                        console.error("Lỗi tải ảnh lên Drive:", e);
-                        resolve(null);
-                    }
-                };
-                reader.readAsDataURL(file);
-            });
-        }
-
-        // Định tuyến Menu
+        // Thêm menu Báo cáo dòng tiền
         const menuItems = [
-            { id: 'dashboard', label: 'Dashboard', icon: 'layout-dashboard', roles: ['owner', 'manager'] },
+            { id: 'dashboard', label: 'Tổng quan', icon: 'layout-dashboard', roles: ['owner', 'manager'] },
             { id: 'students', label: 'Học viên', icon: 'users', roles: ['owner', 'manager', 'receptionist'] },
-            { id: 'classes', label: 'Lớp học', icon: 'calendar-days', roles: ['owner', 'manager', 'trainer'] },
-            { id: 'attendance', label: 'Điểm danh', icon: 'check-square', roles: ['owner', 'manager', 'trainer', 'receptionist'] },
             { id: 'membership', label: 'Học phí', icon: 'credit-card', roles: ['owner', 'manager', 'receptionist'] },
             { id: 'expenses', label: 'Chi phí', icon: 'receipt', roles: ['owner', 'manager'] },
             { id: 'facilities', label: 'CS Vật chất', icon: 'building-2', roles: ['owner', 'manager', 'maintenance'] },
             { id: 'shop', label: 'Cửa hàng (POS)', icon: 'shopping-cart', roles: ['owner', 'manager', 'receptionist'] },
-            { id: 'users', label: 'Tài khoản', icon: 'shield-check', roles: ['owner'] }
+            { id: 'reports', label: 'Báo cáo Dòng tiền', icon: 'bar-chart-3', roles: ['owner', 'manager'] },
+            { id: 'users', label: 'Tài khoản', icon: 'shield-check', roles: ['owner', 'manager'] }
         ];
 
-        // Xác thực (Login)
-        async function checkSession() {
-            const { data: { session } } = await supabase.auth.getSession();
-            if (session) {
-                currentUser = session.user;
-                await loadUserProfile();
-            } else {
-                document.getElementById('initial-loading').style.display = 'none';
-                document.getElementById('app-view').classList.add('hidden');
-                document.getElementById('auth-view').classList.remove('hidden');
-            }
-        }
-
-        async function loadUserProfile() {
-            try {
-                let { data: profile, error } = await supabase.from('users').select('*').eq('id', currentUser.id).single();
-                if (!profile && currentUser.email === 'alistar982k@gmail.com') {
-                    // FIX: Bổ sung branch_id cho tài khoản Admin
-                    profile = { id: currentUser.id, email: currentUser.email, full_name: 'Master Admin', role: 'owner', organization_id: 'd0000000-0000-0000-0000-000000000001', branch_id: 'b0000000-0000-0000-0000-000000000001' };
-                }
-                
-                const userRole = profile.role || 'student';
-                currentUserProfile = { ...profile, role: userRole };
-                
-                document.getElementById('current-user-name').innerText = profile.full_name || profile.email;
-                document.getElementById('current-user-role').innerText = userRole;
-                document.getElementById('user-avatar-initial').innerText = (profile.full_name || profile.email).charAt(0).toUpperCase();
-
-                buildSidebarMenu();
-                
-                document.getElementById('initial-loading').style.display = 'none';
-                document.getElementById('auth-view').classList.add('hidden');
-                document.getElementById('app-view').classList.remove('hidden');
-                switchModule('dashboard');
-            } catch (err) {
-                showToast("Lỗi phân quyền, đang cấp quyền Fallback...", "error");
-                currentUserProfile = { id: currentUser.id, email: currentUser.email, full_name: 'Admin (Fallback)', role: 'owner', organization_id: 'd0000000-0000-0000-0000-000000000001', branch_id: 'b0000000-0000-0000-0000-000000000001' };
-                document.getElementById('current-user-name').innerText = 'Admin (Fallback)';
-                document.getElementById('current-user-role').innerText = 'owner';
-                buildSidebarMenu();
-                document.getElementById('initial-loading').style.display = 'none';
-                document.getElementById('auth-view').classList.add('hidden');
-                document.getElementById('app-view').classList.remove('hidden');
-                switchModule('dashboard');
-            }
-        }
-
-        document.getElementById('auth-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('auth-email').value;
-            const password = document.getElementById('auth-password').value;
-            const btn = document.getElementById('auth-submit-btn');
-            
-            btn.innerHTML = 'Đang xử lý...'; btn.disabled = true;
-            const { error } = await supabase.auth.signInWithPassword({ email, password });
-            
-            if (error) {
-                showToast("Email hoặc mật khẩu không đúng", 'error');
-                btn.innerHTML = `<span>Đăng nhập</span><i data-lucide="arrow-right" class="w-4 h-4"></i>`;
-                btn.disabled = false;
-                lucide.createIcons();
-            } else {
-                showToast('Đăng nhập thành công', 'success');
-                setTimeout(() => window.location.reload(), 500);
-            }
-        });
-
-        document.getElementById('btn-confirm-logout').addEventListener('click', async () => {
-            document.getElementById('btn-confirm-logout').innerText = 'Đang xử lý...';
-            await supabase.auth.signOut();
-            window.location.reload();
-        });
-
-        // Sidebar
-        function buildSidebarMenu() {
+        function renderSidebar() {
             const nav = document.getElementById('sidebar-nav');
             nav.innerHTML = '';
-            const userRole = currentUserProfile.role;
-
             menuItems.forEach(item => {
-                if(userRole === 'owner' || item.roles.includes(userRole)) {
-                    const a = document.createElement('a');
-                    a.href = '#';
-                    a.className = `flex items-center gap-3 px-3 py-2.5 rounded-lg mb-1 transition-colors text-sm font-medium ${activeModule === item.id ? 'bg-primary text-white' : 'text-gray-400 hover:text-gray-200 hover:bg-gray-800'}`;
-                    a.innerHTML = `<i data-lucide="${item.icon}" class="w-5 h-5"></i> <span>${item.label}</span>`;
-                    a.addEventListener('click', (e) => { e.preventDefault(); switchModule(item.id, a); });
-                    nav.appendChild(a);
+                if(item.roles.includes(currentUser.role_name || currentUser.role)) {
+                    const btn = document.createElement('button');
+                    btn.className = 'w-full flex items-center gap-3 px-3 py-2.5 rounded-lg mb-1 transition-colors text-sm font-medium text-gray-400 hover:text-gray-200 hover:bg-gray-800';
+                    btn.innerHTML = `<i data-lucide="${item.icon}" class="w-5 h-5"></i> ${item.label}`;
+                    btn.onclick = () => {
+                        switchModule(item.id, btn);
+                        if(window.innerWidth < 768) document.querySelector('aside').classList.add('hidden');
+                    }
+                    nav.appendChild(btn);
+                    if(item.id === 'dashboard') { setTimeout(() => btn.click(), 100); }
                 }
             });
             lucide.createIcons();
@@ -906,15 +828,14 @@
         function switchModule(moduleId, targetElement = null) {
             activeModule = moduleId;
             if(targetElement) {
-                document.querySelectorAll('#sidebar-nav a').forEach(el => el.className = 'flex items-center gap-3 px-3 py-2.5 rounded-lg mb-1 transition-colors text-sm font-medium text-gray-400 hover:text-gray-200 hover:bg-gray-800');
-                targetElement.className = 'flex items-center gap-3 px-3 py-2.5 rounded-lg mb-1 transition-colors text-sm font-medium bg-primary text-white shadow-md shadow-primary/20';
+                document.querySelectorAll('#sidebar-nav button').forEach(el => el.className = 'w-full flex items-center gap-3 px-3 py-2.5 rounded-lg mb-1 transition-colors text-sm font-medium text-gray-400 hover:text-gray-200 hover:bg-gray-800');
+                targetElement.className = 'w-full flex items-center gap-3 px-3 py-2.5 rounded-lg mb-1 transition-colors text-sm font-medium bg-primary text-white shadow-md shadow-primary/20';
             }
             const menuInfo = menuItems.find(m => m.id === moduleId);
             if(menuInfo) {
                 document.getElementById('page-title').innerHTML = `<i data-lucide="${menuInfo.icon}" class="w-5 h-5 text-gray-500"></i> ${menuInfo.label}`;
                 lucide.createIcons();
             }
-
             document.querySelectorAll('.module-view').forEach(el => el.classList.add('hidden'));
             const targetView = document.getElementById(`view-${moduleId}`);
             if (targetView) {
@@ -922,228 +843,607 @@
                 if(moduleId === 'dashboard') loadDashboardData();
                 if(moduleId === 'users') loadUsersList();
                 if(moduleId === 'students') loadStudentsList();
-                if(moduleId === 'classes') loadClassesList();
-                if(moduleId === 'attendance') {
-                    document.getElementById('current-date-display').innerText = new Date().toLocaleDateString('vi-VN');
-                    loadAttendanceList();
-                }
                 if(moduleId === 'membership') loadMembershipList();
                 if(moduleId === 'expenses') loadExpensesList();
                 if(moduleId === 'facilities') loadFacilitiesList();
                 if(moduleId === 'shop') loadShopList();
-            } else {
-                document.getElementById('view-placeholder').classList.remove('hidden');
+                if(moduleId === 'reports') {
+                    const selectEl = document.getElementById('report-year-select');
+                    if (selectEl.options.length === 0) {
+                        const currentYear = new Date().getFullYear();
+                        for (let y = currentYear - 3; y <= currentYear + 2; y++) {
+                            const option = document.createElement('option');
+                            option.value = y;
+                            option.text = 'Năm ' + y;
+                            if (y === currentYear) option.selected = true;
+                            selectEl.appendChild(option);
+                        }
+                    }
+                    window.loadReportsData();
+                }
             }
         }
 
-        // Tải Dữ liệu Dashboard (SỐ LIỆU THỰC TẾ)
+        async function uploadImageToDrive(fileInputId) {
+            const file = document.getElementById(fileInputId).files[0];
+            if (!file) return null;
+            
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = async function() {
+                    const base64String = reader.result.split(',')[1]; 
+                    try {
+                        const response = await fetch(GAS_URL, {
+                            method: 'POST',
+                            body: JSON.stringify({ 
+                                filename: file.name, 
+                                mimeType: file.type, 
+                                base64: base64String,
+                                name: file.name,
+                                data: base64String
+                            })
+                        });
+                        const result = await response.json();
+                        if (result.success && result.url) {
+                            resolve(result.url); 
+                        } else if (result.status === "success" && result.url) { 
+                            resolve(result.url);
+                        } else {
+                            reject(result.error || "Google Drive từ chối lưu file.");
+                        }
+                    } catch (e) { reject(e.message || "Lỗi mạng hoặc CORS."); }
+                };
+                reader.onerror = error => reject("Không thể đọc file trên trình duyệt.");
+                reader.readAsDataURL(file);
+            });
+        }
+
+        let deleteTarget = { id: null, table: null };
+        window.openDeleteModal = function(id, table, name) {
+            deleteTarget = { id, table };
+            document.getElementById('delete-item-name').innerText = name;
+            window.openModal('modal-confirm-delete');
+        }
+
+        const btnConfirmDelete = document.getElementById('btn-confirm-delete');
+        if(btnConfirmDelete) {
+            btnConfirmDelete.addEventListener('click', async () => {
+                if(!deleteTarget.id || !deleteTarget.table) return;
+                btnConfirmDelete.innerText = "Đang xóa...";
+                try {
+                    let err = null;
+                    if(deleteTarget.table === 'product_variant') {
+                        const { error } = await supabase.from('shop_product_variants').delete().eq('id', deleteTarget.id);
+                        err = error;
+                    } else {
+                        const { error } = await supabase.from(deleteTarget.table).delete().eq('id', deleteTarget.id);
+                        err = error;
+                    }
+                    if(err) throw err;
+                    showToast("Đã xóa dữ liệu thành công!", "success");
+                    window.closeModal('modal-confirm-delete');
+                    
+                    if(activeModule === 'users') loadUsersList();
+                    if(activeModule === 'students') { await loadStudentsList(); loadDashboardData(); }
+                    if(activeModule === 'membership') { await loadMembershipList(); loadDashboardData(); }
+                    if(activeModule === 'expenses') { loadExpensesList(); loadDashboardData(); }
+                    if(activeModule === 'facilities') loadFacilitiesList();
+                    if(activeModule === 'shop') { loadShopList(); loadDashboardData(); }
+                } catch (e) {
+                    let viError = e.message;
+                    if(viError.includes("violates foreign key constraint")) viError = "Dữ liệu đang được liên kết ở mục khác, không thể xóa trực tiếp để bảo vệ hệ thống.";
+                    showToast("Lỗi khi xóa: " + viError, "error");
+                }
+                btnConfirmDelete.innerText = "Xóa vĩnh viễn";
+                deleteTarget = { id: null, table: null };
+            });
+        }
+
+        function getCurrentMonthRange() {
+            const now = new Date();
+            const startOfMonth = new Date(Date.UTC(now.getFullYear(), now.getMonth(), 1));
+            const endOfMonth = new Date(Date.UTC(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999));
+            return { start: startOfMonth.toISOString(), end: endOfMonth.toISOString() };
+        }
+
         async function loadDashboardData() {
             try {
-                // 1. Số lượng Học viên & Lớp
-                const { count: studentCount } = await supabase.from('students').select('*', { count: 'exact', head: true });
-                const { count: classCount } = await supabase.from('classes').select('*', { count: 'exact', head: true });
-                document.getElementById('dash-students').innerText = studentCount || 0;
-                document.getElementById('dash-classes').innerText = classCount || 0;
+                const today = new Date().toISOString().split('T')[0];
+                const { data: activeMems, error: memErr } = await supabase
+                    .from('memberships')
+                    .select('student_id')
+                    .gte('end_date', today);
+                    
+                let activeStudentCount = 0;
+                if (!memErr && activeMems) {
+                    const uniqueStudents = new Set(activeMems.map(m => m.student_id));
+                    activeStudentCount = uniqueStudents.size;
+                }
+                document.getElementById('dash-students').innerText = activeStudentCount;
 
-                // 2. Tính toán Doanh thu từ Học phí (Memberships)
-                const { data: mems } = await supabase.from('memberships').select('membership_plans(price)');
-                let memRevenue = 0;
-                if(mems) mems.forEach(m => { if(m.membership_plans) memRevenue += parseFloat(m.membership_plans.price || 0) });
+                const currentMonth = getCurrentMonthRange();
+                
+                const { data: memsThisMonth } = await supabase
+                    .from('memberships')
+                    .select('created_at, membership_plans(price)')
+                    .gte('created_at', currentMonth.start)
+                    .lte('created_at', currentMonth.end);
+                    
+                let memRev = 0;
+                if (memsThisMonth) { 
+                    memsThisMonth.forEach(m => { 
+                        if(m.membership_plans?.price) memRev += parseFloat(m.membership_plans.price); 
+                    }); 
+                }
 
-                // 3. Tính toán Doanh thu từ Cửa hàng (Shop Orders)
-                const { data: orders } = await supabase.from('shop_orders').select('total');
-                let shopRevenue = 0;
-                if(orders) orders.forEach(o => shopRevenue += parseFloat(o.total || 0));
+                const { data: ordersThisMonth } = await supabase
+                    .from('shop_orders')
+                    .select('total')
+                    .gte('created_at', currentMonth.start)
+                    .lte('created_at', currentMonth.end);
+                    
+                let shopRev = 0;
+                if (ordersThisMonth) { 
+                    ordersThisMonth.forEach(o => shopRev += parseFloat(o.total || 0)); 
+                }
 
-                // 4. Lấy chi phí và doanh thu phụ từ bảng Finance
-                const { data: finances } = await supabase.from('finance_transactions').select('*');
-                let otherIncome = 0;
-                let expense = 0;
-                if (finances) {
-                    finances.forEach(tx => {
-                        if(tx.type === 'expense') expense += parseFloat(tx.amount);
-                        if(tx.type === 'income' && tx.category !== 'shop' && tx.category !== 'membership') otherIncome += parseFloat(tx.amount);
+                const { data: expensesThisMonth } = await supabase
+                    .from('finance_transactions')
+                    .select('amount')
+                    .eq('type', 'expense')
+                    .gte('transaction_date', currentMonth.start)
+                    .lte('transaction_date', currentMonth.end);
+                    
+                let totalExpense = 0;
+                if (expensesThisMonth) { 
+                    expensesThisMonth.forEach(e => totalExpense += parseFloat(e.amount || 0)); 
+                }
+
+                let totalIncome = memRev + shopRev;
+                let netProfit = totalIncome - totalExpense;
+                
+                document.getElementById('dash-profit').innerText = new Intl.NumberFormat('vi-VN').format(netProfit) + ' đ';
+                document.getElementById('dash-profit').className = `text-lg font-bold ${netProfit >= 0 ? 'text-green-600' : 'text-red-600'}`;
+
+                const ctxFinance = document.getElementById('financeChart');
+                if(window.financeChartInstance) window.financeChartInstance.destroy();
+                window.financeChartInstance = new Chart(ctxFinance, {
+                    type: 'bar',
+                    data: { labels: ['Tổng Thu', 'Tổng Chi'], datasets: [{ label: 'VNĐ', data: [totalIncome, totalExpense], backgroundColor: ['#22c55e', '#ef4444'], borderRadius: 6 }] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+                });
+
+                const ctxRevenue = document.getElementById('revenueSourceChart');
+                if(window.revenueChartInstance) window.revenueChartInstance.destroy();
+                window.revenueChartInstance = new Chart(ctxRevenue, {
+                    type: 'doughnut',
+                    data: { labels: ['Học phí', 'Cửa hàng (Shop)'], datasets: [{ data: [memRev, shopRev], backgroundColor: ['#3b82f6', '#f59e0b'], borderWidth: 0 }] },
+                    options: { responsive: true, maintainAspectRatio: false, cutout: '70%', plugins: { legend: { position: 'right' } } }
+                });
+            } catch(e) { console.error("Lỗi Tổng quan:", e) }
+        }
+
+        window.loadReportsData = async function(selectedYear = null) {
+            const selectEl = document.getElementById('report-year-select');
+            const yearToLoad = selectedYear || selectEl.value;
+
+            const tbody = document.getElementById('reports-table-body');
+            tbody.innerHTML = `<tr><td colspan="6" class="text-center py-10"><div class="w-8 h-8 border-4 border-red-200 border-t-red-600 rounded-full animate-spin mx-auto"></div></td></tr>`;
+            
+            try {
+                const startOfYear = `${yearToLoad}-01-01T00:00:00.000Z`;
+                const endOfYear = `${yearToLoad}-12-31T23:59:59.999Z`;
+
+                const [membershipsRes, ordersRes, expensesRes] = await Promise.all([
+                    supabase.from('memberships').select('created_at, membership_plans(price)').gte('created_at', startOfYear).lte('created_at', endOfYear),
+                    supabase.from('shop_orders').select('created_at, total').gte('created_at', startOfYear).lte('created_at', endOfYear),
+                    supabase.from('finance_transactions').select('transaction_date, amount').eq('type', 'expense').gte('transaction_date', startOfYear).lte('transaction_date', endOfYear)
+                ]);
+
+                const monthlyData = Array.from({length: 12}, () => ({ memRev: 0, shopRev: 0, expense: 0 }));
+
+                if (membershipsRes.data) {
+                    membershipsRes.data.forEach(m => {
+                        const month = new Date(m.created_at).getMonth();
+                        if (m.membership_plans?.price) monthlyData[month].memRev += parseFloat(m.membership_plans.price);
+                    });
+                }
+                
+                if (ordersRes.data) {
+                    ordersRes.data.forEach(o => {
+                        const month = new Date(o.created_at).getMonth();
+                        if (o.total) monthlyData[month].shopRev += parseFloat(o.total);
                     });
                 }
 
-                // 5. Tổng kết
-                let totalIncome = memRevenue + shopRevenue + otherIncome;
-                let profit = totalIncome - expense;
+                if (expensesRes.data) {
+                    expensesRes.data.forEach(e => {
+                        const month = new Date(e.transaction_date).getMonth();
+                        if (e.amount) monthlyData[month].expense += parseFloat(e.amount);
+                    });
+                }
 
-                document.getElementById('dash-income').innerText = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(totalIncome);
-                document.getElementById('dash-profit').innerText = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(profit);
+                const formatter = new Intl.NumberFormat('vi-VN');
+                let html = '';
+                let totalMemYear = 0, totalShopYear = 0, totalExpenseYear = 0, totalProfitYear = 0;
 
-                // 6. Vẽ biểu đồ
-                if (chartInstances['finance']) chartInstances['finance'].destroy();
-                const ctxFin = document.getElementById('financeChart').getContext('2d');
-                chartInstances['finance'] = new Chart(ctxFin, {
-                    type: 'bar',
-                    data: { labels: ['Kỳ này'], datasets: [
-                        { label: 'Tổng Doanh thu', data: [totalIncome], backgroundColor: '#10b981', borderRadius: 4 },
-                        { label: 'Tổng Chi phí', data: [expense], backgroundColor: '#ef4444', borderRadius: 4 }
-                    ]},
-                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
-                });
+                for (let i = 0; i < 12; i++) {
+                    const monthData = monthlyData[i];
+                    const totalThu = monthData.memRev + monthData.shopRev;
+                    const profit = totalThu - monthData.expense;
+                    
+                    totalMemYear += monthData.memRev;
+                    totalShopYear += monthData.shopRev;
+                    totalExpenseYear += monthData.expense;
+                    totalProfitYear += profit;
 
-                if (chartInstances['revenue']) chartInstances['revenue'].destroy();
-                const ctxRev = document.getElementById('revenueSourceChart').getContext('2d');
-                chartInstances['revenue'] = new Chart(ctxRev, {
-                    type: 'doughnut',
-                    data: { labels: ['Học phí', 'Cửa hàng', 'Khác'], datasets: [{ data: [memRevenue, shopRevenue, otherIncome], backgroundColor: ['#3b82f6', '#f59e0b', '#8b5cf6'], borderWidth: 0 }]},
-                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right' } } }
-                });
-            } catch (err) { console.error(err); }
+                    html += `
+                        <tr class="hover:bg-gray-50 border-b border-gray-100">
+                            <td class="px-6 py-4 font-medium text-gray-900">Tháng ${i + 1}</td>
+                            <td class="px-6 py-4 text-right text-gray-700">${formatter.format(monthData.memRev)} đ</td>
+                            <td class="px-6 py-4 text-right text-gray-700">${formatter.format(monthData.shopRev)} đ</td>
+                            <td class="px-6 py-4 text-right font-medium text-green-600">${formatter.format(totalThu)} đ</td>
+                            <td class="px-6 py-4 text-right font-medium text-red-500">-${formatter.format(monthData.expense)} đ</td>
+                            <td class="px-6 py-4 text-right font-bold ${profit >= 0 ? 'text-blue-600' : 'text-red-600'}">${formatter.format(profit)} đ</td>
+                        </tr>
+                    `;
+                }
+
+                html += `
+                    <tr class="bg-gray-100 border-t-2 border-gray-300">
+                        <td class="px-6 py-4 font-bold text-gray-900 uppercase">Tổng cả năm</td>
+                        <td class="px-6 py-4 text-right font-bold text-gray-800">${formatter.format(totalMemYear)} đ</td>
+                        <td class="px-6 py-4 text-right font-bold text-gray-800">${formatter.format(totalShopYear)} đ</td>
+                        <td class="px-6 py-4 text-right font-bold text-green-700">${formatter.format(totalMemYear + totalShopYear)} đ</td>
+                        <td class="px-6 py-4 text-right font-bold text-red-600">-${formatter.format(totalExpenseYear)} đ</td>
+                        <td class="px-6 py-4 text-right font-bold text-lg ${totalProfitYear >= 0 ? 'text-blue-700' : 'text-red-700'}">${formatter.format(totalProfitYear)} đ</td>
+                    </tr>
+                `;
+
+                tbody.innerHTML = html;
+
+            } catch (error) {
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-red-500">Lỗi tải dữ liệu báo cáo: ${error.message}</td></tr>`;
+            }
         }
 
-        // Tải danh sách Tài khoản
         async function loadUsersList() {
             const tbody = document.getElementById('users-table-body');
             try {
-                const { data, error } = await supabase.from('users').select('*').neq('email', 'alistar982k@gmail.com').order('created_at', { ascending: false });
-                if (!data || data.length === 0) { tbody.innerHTML = `<tr><td colspan="5" class="px-6 py-10 text-center text-gray-500">Chưa có tài khoản.</td></tr>`; return; }
-
-                tbody.innerHTML = data.map(user => `
+                const { data, error } = await supabase.from('users').select('*').order('created_at', { ascending: false });
+                if(error) throw error;
+                
+                const filteredData = data.filter(u => u.email !== 'alistar982k@gmail.com');
+                window.usersCache = filteredData; 
+                
+                tbody.innerHTML = filteredData.map(user => `
                     <tr class="hover:bg-gray-50 border-b border-gray-100">
                         <td class="px-6 py-4">
-                            <div class="font-medium text-gray-900">${user.full_name || 'Chưa cập nhật'}</div>
-                            <div class="text-xs text-gray-500">${user.email}</div>
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-full bg-red-100 text-red-600 flex items-center justify-center font-bold text-xs">${user.full_name?.charAt(0) || user.email?.charAt(0) || 'U'}</div>
+                                <div>
+                                    <p class="font-medium text-gray-900">${user.full_name || 'Chưa cập nhật'}</p>
+                                    <p class="text-xs text-gray-500">${user.email}</p>
+                                </div>
+                            </div>
                         </td>
-                        <td class="px-6 py-4 capitalize font-medium text-gray-700">${user.role || 'Chưa phân quyền'}</td>
-                        <td class="px-6 py-4"><span class="px-2.5 py-1 rounded-full text-xs font-medium ${user.status === 'active' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}">${user.status || 'pending'}</span></td>
-                        <td class="px-6 py-4 text-gray-500">${new Date(user.created_at || new Date()).toLocaleDateString('vi-VN')}</td>
+                        <td class="px-6 py-4"><span class="px-2.5 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-medium uppercase">${user.role_name || user.role || 'student'}</span></td>
+                        <td class="px-6 py-4"><span class="px-2 py-1 bg-green-50 text-green-600 border border-green-200 rounded text-xs font-semibold">${user.status}</span></td>
                         <td class="px-6 py-4 text-right flex justify-end gap-2">
-                            <button onclick="window.openDeleteModal('${user.id}', 'user', '${user.full_name || user.email}')" class="text-red-500 hover:bg-red-50 p-1.5 rounded-md transition-colors"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                            <button onclick="window.openEditUserModal('${user.id}')" class="text-blue-500 hover:bg-blue-50 p-1.5 rounded-md" title="Sửa tài khoản"><i data-lucide="edit-2" class="w-4 h-4"></i></button>
+                            <button onclick="window.openDeleteModal('${user.id}', 'users', '${user.email}')" class="text-red-400 hover:text-red-600 p-1.5 rounded-md" title="Xóa tài khoản"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
                         </td>
                     </tr>
                 `).join('');
                 lucide.createIcons();
-            } catch (err) { tbody.innerHTML = `<tr><td colspan="5" class="px-6 py-4 text-center text-red-500">Lỗi lấy dữ liệu</td></tr>`; }
+            } catch(e) { tbody.innerHTML = `<tr><td colspan="4" class="text-center py-4 text-red-500 text-sm">Không thể tải danh sách tài khoản.</td></tr>`; }
         }
 
-        // Tải danh sách Học viên & Xử lý màu Gói tập
+        const formAddUser = document.getElementById('form-add-user');
+        if (formAddUser) {
+            formAddUser.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const btn = document.getElementById('btn-submit-add-user');
+                btn.innerText = "Đang xử lý..."; btn.disabled = true;
+                try {
+                    const emailInput = document.getElementById('add-user-email').value;
+                    const passInput = document.getElementById('add-user-pass').value;
+                    
+                    const { error } = await supabase.from('users').insert({
+                        id: crypto.randomUUID(), 
+                        organization_id: currentUser.organization_id,
+                        branch_id: currentUser.branch_id || 'b0000000-0000-0000-0000-000000000001',
+                        email: emailInput,
+                        password: passInput,
+                        full_name: document.getElementById('add-user-name').value,
+                        role_name: document.getElementById('add-user-role').value,
+                        status: 'active'
+                    });
+                    
+                    if(!error) { 
+                        showToast("Tạo tài khoản thành công!", "success"); 
+                        window.closeModal('modal-add-user'); 
+                        loadUsersList(); 
+                        formAddUser.reset(); 
+                    } else { 
+                        showToast("Lỗi Database: " + error.message, "error"); 
+                    }
+                } catch(err) { showToast("Lỗi kết nối: " + err.message, "error"); }
+                btn.innerText = "Tạo tài khoản"; btn.disabled = false;
+            });
+        }
+
+        window.openEditUserModal = function(id) {
+            const user = window.usersCache.find(u => u.id === id);
+            if(!user) return;
+            document.getElementById('edit-user-id').value = user.id;
+            document.getElementById('edit-user-name').value = user.full_name || '';
+            document.getElementById('edit-user-email').value = user.email || '';
+            document.getElementById('edit-user-role').value = user.role_name || user.role || 'receptionist';
+            document.getElementById('edit-user-pass').value = ''; 
+            window.openModal('modal-edit-user');
+        }
+
+        const formEditUser = document.getElementById('form-edit-user');
+        if(formEditUser) {
+            formEditUser.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const btn = document.getElementById('btn-submit-edit-user');
+                btn.innerText = "Đang lưu..."; btn.disabled = true;
+                
+                const id = document.getElementById('edit-user-id').value;
+                const newPass = document.getElementById('edit-user-pass').value;
+                
+                try {
+                    let updateData = {
+                        full_name: document.getElementById('edit-user-name').value,
+                        role_name: document.getElementById('edit-user-role').value
+                    };
+                    
+                    if (newPass.trim() !== '') { updateData.password = newPass; }
+
+                    const { error } = await supabase.from('users').update(updateData).eq('id', id);
+                    if(error) throw error;
+                    
+                    showToast("Cập nhật thông tin tài khoản thành công!", "success");
+                    window.closeModal('modal-edit-user');
+                    loadUsersList();
+                } catch(err) { showToast("Lỗi Database: " + err.message, "error"); }
+                
+                btn.innerText = "Lưu thay đổi"; btn.disabled = false;
+            });
+        }
+
+        window.calculateAge = function(dob) {
+            if(!dob) return 0;
+            const diff = Date.now() - new Date(dob).getTime();
+            return Math.abs(new Date(diff).getUTCFullYear() - 1970);
+        }
+
         async function loadStudentsList() {
             const tbody = document.getElementById('students-table-body');
-            const totalCountEl = document.getElementById('students-total-count');
             try {
-                const { data, error } = await supabase.from('students').select('*, memberships(end_date)').order('created_at', { ascending: false });
-                if (!data || data.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-10 text-center text-gray-500">Chưa có học viên nào.</td></tr>`;
-                    return;
-                }
-
-                const processedData = data.map(st => {
-                    let age = 'N/A', ageGroup = 3, ageText = 'Trên 18t';
-                    if (st.date_of_birth) {
-                        const ageDate = new Date(Date.now() - new Date(st.date_of_birth).getTime());
-                        age = Math.abs(ageDate.getUTCFullYear() - 1970);
-                        if (age < 12) { ageGroup = 1; ageText = 'Dưới 12 tuổi'; }
-                        else if (age <= 18) { ageGroup = 2; ageText = '12 - 18 tuổi'; }
-                    }
-
-                    let memColor = 'bg-gray-100 text-gray-600', memText = 'Chưa ĐK gói';
-                    if (st.memberships && st.memberships.length > 0) {
-                        const maxEndDate = new Date(Math.max(...st.memberships.map(m => new Date(m.end_date))));
-                        const diffDays = Math.ceil((maxEndDate - new Date()) / (1000 * 60 * 60 * 24));
-                        if (diffDays > 7) { memColor = 'bg-green-100 text-green-700 border border-green-200'; memText = `Còn hạn (${diffDays} ngày)`; }
-                        else if (diffDays >= 0) { memColor = 'bg-yellow-100 text-yellow-800 border border-yellow-200'; memText = `Sắp hết (${diffDays} ngày)`; }
-                        else { memColor = 'bg-red-50 text-red-600 border border-red-200'; memText = `Đã hết hạn`; }
-                    }
-                    return { ...st, age, ageGroup, ageText, memColor, memText };
-                });
-
-                processedData.sort((a, b) => {
-                    if (a.ageGroup !== b.ageGroup) return a.ageGroup - b.ageGroup;
+                const { data, error } = await supabase.from('students').select('*, memberships(end_date, status)');
+                allStudentsCache = data || [];
+                allStudentsCache.sort((a, b) => {
+                    const ageA = window.calculateAge(a.date_of_birth);
+                    const ageB = window.calculateAge(b.date_of_birth);
+                    const groupA = ageA < 12 ? 1 : ageA <= 18 ? 2 : 3;
+                    const groupB = ageB < 12 ? 1 : ageB <= 18 ? 2 : 3;
+                    if(groupA !== groupB) return groupA - groupB;
                     return (a.full_name || '').localeCompare(b.full_name || '');
                 });
-                allStudentsCache = processedData;
 
-                tbody.innerHTML = processedData.map(st => `
-                    <tr class="hover:bg-gray-50 border-b border-gray-100">
-                        <td class="px-6 py-4 font-bold text-gray-900">${st.student_code}</td>
-                        <td class="px-6 py-4 font-medium">${st.full_name}</td>
-                        <td class="px-6 py-4">
-                            <div class="text-sm text-gray-700">Tuổi: <b>${st.age !== 'N/A' ? st.age : '?'}</b> <span class="text-xs text-gray-400">(${st.ageText})</span></div>
-                            <div class="text-xs text-gray-500 mt-0.5">Giới tính: ${st.gender || '?'}</div>
-                        </td>
-                        <td class="px-6 py-4"><span class="px-2.5 py-1 rounded text-xs font-bold ${st.memColor}">${st.memText}</span></td>
-                        <td class="px-6 py-4 text-sm text-gray-500">${new Date(st.created_at).toLocaleDateString('vi-VN')}</td>
-                        <td class="px-6 py-4 text-right flex justify-end gap-2">
-                            <button onclick="window.openEditStudentModal('${st.id}')" class="text-blue-600 hover:text-blue-800 p-1.5 hover:bg-blue-50 rounded-md transition-colors"><i data-lucide="edit-2" class="w-4 h-4"></i></button>
-                            <button onclick="window.openDeleteModal('${st.id}', 'student', '${st.full_name}')" class="text-red-500 hover:text-red-700 p-1.5 hover:bg-red-50 rounded-md transition-colors"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
-                        </td>
-                    </tr>
-                `).join('');
-                totalCountEl.innerText = `Tổng cộng: ${processedData.length} học viên`;
-                lucide.createIcons();
-            } catch (err) { tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-4 text-center text-red-500">Lỗi tải dữ liệu.</td></tr>`; }
+                if(!allStudentsCache || allStudentsCache.length === 0) { 
+                    tbody.innerHTML = `<tr><td colspan="6" class="text-center py-10 text-gray-500">Chưa có học viên nào.</td></tr>`; 
+                    document.getElementById('students-total-count').innerText = "Tổng số: 0"; 
+                    return; 
+                }
+                renderStudentsTable(allStudentsCache);
+                document.getElementById('students-total-count').innerText = `Tổng số: ${allStudentsCache.length} học viên`;
+            } catch(e) { console.error(e) }
         }
 
-        // Logic Sửa Học viên
+        function renderStudentsTable(data) {
+            const tbody = document.getElementById('students-table-body');
+            tbody.innerHTML = data.map(st => {
+                const age = window.calculateAge(st.date_of_birth);
+                const ageGroup = age < 12 ? 'Dưới 12 tuổi' : age <= 18 ? '12 - 18 tuổi' : 'Trên 18 tuổi';
+                let statusHtml = '<span class="px-2.5 py-1 bg-gray-100 text-gray-500 rounded text-xs font-semibold">Chưa có gói</span>';
+                if (st.memberships && st.memberships.length > 0) {
+                    const latestMem = st.memberships.reduce((a, b) => new Date(a.end_date) > new Date(b.end_date) ? a : b);
+                    const daysLeft = Math.ceil((new Date(latestMem.end_date) - new Date()) / (1000 * 60 * 60 * 24));
+                    if (daysLeft < 0) {
+                        statusHtml = `<span class="px-2.5 py-1 bg-red-100 text-red-700 rounded text-xs font-semibold">Đã hết hạn</span>`;
+                    } else if (daysLeft <= 7) {
+                        statusHtml = `<span class="px-2.5 py-1 bg-yellow-100 text-yellow-700 rounded text-xs font-semibold">Sắp hết hạn (${daysLeft} ngày)</span>`;
+                    } else {
+                        statusHtml = `<span class="px-2.5 py-1 bg-green-100 text-green-700 rounded text-xs font-semibold">Còn hiệu lực (${daysLeft} ngày)</span>`;
+                    }
+                }
+                return `
+                    <tr class="hover:bg-gray-50 border-b border-gray-100">
+                        <td class="px-6 py-4 font-bold text-gray-900">${st.student_code}</td>
+                        <td class="px-6 py-4 font-medium text-gray-800">${st.full_name}</td>
+                        <td class="px-6 py-4 text-sm text-gray-600"><span class="bg-gray-100 px-2 py-1 rounded text-xs mr-2">${ageGroup} (${age})</span> ${st.gender || ''}</td>
+                        <td class="px-6 py-4 text-sm text-gray-500">${st.phone || '--'}</td>
+                        <td class="px-6 py-4">${statusHtml}</td>
+                        <td class="px-6 py-4 text-right flex justify-end gap-2">
+                            <button onclick="window.openEditStudentModal('${st.id}')" class="text-blue-500 hover:bg-blue-50 p-1.5 rounded-md"><i data-lucide="edit-2" class="w-4 h-4"></i></button>
+                            <button onclick="window.openDeleteModal('${st.id}', 'students', '${st.full_name}')" class="text-red-400 hover:text-red-600 p-1.5 rounded-md"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+            lucide.createIcons();
+        }
+
+        window.searchStudents = function(val) {
+            if(!val) renderStudentsTable(allStudentsCache);
+            else {
+                const lower = val.toLowerCase();
+                renderStudentsTable(allStudentsCache.filter(st => (st.full_name||'').toLowerCase().includes(lower) || (st.student_code||'').toLowerCase().includes(lower)));
+            }
+        }
+
+        const formAddStudent = document.getElementById('form-add-student');
+        if (formAddStudent) {
+            formAddStudent.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const btn = document.getElementById('btn-submit-add-student');
+                btn.innerText = "Đang lưu..."; btn.disabled = true;
+                try {
+                    const { error } = await supabase.from('students').insert({
+                        organization_id: currentUser.organization_id,
+                        branch_id: currentUser.branch_id || 'b0000000-0000-0000-0000-000000000001',
+                        student_code: 'HV' + Math.floor(Math.random() * 100000),
+                        full_name: document.getElementById('add-st-name').value,
+                        date_of_birth: document.getElementById('add-st-dob').value,
+                        gender: document.getElementById('add-st-gender').value,
+                        phone: document.getElementById('add-st-phone').value,
+                        status: 'active'
+                    });
+                    if(!error) { showToast("Đã thêm Học viên!", "success"); window.closeModal('modal-add-student'); loadStudentsList(); loadDashboardData(); formAddStudent.reset(); } 
+                    else { showToast("Lỗi: " + error.message, "error"); }
+                } catch (err) { showToast("Lỗi kết nối", "error"); }
+                btn.innerText = "Lưu Học viên"; btn.disabled = false;
+            });
+        }
+
         window.openEditStudentModal = function(id) {
-            const st = allStudentsCache.find(s => s.id === id);
-            if(!st) return;
-            document.getElementById('edit-student-id').value = st.id;
-            document.getElementById('edit-student-name').value = st.full_name;
-            document.getElementById('edit-student-phone').value = st.phone || '';
-            document.getElementById('edit-student-dob').value = st.date_of_birth || '';
-            document.getElementById('edit-student-gender').value = st.gender || 'Nam';
+            const student = allStudentsCache.find(s => s.id === id);
+            if (!student) return;
+            document.getElementById('edit-st-id').value = student.id;
+            document.getElementById('edit-st-name').value = student.full_name;
+            document.getElementById('edit-st-dob').value = student.date_of_birth || '';
+            document.getElementById('edit-st-gender').value = student.gender || 'Nam';
+            document.getElementById('edit-st-phone').value = student.phone || '';
             window.openModal('modal-edit-student');
         }
 
-        document.getElementById('form-edit-student').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const btn = document.getElementById('btn-submit-edit-student');
-            btn.innerText = "Đang lưu..."; btn.disabled = true;
-
-            const id = document.getElementById('edit-student-id').value;
-            const { error } = await supabase.from('students').update({
-                full_name: document.getElementById('edit-student-name').value,
-                phone: document.getElementById('edit-student-phone').value,
-                gender: document.getElementById('edit-student-gender').value,
-                date_of_birth: document.getElementById('edit-student-dob').value
-            }).eq('id', id);
-
-            if(!error) { showToast("Cập nhật học viên thành công!", "success"); window.closeModal('modal-edit-student'); loadStudentsList(); }
-            else { showToast("Lỗi cập nhật", "error"); }
-            btn.innerText = "Lưu cập nhật"; btn.disabled = false;
-        });
-
-        // Tải các module khác
-        async function loadClassesList() {
-            const container = document.getElementById('classes-grid');
-            try {
-                const { data } = await supabase.from('classes').select('*').order('created_at', { ascending: false });
-                if (!data || data.length === 0) { container.innerHTML = `<div class="col-span-full text-center py-10 bg-white">Chưa có lớp học.</div>`; return; }
-                container.innerHTML = data.map(cls => `
-                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md transition-shadow">
-                        <div class="flex justify-between items-start mb-4">
-                            <div><h4 class="text-lg font-bold text-gray-900">${cls.name}</h4></div>
-                            <div class="flex gap-2 items-center">
-                                <span class="px-2 py-1 rounded text-xs font-medium bg-green-100 text-green-700">Mở</span>
-                                <button onclick="window.openDeleteModal('${cls.id}', 'class', '${cls.name}')" class="text-red-400 hover:text-red-600 hover:bg-red-50 p-1 rounded transition-colors"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
-                            </div>
-                        </div>
-                        <div class="flex items-center text-sm text-gray-500 gap-2 mb-5"><i data-lucide="users" class="w-4 h-4"></i><span>Sức chứa: <b>${cls.capacity}</b></span></div>
-                        <button onclick="window.handleCheckIn('${cls.id}', '${cls.name}')" class="w-full bg-primary hover:bg-primaryHover text-white font-medium py-2 rounded-lg text-sm">Điểm danh</button>
-                    </div>
-                `).join('');
-                lucide.createIcons();
-            } catch (err) {}
+        const formEditStudent = document.getElementById('form-edit-student');
+        if (formEditStudent) {
+            formEditStudent.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const btn = document.getElementById('btn-submit-edit-student');
+                btn.innerText = "Đang lưu..."; btn.disabled = true;
+                const id = document.getElementById('edit-st-id').value;
+                try {
+                    const { error } = await supabase.from('students').update({
+                        full_name: document.getElementById('edit-st-name').value,
+                        date_of_birth: document.getElementById('edit-st-dob').value,
+                        gender: document.getElementById('edit-st-gender').value,
+                        phone: document.getElementById('edit-st-phone').value
+                    }).eq('id', id);
+                    if(!error) { showToast("Cập nhật học viên thành công!", "success"); window.closeModal('modal-edit-student'); loadStudentsList(); } 
+                    else { showToast("Lỗi cập nhật: " + error.message, "error"); }
+                } catch(err) { showToast("Lỗi hệ thống", "error"); }
+                btn.innerText = "Lưu thay đổi"; btn.disabled = false;
+            });
         }
 
-        async function loadAttendanceList() {
-            const container = document.getElementById('attendance-container');
+        async function loadMembershipList() {
+            const tbody = document.getElementById('membership-table-body');
             try {
-                const { data } = await supabase.from('classes').select('*');
-                if(!data || data.length === 0) { container.innerHTML = `<div class="text-center py-10 bg-white text-gray-500">Trống.</div>`; return; }
-                container.innerHTML = data.map(cls => `
-                    <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex items-center justify-between">
-                        <div><h4 class="font-bold text-gray-900 text-lg">${cls.name}</h4></div>
-                        <button onclick="window.handleCheckIn('${cls.id}', '${cls.name}')" class="bg-primary text-white px-5 py-2.5 rounded-lg text-sm flex items-center gap-2"><i data-lucide="scan-line" class="w-4 h-4"></i> Điểm danh</button>
-                    </div>
-                `).join('');
-                lucide.createIcons();
-            } catch(e) {}
+                await loadStudentsList(); 
+                
+                const { data, error } = await supabase.from('memberships').select('*, students(full_name, student_code), membership_plans(name, duration_months, price)').order('start_date', { ascending: false });
+                if(!data || data.length === 0) { tbody.innerHTML = `<tr><td colspan="5" class="text-center py-10 text-gray-500">Chưa có đăng ký gói tập nào.</td></tr>`; }
+                else {
+                    tbody.innerHTML = data.map(m => `
+                        <tr class="hover:bg-gray-50 border-b border-gray-100">
+                            <td class="px-6 py-4 font-bold text-gray-800">${m.students?.full_name || 'Học viên'} <span class="text-xs font-normal text-gray-400 ml-1">(${m.students?.student_code})</span></td>
+                            <td class="px-6 py-4">
+                                <p class="font-medium text-red-600">${m.membership_plans?.name || 'Gói tập'}</p>
+                                <p class="text-xs text-gray-500">${new Intl.NumberFormat('vi-VN').format(m.membership_plans?.price || 0)}đ</p>
+                            </td>
+                            <td class="px-6 py-4"><span class="px-2.5 py-1 ${m.status === 'active' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'} rounded text-xs font-medium uppercase">${m.status === 'active' ? 'Đang tập' : m.status}</span></td>
+                            <td class="px-6 py-4 text-gray-500 text-sm">${new Date(m.start_date).toLocaleDateString('vi-VN')}</td>
+                            <td class="px-6 py-4 text-right flex justify-end gap-2">
+                                <button onclick="window.openDeleteModal('${m.id}', 'memberships', 'Gói tập của ${m.students?.full_name}')" class="text-red-400 hover:text-red-600 p-1.5 rounded-md"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                            </td>
+                        </tr>
+                    `).join('');
+                    lucide.createIcons();
+                }
+
+                const { data: plans } = await supabase.from('membership_plans').select('*');
+                if (plans) {
+                    const customOrder = [
+                        'Phong trào (<12 Tuổi) - 3 buổi/tuần', 'Phong trào (<12 Tuổi) - 6 buổi/tuần',
+                        'Phong trào (12-18 Tuổi) - 3 buổi/tuần', 'Phong trào (12-18 Tuổi) - 6 buổi/tuần',
+                        'Phong trào (>18 Tuổi) - 3 buổi/tuần', 'Phong trào (>18 Tuổi) - 6 buổi/tuần'
+                    ];
+                    plans.sort((a, b) => {
+                        let idxA = customOrder.indexOf(a.name); let idxB = customOrder.indexOf(b.name);
+                        if(idxA === -1) idxA = 99; if(idxB === -1) idxB = 99;
+                        if(idxA !== idxB) return idxA - idxB;
+                        return a.price - b.price;
+                    });
+                    
+                    if (plans.length > 0) {
+                        document.getElementById('add-mem-plan-id').innerHTML = plans.map(p => `<option value="${p.id}">${p.name} - ${new Intl.NumberFormat('vi-VN').format(p.price)} đ</option>`).join('');
+                    } else {
+                        document.getElementById('add-mem-plan-id').innerHTML = `<option value="">(Trống dữ liệu Bảng giá)</option>`;
+                    }
+                }
+            } catch(e) { console.error(e) }
+        }
+
+        window.searchMembershipStudent = function(val) {
+            const dropdown = document.getElementById('mem-student-dropdown');
+            if(val.length < 1) { dropdown.classList.add('hidden'); return; }
+            
+            const eligibleStudents = allStudentsCache.filter(st => {
+                if (!st.memberships || st.memberships.length === 0) return true;
+                const maxEndDate = new Date(Math.max(...st.memberships.map(m => new Date(m.end_date))));
+                return maxEndDate < new Date();
+            });
+            
+            const results = eligibleStudents.filter(st => (st.full_name||'').toLowerCase().includes(val.toLowerCase())).slice(0, 5);
+            if(results.length === 0) { 
+                dropdown.innerHTML = `<div class="p-3 text-sm text-gray-500 text-center">Tất cả đều đã có Gói tập hiệu lực.</div>`;
+                dropdown.classList.remove('hidden'); return; 
+            }
+            dropdown.innerHTML = results.map(st => `
+                <div class="px-4 py-2 hover:bg-red-50 cursor-pointer flex justify-between items-center transition-colors" onclick="window.selectMemStudent('${st.id}', '${st.full_name}', '${st.student_code}')">
+                    <span class="font-medium text-gray-800">${st.full_name} <span class="text-gray-400 text-xs ml-1">${st.student_code}</span></span>
+                    <span class="text-xs bg-gray-100 px-2 py-1 rounded text-gray-500">${window.calculateAge(st.date_of_birth)} tuổi - ${st.gender}</span>
+                </div>
+            `).join('');
+            dropdown.classList.remove('hidden');
+        }
+
+        window.selectMemStudent = function(id, name, code) {
+            document.getElementById('add-mem-student-id').value = id;
+            document.getElementById('mem-search-student').value = `${name} (${code})`;
+            document.getElementById('mem-student-dropdown').classList.add('hidden');
+        }
+
+        const formAddMembership = document.getElementById('form-add-membership');
+        if (formAddMembership) {
+            formAddMembership.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const btn = document.getElementById('btn-submit-add-membership');
+                btn.innerText = "Đang xử lý..."; btn.disabled = true;
+                try {
+                    const stId = document.getElementById('add-mem-student-id').value;
+                    const planId = document.getElementById('add-mem-plan-id').value;
+                    const startDate = document.getElementById('add-mem-start-date').value;
+                    if(!stId) throw new Error("Vui lòng chọn học viên!");
+
+                    const { data: plan } = await supabase.from('membership_plans').select('duration_months').eq('id', planId).single();
+                    let endDate = new Date(startDate);
+                    endDate.setMonth(endDate.getMonth() + plan.duration_months);
+
+                    const { error } = await supabase.from('memberships').insert({
+                        student_id: stId, plan_id: planId, start_date: startDate, end_date: endDate.toISOString().split('T')[0], status: 'active'
+                    });
+                    if(!error) { showToast("Đăng ký thành công!", "success"); window.closeModal('modal-add-membership'); loadMembershipList(); loadDashboardData(); formAddMembership.reset(); } 
+                    else { showToast("Lỗi: " + error.message, "error"); }
+                } catch (err) { showToast(err.message, "error"); }
+                btn.innerText = "Đăng ký"; btn.disabled = false;
+            });
         }
 
         async function loadExpensesList() {
@@ -1151,17 +1451,17 @@
             try {
                 const { data } = await supabase.from('finance_transactions').select('*').eq('type', 'expense').order('transaction_date', { ascending: false });
                 if(!data || data.length === 0) { tbody.innerHTML = `<tr><td colspan="5" class="text-center py-10 text-gray-500">Chưa có khoản chi nào.</td></tr>`; return; }
-
                 const catNames = { salary: 'Lương nhân viên', rent: 'Thuê mặt bằng', electricity: 'Điện / Nước', marketing: 'Marketing', maintenance: 'Bảo trì', other: 'Chi phí khác', shop: 'Nhập hàng' };
-
+                window.expensesCache = data;
                 tbody.innerHTML = data.map(ex => `
                     <tr class="hover:bg-gray-50 border-b border-gray-100">
                         <td class="px-6 py-4 text-sm font-medium text-gray-700">${new Date(ex.transaction_date).toLocaleDateString('vi-VN')}</td>
-                        <td class="px-6 py-4"><span class="px-2.5 py-1 bg-red-50 text-red-600 border border-red-100 rounded-md text-xs font-semibold">${catNames[ex.category] || ex.category}</span></td>
+                        <td class="px-6 py-4"><span class="px-2.5 py-1 bg-red-50 text-red-600 rounded-md text-xs font-semibold">${catNames[ex.category] || ex.category}</span></td>
                         <td class="px-6 py-4 font-bold text-red-600">-${new Intl.NumberFormat('vi-VN').format(ex.amount)} đ</td>
                         <td class="px-6 py-4 text-gray-500 text-sm max-w-[200px] truncate">${ex.description || '--'}</td>
                         <td class="px-6 py-4 text-right flex justify-end gap-2">
-                            <button onclick="window.openDeleteModal('${ex.id}', 'expense', 'Khoản chi ${new Intl.NumberFormat('vi-VN').format(ex.amount)} đ')" class="text-red-400 hover:text-red-600 hover:bg-red-50 p-1.5 rounded-md transition-colors"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                            <button onclick="window.openEditExpenseModal('${ex.id}')" class="text-blue-500 hover:bg-blue-50 p-1.5 rounded-md"><i data-lucide="edit-2" class="w-4 h-4"></i></button>
+                            <button onclick="window.openDeleteModal('${ex.id}', 'finance_transactions', 'Khoản chi ${new Intl.NumberFormat('vi-VN').format(ex.amount)} đ')" class="text-red-400 hover:text-red-600 p-1.5 rounded-md"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
                         </td>
                     </tr>
                 `).join('');
@@ -1169,19 +1469,120 @@
             } catch(e) { console.error(e) }
         }
 
-        async function loadShopList() {
-            const grid = document.getElementById('pos-products-grid');
+        const formAddExpense = document.getElementById('form-add-expense');
+        if(formAddExpense) {
+            formAddExpense.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const btn = document.getElementById('btn-submit-add-expense');
+                btn.innerText = "Đang lưu..."; btn.disabled = true;
+                try {
+                    const { error } = await supabase.from('finance_transactions').insert({
+                        organization_id: currentUser.organization_id, type: 'expense',
+                        amount: document.getElementById('add-expense-amount').value, category: document.getElementById('add-expense-category').value,
+                        transaction_date: document.getElementById('add-expense-date').value, description: document.getElementById('add-expense-note').value
+                    });
+                    if(!error) { showToast("Đã ghi nhận khoản chi!", "success"); window.closeModal('modal-add-expense'); loadExpensesList(); loadDashboardData(); formAddExpense.reset(); } 
+                    else { showToast("Lỗi: " + error.message, "error"); }
+                } catch(err) { showToast("Lỗi kết nối", "error"); }
+                btn.innerText = "Lưu khoản chi"; btn.disabled = false;
+            });
+        }
+
+        window.openEditExpenseModal = function(id) {
+            const expense = window.expensesCache.find(e => e.id === id);
+            if (!expense) return;
+            document.getElementById('edit-expense-id').value = expense.id;
+            document.getElementById('edit-expense-amount').value = expense.amount;
+            document.getElementById('edit-expense-category').value = expense.category;
+            document.getElementById('edit-expense-date').value = expense.transaction_date;
+            document.getElementById('edit-expense-note').value = expense.description || '';
+            window.openModal('modal-edit-expense');
+        }
+
+        const formEditExpense = document.getElementById('form-edit-expense');
+        if (formEditExpense) {
+            formEditExpense.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const btn = document.getElementById('btn-submit-edit-expense');
+                btn.innerText = "Đang lưu..."; btn.disabled = true;
+                const id = document.getElementById('edit-expense-id').value;
+                try {
+                    const { error } = await supabase.from('finance_transactions').update({
+                        amount: document.getElementById('edit-expense-amount').value, category: document.getElementById('edit-expense-category').value,
+                        transaction_date: document.getElementById('edit-expense-date').value, description: document.getElementById('edit-expense-note').value
+                    }).eq('id', id);
+                    if(!error) { showToast("Cập nhật thành công!", "success"); window.closeModal('modal-edit-expense'); loadExpensesList(); loadDashboardData(); } 
+                    else { showToast("Lỗi cập nhật: " + error.message, "error"); }
+                } catch(err) { showToast("Lỗi hệ thống", "error"); }
+                btn.innerText = "Lưu thay đổi"; btn.disabled = false;
+            });
+        }
+
+        async function loadFacilitiesList() {
+            const tbody = document.getElementById('facilities-table-body');
             try {
-                const { data: vData } = await supabase.from('shop_product_variants').select('*, shop_products(name, image_url)');
-                if(!vData || vData.length === 0) { grid.innerHTML = `<div class="col-span-full py-10 text-center text-gray-500">Chưa có sản phẩm.</div>`; return; }
+                const { data } = await supabase.from('assets').select('*').order('created_at', { ascending: false });
+                if (!data || data.length === 0) { tbody.innerHTML = `<tr><td colspan="5" class="text-center py-10 text-gray-500">Chưa có tài sản.</td></tr>`; return; }
+                tbody.innerHTML = data.map(ast => `
+                    <tr class="hover:bg-gray-50 border-b border-gray-100">
+                        <td class="px-6 py-4 font-bold text-gray-900">${ast.asset_code}</td>
+                        <td class="px-6 py-4">
+                            <div class="flex items-center gap-3">
+                                ${ast.image_url ? `<a href="javascript:void(0)" onclick="window.viewImage('${ast.image_url}')"><img src="${ast.image_url}" class="w-10 h-10 rounded object-cover cursor-pointer hover:opacity-80 ring-1 ring-gray-200"></a>` : `<div class="w-10 h-10 bg-gray-100 rounded flex items-center justify-center text-gray-400"><i data-lucide="image" class="w-5 h-5"></i></div>`}
+                                <span class="font-medium text-gray-800">${ast.name}</span>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 text-gray-600">Phòng chính</td>
+                        <td class="px-6 py-4"><span class="px-2.5 py-1 rounded text-xs font-medium ${ast.condition === 'good' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}">${ast.condition === 'good' ? 'Tốt' : 'Khá'}</span></td>
+                        <td class="px-6 py-4 text-right flex justify-end gap-2">
+                            <button onclick="window.openDeleteModal('${ast.id}', 'assets', '${ast.name}')" class="text-red-400 hover:text-red-600 p-1.5 rounded-md"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                        </td>
+                    </tr>
+                `).join('');
+                lucide.createIcons();
+            } catch(e) { console.error(e) }
+        }
+
+        const formAddAsset = document.getElementById('form-add-asset');
+        if (formAddAsset) {
+            formAddAsset.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const btn = document.getElementById('btn-submit-add-asset');
+                btn.innerText = "Đang tải ảnh..."; btn.disabled = true;
+                try {
+                    let imageUrl = null;
+                    if (document.getElementById('add-asset-img').files.length > 0) {
+                        imageUrl = await uploadImageToDrive('add-asset-img');
+                    }
+                    btn.innerText = "Đang lưu...";
+                    const { error } = await supabase.from('assets').insert({
+                        branch_id: currentUser.branch_id || 'b0000000-0000-0000-0000-000000000001',
+                        asset_code: document.getElementById('add-asset-code').value.toUpperCase(),
+                        name: document.getElementById('add-asset-name').value,
+                        purchase_price: document.getElementById('add-asset-price').value,
+                        condition: document.getElementById('add-asset-condition').value,
+                        image_url: imageUrl
+                    });
+                    if(!error) { showToast("Đã lưu Tài sản thành công!", "success"); window.closeModal('modal-add-asset'); loadFacilitiesList(); formAddAsset.reset(); } 
+                    else { showToast("Lỗi Database: " + error.message, "error"); }
+                } catch (err) { showToast("Lỗi: " + err, "error"); }
+                btn.innerText = "Lưu Tài sản"; btn.disabled = false;
+            });
+        }
+
+        async function loadShopList() {
+            const grid = document.getElementById('pos-product-grid');
+            try {
+                const { data: vData } = await supabase.from('shop_product_variants').select('*, shop_products(name, image_url)').order('created_at', { ascending: false });
+                if(!vData || vData.length === 0) { grid.innerHTML = `<div class="col-span-full text-center py-10 text-gray-500">Chưa có sản phẩm nào.</div>`; return; }
                 grid.innerHTML = vData.map(v => `
                     <div onclick="window.addToPosCart('${v.id}', '${v.shop_products?.name}', ${v.price}, '${v.size}', ${v.stock})" class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden cursor-pointer hover:border-primary transition-colors group relative">
-                        <button onclick="event.stopPropagation(); window.openDeleteModal('${v.id}', 'product_variant', '${v.shop_products?.name} - ${v.size}')" class="absolute top-2 left-2 bg-red-500/90 hover:bg-red-600 text-white p-1.5 rounded-md z-10 backdrop-blur opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button onclick="event.stopPropagation(); window.openDeleteModal('${v.id}', 'product_variant', '${v.shop_products?.name} - ${v.size}')" class="absolute top-2 left-2 bg-red-500 hover:bg-red-600 text-white p-1.5 rounded-md z-10 opacity-0 group-hover:opacity-100 transition-opacity">
                             <i data-lucide="trash-2" class="w-4 h-4"></i>
                         </button>
                         <div class="h-32 bg-gray-100 relative">
-                            ${v.shop_products?.image_url ? `<img src="${window.getDisplayImg(v.shop_products.image_url)}" class="w-full h-full object-cover">` : `<div class="absolute inset-0 flex items-center justify-center"><i data-lucide="package" class="w-8 h-8 text-gray-300"></i></div>`}
-                            <div class="absolute top-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded-md backdrop-blur">Tồn: ${v.stock}</div>
+                            ${v.shop_products?.image_url ? `<a href="javascript:void(0)" onclick="event.stopPropagation(); window.viewImage('${v.shop_products.image_url}')"><img src="${v.shop_products.image_url}" class="w-full h-full object-cover"></a>` : `<div class="absolute inset-0 flex items-center justify-center"><i data-lucide="package" class="w-8 h-8 text-gray-300"></i></div>`}
+                            <div class="absolute top-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded-md">Tồn: ${v.stock}</div>
                         </div>
                         <div class="p-3">
                             <h4 class="text-sm font-bold text-gray-900 truncate mb-1">${v.shop_products?.name || 'Sản phẩm'}</h4>
@@ -1196,253 +1597,179 @@
             } catch(e) { console.error(e) }
         }
 
-        // Tìm kiếm Đăng ký Gói
-        window.searchMembershipStudent = function(val) {
-            const dropdown = document.getElementById('mem-student-dropdown');
-            if(val.length < 1) { dropdown.classList.add('hidden'); return; }
-            const results = allStudentsCache.filter(st => (st.full_name||'').toLowerCase().includes(val.toLowerCase()) || (st.student_code||'').toLowerCase().includes(val.toLowerCase())).slice(0, 5);
-            if(results.length === 0) { dropdown.classList.add('hidden'); return; }
-            dropdown.innerHTML = results.map(st => `
-                <div onclick="window.selectMemStudent('${st.id}', '${st.full_name}', '${st.age}', '${st.gender}')" class="p-3 border-b border-gray-100 hover:bg-blue-50 cursor-pointer transition-colors">
-                    <div class="font-bold text-gray-800 text-sm">${st.full_name}</div>
-                    <div class="text-xs text-gray-500">Mã: ${st.student_code} • ${st.gender || '?'} • Tuổi: ${st.age !== 'N/A' ? st.age : '?'}</div>
-                </div>
-            `).join('');
-            dropdown.classList.remove('hidden');
-        }
-        window.selectMemStudent = function(id, name, age, gender) {
-            document.getElementById('inp-mem-student-id').value = id;
-            document.getElementById('mem-student-display').innerText = `${name} (${age} tuổi, ${gender})`;
-            document.getElementById('mem-selected-student').classList.remove('hidden');
-            document.getElementById('mem-search-student').parentElement.classList.add('hidden');
-            document.getElementById('mem-student-dropdown').classList.add('hidden');
-        }
-        window.clearMemStudent = function() {
-            document.getElementById('inp-mem-student-id').value = '';
-            document.getElementById('mem-selected-student').classList.add('hidden');
-            document.getElementById('mem-search-student').value = '';
-            document.getElementById('mem-search-student').parentElement.classList.remove('hidden');
-        }
-
-        // Cửa hàng POS Logic
-        window.searchPosCustomer = function(val) {
-            const dropdown = document.getElementById('pos-customer-dropdown');
-            if(val.length < 1) { dropdown.classList.add('hidden'); return; }
-            const results = allStudentsCache.filter(st => (st.full_name||'').toLowerCase().includes(val.toLowerCase()) || (st.phone||'').includes(val)).slice(0, 5);
-            if(results.length === 0) { dropdown.classList.add('hidden'); return; }
-            dropdown.innerHTML = results.map(st => `
-                <div onclick="window.selectPosCustomer('${st.id}', '${st.full_name}')" class="p-3 border-b border-gray-100 hover:bg-blue-50 cursor-pointer">
-                    <div class="font-bold text-gray-800 text-sm">${st.full_name}</div>
-                    <div class="text-xs text-gray-500">${st.phone || 'Chưa cập nhật SĐT'}</div>
-                </div>
-            `).join('');
-            dropdown.classList.remove('hidden');
-        }
-        window.selectPosCustomer = function(id, name) {
-            posSelectedCustomer = { id, name };
-            document.getElementById('pos-customer-name-display').innerText = name;
-            document.getElementById('pos-selected-customer').classList.remove('hidden');
-            document.getElementById('pos-customer-search-container').classList.add('hidden');
-            document.getElementById('pos-customer-dropdown').classList.add('hidden');
-        }
-        window.clearPosCustomer = function() {
-            posSelectedCustomer = null;
-            document.getElementById('pos-selected-customer').classList.add('hidden');
-            document.getElementById('pos-customer-search').value = '';
-            document.getElementById('pos-customer-search-container').classList.remove('hidden');
-        }
-
-        window.addToPosCart = function(variantId, name, price, size, stock) {
-            if (stock <= 0) { showToast("Sản phẩm đã hết hàng!", "error"); return; }
-            const existing = posCart.find(i => i.variantId === variantId);
-            if (existing) {
-                if (existing.qty >= stock) { showToast("Không đủ tồn kho!", "error"); return; }
-                existing.qty++;
-            } else { posCart.push({ variantId, name, price, size, qty: 1 }); }
-            window.renderPosCart();
-        }
-
-        window.renderPosCart = function() {
-            const container = document.getElementById('pos-cart-items');
-            const totalEl = document.getElementById('pos-total-price');
-            if (posCart.length === 0) {
-                container.innerHTML = `<div class="text-center flex flex-col items-center justify-center h-full text-gray-400 text-sm mt-10"><i data-lucide="package-open" class="w-12 h-12 mb-2 text-gray-200"></i> Chưa có sản phẩm</div>`;
-                totalEl.innerText = "0 đ";
-                lucide.createIcons(); return;
-            }
-            let total = 0;
-            container.innerHTML = posCart.map((item, index) => {
-                total += item.price * item.qty;
-                return `
-                    <div class="flex justify-between items-center bg-white p-3 rounded-lg border border-gray-100 shadow-sm">
-                        <div class="flex-1 min-w-0 pr-3">
-                            <h4 class="text-sm font-bold text-gray-800 truncate">${item.name}</h4>
-                            <p class="text-xs text-gray-500">${item.size} x ${new Intl.NumberFormat('vi-VN').format(item.price)}</p>
-                        </div>
-                        <div class="flex items-center bg-gray-50 border border-gray-200 rounded">
-                            <button onclick="window.posChangeQty(${index}, -1)" class="px-2 py-0.5 text-gray-600 hover:bg-gray-200 font-bold">-</button>
-                            <span class="px-2 text-sm font-bold w-6 text-center">${item.qty}</span>
-                            <button onclick="window.posChangeQty(${index}, 1)" class="px-2 py-0.5 text-gray-600 hover:bg-gray-200 font-bold">+</button>
-                        </div>
-                    </div>`;
-            }).join('');
-            totalEl.innerText = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(total);
-            lucide.createIcons();
-        }
-        
-        window.posChangeQty = function(index, delta) { posCart[index].qty += delta; if (posCart[index].qty <= 0) posCart.splice(index, 1); window.renderPosCart(); }
-        
-        // HÀM XÓA HẾT GIỎ HÀNG
-        window.clearPosCart = function() { posCart = []; window.renderPosCart(); }
-
-        window.processPosCheckout = function() {
-            if (posCart.length === 0) { showToast("Giỏ hàng trống!", "error"); return; }
-            if (!posSelectedCustomer) { showToast("Vui lòng chọn khách hàng!", "error"); return; }
-            showToast("Thanh toán thành công!", "success");
-            posCart = []; window.clearPosCustomer(); window.renderPosCart();
-        }
-        window.handleCheckIn = function(id, name) { showToast(`Đã điểm danh cho lớp: ${name}`, "success"); }
-
-        // Form Submissions với Ảnh Google Drive
-        document.getElementById('form-add-asset').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const btn = document.getElementById('btn-submit-asset');
-            btn.innerText = "Đang xử lý & Tải ảnh..."; btn.disabled = true;
-
-            try {
-                const imageUrl = await window.uploadImageToDrive('inp-asset-file');
-                
-                let branchId = currentUserProfile.branch_id;
-                if (!branchId) {
-                    const { data: br } = await supabase.from('branches').select('id').eq('organization_id', currentUserProfile.organization_id).limit(1);
-                    if (br && br.length > 0) branchId = br[0].id;
-                }
-
-                const { error } = await supabase.from('assets').insert([{
-                    asset_code: 'TS-' + Math.floor(Math.random() * 10000), 
-                    name: document.getElementById('inp-asset-name').value,
-                    condition: document.getElementById('inp-asset-condition').value, 
-                    image_url: imageUrl,
-                    branch_id: branchId
-                }]);
-                
-                if(!error) { 
-                    showToast("Nhập kho thiết bị thành công!", "success"); 
-                    window.closeModal('modal-add-asset'); 
-                    document.getElementById('form-add-asset').reset();
-                    loadFacilitiesList(); 
-                } else {
-                    showToast("Lỗi khi thêm: " + error.message, "error");
-                }
-            } catch (err) {
-                showToast("Lỗi hệ thống: " + err.message, "error");
-            }
-            btn.innerText = "Nhập kho"; btn.disabled = false;
-        });
-
-        document.getElementById('form-add-product').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const btn = document.getElementById('btn-submit-product');
-            btn.innerText = "Đang xử lý & Tải ảnh..."; btn.disabled = true;
-
-            try {
-                const imageUrl = await window.uploadImageToDrive('inp-prod-file');
-
-                const { data: pData, error: pError } = await supabase.from('shop_products').insert([{ 
-                    name: document.getElementById('inp-prod-name').value, 
-                    image_url: imageUrl,
-                    organization_id: currentUserProfile.organization_id 
-                }]).select();
-
-                if(pError) {
-                    showToast("Lỗi thêm Sản phẩm: " + pError.message, "error");
-                } else if(pData) {
-                    await supabase.from('shop_product_variants').insert([{
-                        product_id: pData[0].id, sku: 'SKU-' + Math.floor(Math.random() * 10000), 
-                        size: document.getElementById('inp-prod-size').value,
-                        price: document.getElementById('inp-prod-price').value, 
-                        stock: document.getElementById('inp-prod-stock').value
-                    }]);
-                    showToast("Thêm sản phẩm thành công!", "success"); 
-                    window.closeModal('modal-add-product'); 
-                    document.getElementById('form-add-product').reset();
-                    loadShopList();
-                }
-            } catch (err) {
-                showToast("Lỗi hệ thống: " + err.message, "error");
-            }
-            btn.innerText = "Lưu lên kệ"; btn.disabled = false;
-        });
-
-        // Form Submissions (Học viên, Lớp, Tài khoản)
-        document.getElementById('form-add-user').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const { error } = await supabase.from('users').insert([{
-                id: crypto.randomUUID(), email: document.getElementById('inp-user-email').value,
-                full_name: document.getElementById('inp-user-name').value, role: document.getElementById('inp-user-role').value,
-                organization_id: currentUserProfile.organization_id
-            }]);
-            if(!error) { showToast("Thêm nhân sự thành công!", "success"); window.closeModal('modal-add-user'); loadUsersList(); }
-        });
-
-        document.getElementById('form-add-student').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const { error } = await supabase.from('students').insert([{
-                student_code: document.getElementById('inp-student-code').value, full_name: document.getElementById('inp-student-name').value,
-                phone: document.getElementById('inp-student-phone').value, gender: document.getElementById('inp-student-gender').value,
-                date_of_birth: document.getElementById('inp-student-dob').value, organization_id: currentUserProfile.organization_id
-            }]);
-            if(!error) { showToast("Thêm học viên thành công!", "success"); window.closeModal('modal-add-student'); loadStudentsList(); }
-        });
-
-        document.getElementById('form-add-class').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const { error } = await supabase.from('classes').insert([{
-                name: document.getElementById('inp-class-name').value, capacity: document.getElementById('inp-class-capacity').value,
-                organization_id: currentUserProfile.organization_id
-            }]);
-            if(!error) { showToast("Mở lớp thành công!", "success"); window.closeModal('modal-add-class'); loadClassesList(); }
-        });
-
-        document.getElementById('form-add-membership').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const { error } = await supabase.from('memberships').insert([{
-                student_id: document.getElementById('inp-mem-student-id').value, plan_id: document.getElementById('inp-mem-plan').value,
-                start_date: new Date().toISOString().split('T')[0], status: 'active'
-            }]);
-            if(!error) { showToast("Đăng ký thẻ thành công!", "success"); window.closeModal('modal-add-membership'); loadMembershipList(); loadStudentsList(); }
-        });
-
-        const formAddExpense = document.getElementById('form-add-expense');
-        if (formAddExpense) {
-            formAddExpense.addEventListener('submit', async (e) => {
+        const formAddProduct = document.getElementById('form-add-product');
+        if (formAddProduct) {
+            formAddProduct.addEventListener('submit', async (e) => {
                 e.preventDefault();
-                const btn = document.getElementById('btn-submit-expense');
-                btn.innerText = "Đang lưu..."; btn.disabled = true;
+                const btn = document.getElementById('btn-submit-add-product');
+                btn.innerText = "Đang tải ảnh lên..."; btn.disabled = true;
                 try {
-                    const { error } = await supabase.from('finance_transactions').insert([{
-                        organization_id: currentUserProfile.organization_id,
-                        type: 'expense',
-                        amount: document.getElementById('inp-expense-amount').value,
-                        category: document.getElementById('inp-expense-category').value,
-                        transaction_date: document.getElementById('inp-expense-date').value,
-                        description: document.getElementById('inp-expense-note').value
-                    }]);
-                    if(!error) {
-                        showToast("Ghi nhận chi phí thành công!", "success");
-                        window.closeModal('modal-add-expense');
-                        document.getElementById('form-add-expense').reset();
-                        if(activeModule === 'expenses') loadExpensesList();
-                        if(activeModule === 'dashboard') loadDashboardData();
-                    } else { showToast("Lỗi: " + error.message, "error"); }
-                } catch(err) { showToast("Lỗi hệ thống: " + err.message, "error"); }
-                btn.innerText = "Lưu khoản chi"; btn.disabled = false;
+                    let imageUrl = null;
+                    if (document.getElementById('add-prod-img').files.length > 0) {
+                        imageUrl = await uploadImageToDrive('add-prod-img');
+                    }
+                    btn.innerText = "Đang tạo Sản phẩm...";
+                    const { data: pData, error: pError } = await supabase.from('shop_products').insert({
+                        organization_id: currentUser.organization_id,
+                        name: document.getElementById('add-prod-name').value,
+                        image_url: imageUrl
+                    }).select('id').single();
+                    if(pError) throw pError;
+
+                    const { error: vError } = await supabase.from('shop_product_variants').insert({
+                        product_id: pData.id,
+                        sku: document.getElementById('add-prod-sku').value.toUpperCase(),
+                        size: document.getElementById('add-prod-size').value,
+                        stock: document.getElementById('add-prod-stock').value,
+                        price: document.getElementById('add-prod-price').value
+                    });
+                    if(vError) throw vError;
+
+                    showToast("Đã thêm Sản phẩm!", "success"); window.closeModal('modal-add-product'); loadShopList(); formAddProduct.reset();
+                } catch (err) { showToast("Lỗi: " + err, "error"); }
+                btn.innerText = "Lưu Sản phẩm"; btn.disabled = false;
             });
         }
 
-        // Khởi động
-        checkSession();
+        window.addToPosCart = function(id, name, price, size, stock) {
+            if(stock <= 0) { showToast("Sản phẩm đã hết hàng!", "error"); return; }
+            const existing = posCart.find(i => i.id === id);
+            if(existing) { if(existing.qty < stock) existing.qty++; else showToast("Đã đạt tối đa tồn kho!", "info"); }
+            else { posCart.push({ id, name, price, size, qty: 1, stock }); }
+            renderPosCart();
+        }
 
+        window.updatePosCartQty = function(id, change) {
+            const item = posCart.find(i => i.id === id);
+            if(item) {
+                item.qty += change;
+                if(item.qty <= 0) posCart = posCart.filter(i => i.id !== id);
+                else if(item.qty > item.stock) { item.qty = item.stock; showToast("Không đủ tồn kho", "error"); }
+            }
+            renderPosCart();
+        }
+
+        window.clearPosCart = function() { posCart = []; renderPosCart(); }
+
+        function renderPosCart() {
+            const cartDiv = document.getElementById('pos-cart-items');
+            if(posCart.length === 0) {
+                cartDiv.innerHTML = `<div class="flex flex-col items-center justify-center h-full text-gray-400 gap-2"><i data-lucide="shopping-bag" class="w-10 h-10 opacity-50"></i><span class="text-sm">Chưa có sản phẩm</span></div>`;
+                document.getElementById('pos-subtotal').innerText = '0đ';
+                document.getElementById('pos-total').innerText = '0đ';
+                lucide.createIcons();
+                return;
+            }
+            let total = 0;
+            cartDiv.innerHTML = posCart.map(item => {
+                total += item.price * item.qty;
+                return `
+                <div class="flex justify-between items-center bg-gray-50 p-2 rounded-lg mb-2">
+                    <div class="flex-1 truncate pr-2">
+                        <p class="text-xs font-bold text-gray-800 truncate">${item.name}</p>
+                        <p class="text-[10px] text-gray-500">${item.size} - ${new Intl.NumberFormat('vi-VN').format(item.price)}đ</p>
+                    </div>
+                    <div class="flex items-center gap-2 shrink-0">
+                        <button onclick="window.updatePosCartQty('${item.id}', -1)" class="w-6 h-6 bg-white border border-gray-300 rounded flex items-center justify-center">-</button>
+                        <span class="text-xs font-bold w-4 text-center">${item.qty}</span>
+                        <button onclick="window.updatePosCartQty('${item.id}', 1)" class="w-6 h-6 bg-white border border-gray-300 rounded flex items-center justify-center">+</button>
+                    </div>
+                </div>
+            `}).join('');
+            document.getElementById('pos-subtotal').innerText = new Intl.NumberFormat('vi-VN').format(total) + 'đ';
+            document.getElementById('pos-total').innerText = new Intl.NumberFormat('vi-VN').format(total) + 'đ';
+            lucide.createIcons();
+        }
+
+        window.checkoutPos = async function() {
+            if(posCart.length === 0) { showToast("Giỏ hàng trống!", "info"); return; }
+            let total = 0; posCart.forEach(i => total += i.price * i.qty);
+            try {
+                const { error: orderErr } = await supabase.from('shop_orders').insert({
+                    organization_id: currentUser.organization_id, order_number: 'ORD-' + Math.floor(Math.random() * 1000000),
+                    subtotal: total, total: total, status: 'completed'
+                });
+                if(orderErr) throw orderErr;
+                window.clearPosCart();
+                loadShopList();
+                loadDashboardData(); 
+                showToast("Thanh toán thành công!", "success");
+            } catch(e) { showToast("Lỗi thanh toán: " + e.message, "error"); }
+        }
+
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btn-login');
+            btn.innerHTML = '<div class="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div> Đang kiểm tra...';
+            btn.disabled = true;
+            
+            const inputEmail = document.getElementById('email').value;
+            const inputPass = document.getElementById('password').value;
+
+            try {
+                const { data: user, error: userErr } = await supabase
+                    .from('users')
+                    .select('*')
+                    .eq('email', inputEmail)
+                    .eq('password', inputPass)
+                    .single();
+
+                if (userErr || !user) {
+                    showToast("Email hoặc mật khẩu không đúng", "error");
+                    btn.innerHTML = '<span>Đăng nhập</span>'; btn.disabled = false;
+                    return;
+                }
+
+                await supabase.auth.signInWithPassword({ 
+                    email: 'alistar982k@gmail.com', 
+                    password: '123456' 
+                });
+
+                currentUser = user;
+                if(!currentUser.branch_id) currentUser.branch_id = 'b0000000-0000-0000-0000-000000000001';
+                
+                localStorage.setItem('lp_custom_user', JSON.stringify(currentUser));
+                
+                showToast("Đăng nhập thành công", "success");
+                document.getElementById('login-screen').classList.add('hidden');
+                document.getElementById('app-shell').classList.remove('hidden');
+                document.getElementById('user-name').innerText = currentUser.full_name || currentUser.email;
+                document.getElementById('user-role').innerText = currentUser.role_name || currentUser.role || 'Nhân sự';
+                document.getElementById('user-avatar').innerText = (currentUser.full_name || currentUser.email).charAt(0).toUpperCase();
+                
+                renderSidebar();
+            } catch (err) { 
+                showToast("Lỗi hệ thống: " + err.message, "error"); 
+            } 
+            finally { 
+                btn.innerHTML = '<span>Đăng nhập</span>'; btn.disabled = false; 
+            }
+        });
+
+        window.addEventListener('DOMContentLoaded', async () => {
+            const savedUser = localStorage.getItem('lp_custom_user');
+            
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                supabase.auth.signInWithPassword({ email: 'alistar982k@gmail.com', password: '123456' });
+
+                document.getElementById('user-name').innerText = currentUser.full_name || currentUser.email;
+                document.getElementById('user-role').innerText = currentUser.role_name || currentUser.role || 'Nhân sự';
+                document.getElementById('user-avatar').innerText = (currentUser.full_name || currentUser.email).charAt(0).toUpperCase();
+                
+                renderSidebar();
+                document.getElementById('app-shell').classList.remove('hidden');
+            } else {
+                document.getElementById('login-screen').classList.remove('hidden');
+            }
+            
+            setTimeout(() => { 
+                document.getElementById('loading-screen').classList.add('opacity-0'); 
+                setTimeout(() => document.getElementById('loading-screen').classList.add('hidden'), 300); 
+            }, 500);
+            
+            lucide.createIcons();
+        });
     </script>
 </body>
 </html>
