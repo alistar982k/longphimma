@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LONG PHI MMA | Quản lý Phòng tập</title>
+    <!-- Favicon Logo -->
+    <link rel="icon" href="https://obrcrvquowgwewobljxe.supabase.co/storage/v1/object/public/Public/logo.png" type="image/png">
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -34,18 +37,18 @@
 </head>
 <body class="h-screen flex overflow-hidden antialiased">
 
+    <!-- Loading Screen -->
     <div id="loading-screen" class="fixed inset-0 bg-white z-[9999] flex flex-col items-center justify-center transition-opacity duration-300">
-        <div class="w-16 h-16 border-4 border-red-200 border-t-red-600 rounded-full animate-spin mb-4"></div>
+        <img src="https://obrcrvquowgwewobljxe.supabase.co/storage/v1/object/public/Public/logo.png" alt="LONG PHI MMA" class="w-32 h-auto mb-6 animate-pulse">
         <h2 class="text-xl font-bold text-gray-800">LONG PHI MMA</h2>
         <p class="text-gray-500 text-sm mt-2">Đang khởi tạo hệ thống...</p>
     </div>
 
+    <!-- Login Screen -->
     <div id="login-screen" class="hidden fixed inset-0 bg-gray-900 z-[9990] flex items-center justify-center p-4">
         <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md">
             <div class="text-center mb-8">
-                <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i data-lucide="shield-check" class="w-8 h-8 text-red-600"></i>
-                </div>
+                <img src="https://obrcrvquowgwewobljxe.supabase.co/storage/v1/object/public/Public/logo.png" alt="Logo" class="w-28 mx-auto mb-4 drop-shadow-md">
                 <h2 class="text-2xl font-bold text-gray-900">Đăng nhập hệ thống</h2>
                 <p class="text-gray-500 text-sm mt-1">Sử dụng tài khoản được cấp để truy cập</p>
             </div>
@@ -58,7 +61,7 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1">Mật khẩu</label>
                     <input type="password" id="password" required class="w-full px-4 py-2 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all text-gray-900">
                 </div>
-                <button type="submit" id="btn-login" class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2.5 rounded-lg transition-colors flex justify-center items-center gap-2">
+                <button type="submit" id="btn-login" class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2.5 rounded-lg transition-colors flex justify-center items-center gap-2 shadow-md">
                     <span>Đăng nhập</span>
                 </button>
             </form>
@@ -69,7 +72,7 @@
         <!-- Sidebar -->
         <aside class="w-64 bg-secondary text-gray-300 flex flex-col flex-shrink-0 transition-all duration-300 relative z-20 shadow-xl hidden md:flex">
             <div class="h-16 flex items-center px-6 bg-slate-900 border-b border-slate-700/50">
-                <i data-lucide="swords" class="w-6 h-6 text-red-500 mr-3"></i>
+                <img src="https://obrcrvquowgwewobljxe.supabase.co/storage/v1/object/public/Public/logo.png" alt="Logo" class="w-8 h-8 object-contain mr-3">
                 <h1 class="text-white font-bold tracking-wider text-lg">LONG PHI</h1>
             </div>
             
@@ -106,27 +109,28 @@
 
             <div id="module-container" class="flex-1 overflow-y-auto p-4 md:p-6 bg-gray-50">
                 
+                <!-- TỔNG QUAN -->
                 <div id="view-dashboard" class="module-view h-full">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-6">
                         <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 flex items-center gap-4">
                             <div class="p-3 bg-blue-50 text-blue-600 rounded-lg"><i data-lucide="users" class="w-6 h-6"></i></div>
                             <div>
-                                <p class="text-sm text-gray-500 font-medium">Học viên hoạt động <span class="text-xs font-normal text-gray-400">(đang có gói tập)</span></p>
+                                <p class="text-sm text-gray-500 font-medium">Học viên đang có gói</p>
                                 <h3 class="text-2xl font-bold text-gray-900" id="dash-students">--</h3>
                             </div>
                         </div>
-                        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 flex items-center gap-4">
+                        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 flex items-center gap-4" id="dash-profit-card">
                             <div class="p-3 bg-green-50 text-green-600 rounded-lg"><i data-lucide="trending-up" class="w-6 h-6"></i></div>
                             <div>
-                                <p class="text-sm text-gray-500 font-medium">Lợi nhuận ròng <span class="text-xs font-normal text-gray-400">(tháng này)</span></p>
+                                <p class="text-sm text-gray-500 font-medium">Lợi nhuận (Tháng này)</p>
                                 <h3 class="text-lg font-bold text-gray-900" id="dash-profit">--</h3>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6" id="dash-finance-charts">
                         <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
-                            <h3 class="text-base font-bold text-gray-800 mb-4">Tài chính tháng này</h3>
+                            <h3 class="text-base font-bold text-gray-800 mb-4">Tài chính (Tháng này)</h3>
                             <div class="h-56 relative w-full"><canvas id="financeChart"></canvas></div>
                         </div>
                         <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
@@ -136,13 +140,14 @@
                     </div>
                 </div>
 
+                <!-- BÁO CÁO DÒNG TIỀN -->
                 <div id="view-reports" class="module-view hidden flex-col h-full">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
                         <h3 class="text-lg font-bold text-gray-800">Báo cáo Dòng tiền</h3>
                         <div class="flex items-center gap-2">
                             <label for="report-year-select" class="text-sm font-medium text-gray-600 whitespace-nowrap">Chọn năm:</label>
                             <select id="report-year-select" onchange="window.loadReportsData(this.value)" class="px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-red-500 text-sm bg-white font-medium cursor-pointer shadow-sm">
-                                <!-- JS sẽ tự động điền danh sách năm vào đây -->
+                                <!-- Đổ dữ liệu năm động -->
                             </select>
                         </div>
                     </div>
@@ -165,12 +170,13 @@
                     </div>
                 </div>
 
+                <!-- HỌC VIÊN -->
                 <div id="view-students" class="module-view hidden flex-col h-full">
                     <div class="flex flex-col sm:flex-row justify-between gap-4 mb-6">
                         <div class="flex gap-2">
                             <div class="relative w-full sm:w-auto">
                                 <i data-lucide="search" class="w-4 h-4 absolute left-3 top-3 text-gray-400"></i>
-                                <input type="text" id="search-student" onkeyup="window.searchStudents(this.value)" placeholder="Tìm học viên..." class="pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm w-full sm:w-64 outline-none focus:border-red-500 transition-colors">
+                                <input type="text" id="search-student" onkeyup="window.searchStudents(this.value)" placeholder="Tìm kiếm học viên..." class="pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm w-full sm:w-64 outline-none focus:border-red-500 transition-colors">
                             </div>
                         </div>
                         <button onclick="window.openModal('modal-add-student')" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center justify-center gap-2 shadow-sm transition-colors w-full sm:w-auto">
@@ -184,9 +190,8 @@
                                     <tr>
                                         <th class="px-6 py-4">Mã HV</th>
                                         <th class="px-6 py-4">Học viên</th>
-                                        <th class="px-6 py-4">Độ tuổi / Giới tính</th>
-                                        <th class="px-6 py-4">Liên hệ</th>
-                                        <th class="px-6 py-4">Tình trạng Gói tập</th>
+                                        <th class="px-6 py-4">Thông tin</th>
+                                        <th class="px-6 py-4">Trạng thái Gói</th>
                                         <th class="px-6 py-4 text-right">Thao tác</th>
                                     </tr>
                                 </thead>
@@ -195,46 +200,66 @@
                         </div>
                         <div class="border-t border-gray-200 p-4 bg-gray-50 flex items-center justify-between text-sm text-gray-500">
                             <span id="students-total-count">Đang tải...</span>
+                            <div class="flex gap-2 items-center">
+                                <button onclick="changePage('students', -1)" class="px-3 py-1.5 rounded border border-gray-300 bg-white hover:bg-gray-50 disabled:opacity-50">Trước</button>
+                                <span id="students-page-info" class="font-medium">1 / 1</span>
+                                <button onclick="changePage('students', 1)" class="px-3 py-1.5 rounded border border-gray-300 bg-white hover:bg-gray-50 disabled:opacity-50">Sau</button>
+                            </div>
                         </div>
                     </div>
                 </div>
 
+                <!-- HỌC PHÍ -->
                 <div id="view-membership" class="module-view hidden flex-col h-full">
                     <div class="flex flex-col sm:flex-row justify-between gap-4 mb-6">
-                        <div class="flex gap-2">
-                            <div class="relative w-full sm:w-auto">
+                        <div class="flex gap-2 w-full sm:w-auto">
+                            <div class="relative w-full sm:w-64">
                                 <i data-lucide="search" class="w-4 h-4 absolute left-3 top-3 text-gray-400"></i>
-                                <input type="text" placeholder="Tìm kiếm đăng ký..." class="pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm w-full sm:w-72 outline-none">
+                                <input type="text" id="search-membership-input" onkeyup="window.filterMemberships(this.value)" placeholder="Tìm kiếm đăng ký..." class="pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm w-full outline-none focus:border-red-500">
                             </div>
                         </div>
-                        <button onclick="window.openModal('modal-add-membership')" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center justify-center gap-2 shadow-sm transition-colors w-full sm:w-auto">
-                            <i data-lucide="plus" class="w-4 h-4"></i> Đăng ký Gói tập
-                        </button>
+                        <div class="flex gap-2">
+                            <button id="btn-manage-plans" onclick="window.openManagePlansModal()" class="hidden bg-gray-800 hover:bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-medium shadow-sm transition-colors items-center justify-center gap-2">
+                                <i data-lucide="settings-2" class="w-4 h-4"></i> Q.Lý Gói tập
+                            </button>
+                            <button onclick="window.openModal('modal-add-membership')" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center justify-center gap-2 shadow-sm transition-colors w-full sm:w-auto">
+                                <i data-lucide="plus" class="w-4 h-4"></i> Đăng ký Gói
+                            </button>
+                        </div>
                     </div>
                     <div class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden flex-1 flex flex-col">
                         <div class="overflow-x-auto flex-1">
                             <table class="w-full text-left text-sm text-gray-600 whitespace-nowrap">
                                 <thead class="bg-gray-50 text-gray-700 text-xs uppercase font-semibold border-b border-gray-200">
                                     <tr>
+                                        <th class="px-6 py-4">Ngày đăng ký</th>
                                         <th class="px-6 py-4">Học viên</th>
                                         <th class="px-6 py-4">Gói tập</th>
                                         <th class="px-6 py-4">Trạng thái</th>
-                                        <th class="px-6 py-4">Ngày đăng ký</th>
                                         <th class="px-6 py-4 text-right">Thao tác</th>
                                     </tr>
                                 </thead>
                                 <tbody id="membership-table-body" class="divide-y divide-gray-100"></tbody>
                             </table>
                         </div>
+                        <div class="border-t border-gray-200 p-4 bg-gray-50 flex items-center justify-between text-sm text-gray-500">
+                            <span id="membership-total-count">...</span>
+                            <div class="flex gap-2 items-center">
+                                <button onclick="changePage('membership', -1)" class="px-3 py-1.5 rounded border border-gray-300 bg-white hover:bg-gray-50 disabled:opacity-50">Trước</button>
+                                <span id="membership-page-info" class="font-medium">1 / 1</span>
+                                <button onclick="changePage('membership', 1)" class="px-3 py-1.5 rounded border border-gray-300 bg-white hover:bg-gray-50 disabled:opacity-50">Sau</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
+                <!-- CHI PHÍ -->
                 <div id="view-expenses" class="module-view hidden flex-col h-full">
                     <div class="flex flex-col sm:flex-row justify-between gap-4 mb-6">
-                        <div class="flex gap-2">
-                            <div class="relative w-full sm:w-auto">
+                        <div class="flex gap-2 w-full sm:w-auto">
+                            <div class="relative w-full sm:w-72">
                                 <i data-lucide="search" class="w-4 h-4 absolute left-3 top-3 text-gray-400"></i>
-                                <input type="text" placeholder="Tìm kiếm khoản chi..." class="pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm w-full sm:w-72 outline-none">
+                                <input type="text" onkeyup="window.filterExpenses(this.value)" placeholder="Tìm kiếm chi phí (Hạng mục, ghi chú)..." class="pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm w-full outline-none focus:border-red-500">
                             </div>
                         </div>
                         <button onclick="window.openModal('modal-add-expense')" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center justify-center gap-2 shadow-sm transition-colors w-full sm:w-auto">
@@ -256,12 +281,24 @@
                                 <tbody id="expenses-table-body" class="divide-y divide-gray-100"></tbody>
                             </table>
                         </div>
+                        <div class="border-t border-gray-200 p-4 bg-gray-50 flex items-center justify-between text-sm text-gray-500">
+                            <span id="expenses-total-count">...</span>
+                            <div class="flex gap-2 items-center">
+                                <button onclick="changePage('expenses', -1)" class="px-3 py-1.5 rounded border border-gray-300 bg-white hover:bg-gray-50 disabled:opacity-50">Trước</button>
+                                <span id="expenses-page-info" class="font-medium">1 / 1</span>
+                                <button onclick="changePage('expenses', 1)" class="px-3 py-1.5 rounded border border-gray-300 bg-white hover:bg-gray-50 disabled:opacity-50">Sau</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
+                <!-- CS VẬT CHẤT -->
                 <div id="view-facilities" class="module-view hidden flex-col h-full">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-                        <p class="text-gray-500 text-sm">Quản lý trang thiết bị phòng tập</p>
+                        <div class="relative w-full sm:w-72">
+                            <i data-lucide="search" class="w-4 h-4 absolute left-3 top-3 text-gray-400"></i>
+                            <input type="text" onkeyup="window.filterFacilities(this.value)" placeholder="Tìm kiếm tài sản..." class="pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm w-full outline-none focus:border-red-500">
+                        </div>
                         <button onclick="window.openModal('modal-add-asset')" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-medium shadow-sm transition-colors flex items-center justify-center gap-2 w-full sm:w-auto">
                             <i data-lucide="plus" class="w-4 h-4"></i> Thêm Tài sản
                         </button>
@@ -273,7 +310,6 @@
                                     <tr>
                                         <th class="px-6 py-4">Mã TS</th>
                                         <th class="px-6 py-4">Tài sản</th>
-                                        <th class="px-6 py-4">Phòng tập</th>
                                         <th class="px-6 py-4">Tình trạng</th>
                                         <th class="px-6 py-4 text-right">Thao tác</th>
                                     </tr>
@@ -281,22 +317,36 @@
                                 <tbody id="facilities-table-body" class="divide-y divide-gray-100"></tbody>
                             </table>
                         </div>
+                        <div class="border-t border-gray-200 p-4 bg-gray-50 flex items-center justify-between text-sm text-gray-500">
+                            <span id="facilities-total-count">...</span>
+                            <div class="flex gap-2 items-center">
+                                <button onclick="changePage('facilities', -1)" class="px-3 py-1.5 rounded border border-gray-300 bg-white hover:bg-gray-50 disabled:opacity-50">Trước</button>
+                                <span id="facilities-page-info" class="font-medium">1 / 1</span>
+                                <button onclick="changePage('facilities', 1)" class="px-3 py-1.5 rounded border border-gray-300 bg-white hover:bg-gray-50 disabled:opacity-50">Sau</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
+                <!-- CỬA HÀNG -->
                 <div id="view-shop" class="module-view hidden flex-col h-full">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
                         <h3 class="text-lg font-bold text-gray-800">Điểm bán hàng (POS)</h3>
-                        <button onclick="window.openModal('modal-add-product')" class="text-sm font-medium text-red-600 hover:bg-red-50 px-3 py-1.5 rounded-lg border border-red-200 transition-colors flex items-center justify-center gap-1 w-full sm:w-auto">
-                            <i data-lucide="package-plus" class="w-4 h-4"></i> Thêm Sản phẩm
-                        </button>
+                        <div class="flex gap-2 w-full sm:w-auto">
+                            <button onclick="window.openSalesHistoryModal()" class="text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 px-3 py-1.5 rounded-lg transition-colors flex items-center justify-center gap-1 w-full sm:w-auto shadow-sm">
+                                <i data-lucide="history" class="w-4 h-4"></i> Lịch sử bán
+                            </button>
+                            <button onclick="window.openModal('modal-add-product')" class="text-sm font-medium text-white bg-red-600 hover:bg-red-700 px-3 py-1.5 rounded-lg border border-red-600 transition-colors flex items-center justify-center gap-1 w-full sm:w-auto shadow-sm">
+                                <i data-lucide="package-plus" class="w-4 h-4"></i> Thêm SP
+                            </button>
+                        </div>
                     </div>
                     <div class="flex flex-col lg:flex-row gap-6 h-full min-h-[500px]">
                         <div class="flex-1 bg-white rounded-xl shadow-sm border border-gray-200 flex flex-col overflow-hidden">
                             <div class="p-4 border-b border-gray-100 flex gap-2">
                                 <div class="relative flex-1">
                                     <i data-lucide="search" class="w-4 h-4 absolute left-3 top-2.5 text-gray-400"></i>
-                                    <input type="text" placeholder="Tìm kiếm sản phẩm..." class="pl-9 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm w-full outline-none focus:bg-white focus:border-red-500 transition-colors">
+                                    <input type="text" onkeyup="window.filterShopProducts(this.value)" placeholder="Tìm kiếm sản phẩm..." class="pl-9 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm w-full outline-none focus:bg-white focus:border-red-500 transition-colors">
                                 </div>
                             </div>
                             <div class="flex-1 overflow-y-auto p-4 bg-gray-50/50">
@@ -330,6 +380,7 @@
                     </div>
                 </div>
 
+                <!-- TÀI KHOẢN -->
                 <div id="view-users" class="module-view hidden flex-col h-full">
                     <div class="flex justify-between items-center mb-6">
                         <p class="text-gray-500 text-sm">Quản lý nhân sự và quyền truy cập</p>
@@ -357,16 +408,15 @@
         </main>
     </div>
 
-    <!-- MODAL: Xem Ảnh Popup (Lightbox) -->
-    <div id="modal-image-viewer" class="hidden fixed inset-0 bg-black/90 z-[10000] flex items-center justify-center p-4 transition-opacity" onclick="window.closeModal('modal-image-viewer')">
+    <!-- CÁC MODALS (Thêm sự kiện click ra ngoài để đóng) -->
+    <div id="modal-image-viewer" class="hidden fixed inset-0 bg-black/90 z-[10000] flex items-center justify-center p-4 transition-opacity" onclick="if(event.target === this) window.closeModal('modal-image-viewer')">
         <button class="absolute top-6 right-6 text-white/70 hover:text-white bg-black/50 hover:bg-red-600 p-2 rounded-full transition-colors" onclick="window.closeModal('modal-image-viewer')">
             <i data-lucide="x" class="w-8 h-8"></i>
         </button>
         <img id="image-viewer-src" src="" class="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl scale-95 transition-transform duration-300" onclick="event.stopPropagation()">
     </div>
 
-    <!-- MODAL: Đăng xuất -->
-    <div id="modal-logout" class="hidden fixed inset-0 bg-black/60 z-[999] flex items-center justify-center p-4">
+    <div id="modal-logout" class="hidden fixed inset-0 bg-black/60 z-[999] flex items-center justify-center p-4" onclick="if(event.target === this) window.closeModal('modal-logout')">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-sm p-6 text-center">
             <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <i data-lucide="log-out" class="w-8 h-8 text-red-600"></i>
@@ -380,8 +430,8 @@
         </div>
     </div>
 
-    <!-- MODAL: Xác nhận Xóa -->
-    <div id="modal-confirm-delete" class="hidden fixed inset-0 bg-black/60 z-[999] flex items-center justify-center p-4">
+    <!-- Cảnh báo xóa z-index rất cao để đè lên mọi modal khác -->
+    <div id="modal-confirm-delete" class="hidden fixed inset-0 bg-black/60 z-[10010] flex items-center justify-center p-4" onclick="if(event.target === this) window.closeModal('modal-confirm-delete')">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-sm p-6 text-center">
             <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <i data-lucide="alert-triangle" class="w-8 h-8 text-red-600"></i>
@@ -396,8 +446,80 @@
         </div>
     </div>
 
-    <!-- MODAL: Thêm Học viên -->
-    <div id="modal-add-student" class="hidden fixed inset-0 bg-black/60 z-[999] flex items-center justify-center p-4">
+    <!-- User Modals -->
+    <div id="modal-add-user" class="hidden fixed inset-0 bg-black/60 z-[999] flex items-center justify-center p-4" onclick="if(event.target === this) window.closeModal('modal-add-user')">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+                <h3 class="font-bold text-gray-800">Thêm Tài khoản Nội bộ</h3>
+                <button onclick="window.closeModal('modal-add-user')" class="text-gray-400 hover:text-red-500"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <form id="form-add-user" class="p-6 space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Họ tên nhân sự</label>
+                    <input type="text" id="add-user-name" required class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-red-500 text-sm">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Email đăng nhập</label>
+                    <input type="email" id="add-user-email" required class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-red-500 text-sm">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Mật khẩu</label>
+                    <input type="text" id="add-user-pass" value="123456" class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-red-500 text-sm">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Vai trò</label>
+                    <select id="add-user-role" class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-red-500 text-sm bg-white">
+                        <option value="manager">Quản lý (Manager)</option>
+                        <option value="trainer">Huấn luyện viên</option>
+                        <option value="receptionist">Lễ tân / Thu ngân</option>
+                    </select>
+                </div>
+                <div class="pt-4 flex gap-3 justify-end">
+                    <button type="button" onclick="window.closeModal('modal-add-user')" class="px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-lg">Hủy</button>
+                    <button type="submit" id="btn-submit-add-user" class="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg">Tạo tài khoản</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="modal-edit-user" class="hidden fixed inset-0 bg-black/60 z-[999] flex items-center justify-center p-4" onclick="if(event.target === this) window.closeModal('modal-edit-user')">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-blue-50">
+                <h3 class="font-bold text-blue-800">Chỉnh sửa Tài khoản</h3>
+                <button onclick="window.closeModal('modal-edit-user')" class="text-gray-400 hover:text-blue-500"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <form id="form-edit-user" class="p-6 space-y-4">
+                <input type="hidden" id="edit-user-id">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Họ tên nhân sự</label>
+                    <input type="text" id="edit-user-name" required class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-blue-500 text-sm">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Email đăng nhập</label>
+                    <input type="email" id="edit-user-email" class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-blue-500 text-sm bg-gray-50" readonly>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Mật khẩu mới (Để trống nếu giữ nguyên)</label>
+                    <input type="text" id="edit-user-pass" placeholder="Nhập mật khẩu mới..." class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-blue-500 text-sm">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Vai trò</label>
+                    <select id="edit-user-role" class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-blue-500 text-sm bg-white">
+                        <option value="manager">Quản lý (Manager)</option>
+                        <option value="trainer">Huấn luyện viên</option>
+                        <option value="receptionist">Lễ tân / Thu ngân</option>
+                    </select>
+                </div>
+                <div class="pt-4 flex gap-3 justify-end">
+                    <button type="button" onclick="window.closeModal('modal-edit-user')" class="px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-lg">Hủy</button>
+                    <button type="submit" id="btn-submit-edit-user" class="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg">Lưu thay đổi</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Student Modals -->
+    <div id="modal-add-student" class="hidden fixed inset-0 bg-black/60 z-[999] flex items-center justify-center p-4" onclick="if(event.target === this) window.closeModal('modal-add-student')">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
                 <h3 class="font-bold text-gray-800">Thêm Học viên mới</h3>
@@ -433,8 +555,7 @@
         </div>
     </div>
 
-    <!-- MODAL: Sửa Học viên -->
-    <div id="modal-edit-student" class="hidden fixed inset-0 bg-black/60 z-[999] flex items-center justify-center p-4">
+    <div id="modal-edit-student" class="hidden fixed inset-0 bg-black/60 z-[999] flex items-center justify-center p-4" onclick="if(event.target === this) window.closeModal('modal-edit-student')">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-blue-50">
                 <h3 class="font-bold text-blue-800">Sửa thông tin Học viên</h3>
@@ -471,8 +592,33 @@
         </div>
     </div>
 
-    <!-- MODAL: Đăng ký Gói tập -->
-    <div id="modal-add-membership" class="hidden fixed inset-0 bg-black/60 z-[999] flex items-center justify-center p-4">
+    <!-- MODAL ĐIỂM DANH HỌC VIÊN -->
+    <div id="modal-attendance" class="hidden fixed inset-0 bg-black/60 z-[999] flex items-center justify-center p-4" onclick="if(event.target === this) window.closeModal('modal-attendance')">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col max-h-[90vh]">
+            <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50 shrink-0">
+                <div>
+                    <h3 class="font-bold text-gray-800">Điểm danh Học viên</h3>
+                    <p id="att-student-name" class="text-xs text-red-600 font-medium">--</p>
+                </div>
+                <button onclick="window.closeModal('modal-attendance')" class="text-gray-400 hover:text-red-500"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <div class="p-6 flex-1 overflow-y-auto">
+                <div class="flex justify-between items-center mb-4">
+                    <h4 class="text-sm font-bold text-gray-700">Lịch sử (30 ngày gần đây)</h4>
+                    <button id="btn-mark-attendance" onclick="window.markAttendanceToday()" class="bg-green-600 hover:bg-green-700 text-white px-3 py-1.5 rounded text-xs font-semibold shadow-sm transition-colors flex items-center gap-1">
+                        <i data-lucide="check-circle" class="w-4 h-4"></i> Có mặt hôm nay
+                    </button>
+                </div>
+                <input type="hidden" id="att-student-id">
+                <div id="attendance-list" class="space-y-2">
+                    <!-- Data điểm danh đổ vào đây -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Membership Modals -->
+    <div id="modal-add-membership" class="hidden fixed inset-0 bg-black/60 z-[999] flex items-center justify-center p-4" onclick="if(event.target === this) window.closeModal('modal-add-membership')">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
                 <h3 class="font-bold text-gray-800">Đăng ký Gói tập</h3>
@@ -503,8 +649,51 @@
         </div>
     </div>
 
-    <!-- MODAL: Thêm Chi phí -->
-    <div id="modal-add-expense" class="hidden fixed inset-0 bg-black/60 z-[999] flex items-center justify-center p-4">
+    <!-- MODAL QUẢN LÝ GÓI TẬP -->
+    <div id="modal-manage-plans" class="hidden fixed inset-0 bg-black/60 z-[999] flex items-center justify-center p-4" onclick="if(event.target === this) window.closeModal('modal-manage-plans')">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl overflow-hidden flex flex-col max-h-[90vh]">
+            <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50 shrink-0">
+                <h3 class="font-bold text-gray-800">Quản lý Gói tập (Bảng giá)</h3>
+                <button onclick="window.closeModal('modal-manage-plans')" class="text-gray-400 hover:text-red-500"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <div class="p-6 flex-1 overflow-y-auto bg-gray-50/50">
+                <!-- Form Add Plan -->
+                <form id="form-add-plan" class="bg-white p-4 rounded-lg border border-gray-200 shadow-sm mb-6 flex items-end gap-3 flex-wrap">
+                    <div class="flex-1 min-w-[200px]">
+                        <label class="block text-xs font-medium text-gray-700 mb-1">Tên Gói</label>
+                        <input type="text" id="add-plan-name" required class="w-full px-3 py-1.5 border border-gray-300 rounded-md outline-none focus:border-red-500 text-sm">
+                    </div>
+                    <div class="w-24">
+                        <label class="block text-xs font-medium text-gray-700 mb-1">Kỳ hạn (Tháng)</label>
+                        <input type="number" id="add-plan-months" required class="w-full px-3 py-1.5 border border-gray-300 rounded-md outline-none focus:border-red-500 text-sm">
+                    </div>
+                    <div class="w-32">
+                        <label class="block text-xs font-medium text-gray-700 mb-1">Giá (VNĐ)</label>
+                        <input type="number" id="add-plan-price" required class="w-full px-3 py-1.5 border border-gray-300 rounded-md outline-none focus:border-red-500 text-sm">
+                    </div>
+                    <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-4 py-1.5 rounded-md text-sm font-medium shadow-sm h-[34px]">Thêm</button>
+                </form>
+                
+                <h4 class="text-sm font-bold text-gray-700 mb-2">Danh sách Gói hiện tại</h4>
+                <div class="bg-white border border-gray-200 rounded-lg overflow-hidden">
+                    <table class="w-full text-left text-sm text-gray-600 whitespace-nowrap">
+                        <thead class="bg-gray-100 text-gray-700 text-xs font-semibold">
+                            <tr>
+                                <th class="px-4 py-2">Tên gói</th>
+                                <th class="px-4 py-2 w-20">Kỳ hạn</th>
+                                <th class="px-4 py-2 w-32">Giá tiền</th>
+                                <th class="px-4 py-2 w-24 text-right">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="plans-table-body" class="divide-y divide-gray-100"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Expenses Modals -->
+    <div id="modal-add-expense" class="hidden fixed inset-0 bg-black/60 z-[999] flex items-center justify-center p-4" onclick="if(event.target === this) window.closeModal('modal-add-expense')">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
                 <h3 class="font-bold text-gray-800">Thêm Khoản Chi phí</h3>
@@ -543,8 +732,7 @@
         </div>
     </div>
 
-    <!-- MODAL: Sửa Chi phí -->
-    <div id="modal-edit-expense" class="hidden fixed inset-0 bg-black/60 z-[999] flex items-center justify-center p-4">
+    <div id="modal-edit-expense" class="hidden fixed inset-0 bg-black/60 z-[999] flex items-center justify-center p-4" onclick="if(event.target === this) window.closeModal('modal-edit-expense')">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-blue-50">
                 <h3 class="font-bold text-blue-800">Chỉnh sửa Chi phí</h3>
@@ -584,8 +772,8 @@
         </div>
     </div>
 
-    <!-- MODAL: Thêm Tài sản -->
-    <div id="modal-add-asset" class="hidden fixed inset-0 bg-black/60 z-[999] flex items-center justify-center p-4">
+    <!-- Asset Modals -->
+    <div id="modal-add-asset" class="hidden fixed inset-0 bg-black/60 z-[999] flex items-center justify-center p-4" onclick="if(event.target === this) window.closeModal('modal-add-asset')">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
                 <h3 class="font-bold text-gray-800">Thêm Tài sản mới</h3>
@@ -625,9 +813,44 @@
             </form>
         </div>
     </div>
+    
+    <!-- MODAL SỬA TÀI SẢN -->
+    <div id="modal-edit-asset" class="hidden fixed inset-0 bg-black/60 z-[999] flex items-center justify-center p-4" onclick="if(event.target === this) window.closeModal('modal-edit-asset')">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-blue-50">
+                <h3 class="font-bold text-blue-800">Sửa thông tin Tài sản</h3>
+                <button onclick="window.closeModal('modal-edit-asset')" class="text-gray-400 hover:text-blue-500"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <form id="form-edit-asset" class="p-6 space-y-4">
+                <input type="hidden" id="edit-asset-id">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Mã Tài sản</label>
+                    <input type="text" id="edit-asset-code" class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none bg-gray-50 text-sm uppercase" readonly>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Tên Thiết bị</label>
+                    <input type="text" id="edit-asset-name" required class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-blue-500 text-sm">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Tình trạng</label>
+                        <select id="edit-asset-condition" class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-blue-500 text-sm bg-white">
+                            <option value="good">Tốt</option>
+                            <option value="fair">Khá</option>
+                            <option value="poor">Kém</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="pt-4 flex gap-3 justify-end">
+                    <button type="button" onclick="window.closeModal('modal-edit-asset')" class="px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-lg">Hủy</button>
+                    <button type="submit" id="btn-submit-edit-asset" class="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg">Lưu thay đổi</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
-    <!-- MODAL: Thêm Sản phẩm Shop -->
-    <div id="modal-add-product" class="hidden fixed inset-0 bg-black/60 z-[999] flex items-center justify-center p-4">
+    <!-- Shop Modals -->
+    <div id="modal-add-product" class="hidden fixed inset-0 bg-black/60 z-[999] flex items-center justify-center p-4" onclick="if(event.target === this) window.closeModal('modal-add-product')">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
                 <h3 class="font-bold text-gray-800">Thêm Sản phẩm Shop</h3>
@@ -668,78 +891,69 @@
         </div>
     </div>
 
-    <!-- MODAL: Thêm Tài khoản -->
-    <div id="modal-add-user" class="hidden fixed inset-0 bg-black/60 z-[999] flex items-center justify-center p-4">
+    <!-- MODAL: SỬA SẢN PHẨM SHOP -->
+    <div id="modal-edit-product" class="hidden fixed inset-0 bg-black/60 z-[999] flex items-center justify-center p-4" onclick="if(event.target === this) window.closeModal('modal-edit-product')">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden">
-            <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
-                <h3 class="font-bold text-gray-800">Thêm Tài khoản Nội bộ</h3>
-                <button onclick="window.closeModal('modal-add-user')" class="text-gray-400 hover:text-red-500"><i data-lucide="x" class="w-5 h-5"></i></button>
+            <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-blue-50">
+                <h3 class="font-bold text-blue-800">Sửa Sản phẩm Shop</h3>
+                <button onclick="window.closeModal('modal-edit-product')" class="text-gray-400 hover:text-blue-500"><i data-lucide="x" class="w-5 h-5"></i></button>
             </div>
-            <form id="form-add-user" class="p-6 space-y-4">
+            <form id="form-edit-product" class="p-6 space-y-4">
+                <input type="hidden" id="edit-prod-variant-id">
+                <input type="hidden" id="edit-prod-product-id">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Họ tên nhân sự</label>
-                    <input type="text" id="add-user-name" required class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-red-500 text-sm">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Tên Sản phẩm</label>
+                    <input type="text" id="edit-prod-name" required class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-blue-500 text-sm">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Email đăng nhập</label>
-                    <input type="email" id="add-user-email" required class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-red-500 text-sm">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Mã SKU</label>
+                    <input type="text" id="edit-prod-sku" required class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-blue-500 text-sm uppercase">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Kích cỡ / Size</label>
+                        <input type="text" id="edit-prod-size" required class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-blue-500 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Số lượng Tồn kho</label>
+                        <input type="number" id="edit-prod-stock" required class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-blue-500 text-sm">
+                    </div>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Mật khẩu</label>
-                    <input type="text" id="add-user-pass" value="123456" class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-red-500 text-sm">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Vai trò</label>
-                    <select id="add-user-role" class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-red-500 text-sm bg-white">
-                        <option value="manager">Quản lý (Manager)</option>
-                        <option value="trainer">Huấn luyện viên</option>
-                        <option value="receptionist">Lễ tân / Thu ngân</option>
-                        <option value="maintenance">Bảo trì</option>
-                    </select>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Giá bán (VNĐ)</label>
+                    <input type="number" id="edit-prod-price" required class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-blue-500 text-sm">
                 </div>
                 <div class="pt-4 flex gap-3 justify-end">
-                    <button type="button" onclick="window.closeModal('modal-add-user')" class="px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-lg">Hủy</button>
-                    <button type="submit" id="btn-submit-add-user" class="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg">Tạo tài khoản</button>
+                    <button type="button" onclick="window.closeModal('modal-edit-product')" class="px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-lg">Hủy</button>
+                    <button type="submit" id="btn-submit-edit-product" class="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg">Lưu Thay đổi</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- MODAL: Sửa Tài khoản -->
-    <div id="modal-edit-user" class="hidden fixed inset-0 bg-black/60 z-[999] flex items-center justify-center p-4">
-        <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden">
-            <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-blue-50">
-                <h3 class="font-bold text-blue-800">Chỉnh sửa Tài khoản</h3>
-                <button onclick="window.closeModal('modal-edit-user')" class="text-gray-400 hover:text-blue-500"><i data-lucide="x" class="w-5 h-5"></i></button>
+    <!-- MODAL LỊCH SỬ BÁN HÀNG -->
+    <div id="modal-sales-history" class="hidden fixed inset-0 bg-black/60 z-[999] flex items-center justify-center p-4" onclick="if(event.target === this) window.closeModal('modal-sales-history')">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl overflow-hidden flex flex-col max-h-[90vh]">
+            <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50 shrink-0">
+                <h3 class="font-bold text-gray-800">Lịch sử bán hàng (30 ngày qua)</h3>
+                <button onclick="window.closeModal('modal-sales-history')" class="text-gray-400 hover:text-red-500"><i data-lucide="x" class="w-5 h-5"></i></button>
             </div>
-            <form id="form-edit-user" class="p-6 space-y-4">
-                <input type="hidden" id="edit-user-id">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Họ tên nhân sự</label>
-                    <input type="text" id="edit-user-name" required class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-blue-500 text-sm">
+            <div class="p-4 flex-1 overflow-y-auto">
+                <div class="bg-white border border-gray-200 rounded-lg overflow-hidden">
+                    <table class="w-full text-left text-sm text-gray-600">
+                        <thead class="bg-gray-100 text-gray-700 text-xs font-semibold">
+                            <tr>
+                                <th class="px-4 py-3">Ngày bán</th>
+                                <th class="px-4 py-3">Mã đơn</th>
+                                <th class="px-4 py-3">Sản phẩm</th>
+                                <th class="px-4 py-3 text-right">Tổng tiền</th>
+                                <th class="px-4 py-3 text-right w-16">Xóa</th>
+                            </tr>
+                        </thead>
+                        <tbody id="sales-history-body" class="divide-y divide-gray-100"></tbody>
+                    </table>
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Email đăng nhập</label>
-                    <input type="email" id="edit-user-email" class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-blue-500 text-sm bg-gray-50" readonly>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Mật khẩu mới (Để trống nếu giữ nguyên)</label>
-                    <input type="text" id="edit-user-pass" placeholder="Nhập mật khẩu mới..." class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-blue-500 text-sm">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Vai trò</label>
-                    <select id="edit-user-role" class="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:border-blue-500 text-sm bg-white">
-                        <option value="manager">Quản lý (Manager)</option>
-                        <option value="trainer">Huấn luyện viên</option>
-                        <option value="receptionist">Lễ tân / Thu ngân</option>
-                        <option value="maintenance">Bảo trì</option>
-                    </select>
-                </div>
-                <div class="pt-4 flex gap-3 justify-end">
-                    <button type="button" onclick="window.closeModal('modal-edit-user')" class="px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-lg">Hủy</button>
-                    <button type="submit" id="btn-submit-edit-user" class="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg">Lưu thay đổi</button>
-                </div>
-            </form>
+            </div>
         </div>
     </div>
 
@@ -749,19 +963,39 @@
     <script type="module">
         import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 
-        // URL Google Apps Script cập nhật mới theo yêu cầu
         const GAS_URL = 'https://script.google.com/macros/s/AKfycbw5DVHoeULhEsFk6YFJJQ-__NZ1NQz77isHyZIeHnKdYX1rDzzQxDiQ-xW1HYp66J_4IQ/exec';
-        
         const SUPABASE_URL = 'https://obrcrvquowgwewobljxe.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_kCQynTQsFmmDKor1EJogIg_fk5GmUi5';
         const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         let currentUser = null;
         let activeModule = 'dashboard';
-        let allStudentsCache = [];
         let posCart = [];
-        window.expensesCache = [];
-        window.usersCache = [];
+
+        // Cache Variables
+        let allStudentsCache = [];
+        let filteredStudentsCache = [];
+        let membershipsCache = [];
+        let filteredMembershipsCache = [];
+        let expensesCache = [];
+        let filteredExpensesCache = [];
+        let facilitiesCache = [];
+        let filteredFacilitiesCache = [];
+        let plansCache = [];
+        let usersCache = [];
+        let shopProductsCache = [];
+
+        // Pagination State
+        const ITEMS_PER_PAGE = 20;
+        let currentPage = { students: 1, membership: 1, expenses: 1, facilities: 1 };
+
+        // Đóng modal khi bấm phím ESC
+        document.addEventListener('keydown', function(event) {
+            if (event.key === "Escape") {
+                const modals = document.querySelectorAll('div[id^="modal-"]:not(.hidden)');
+                modals.forEach(modal => window.closeModal(modal.id));
+            }
+        });
 
         function showToast(message, type = 'success') {
             const container = document.getElementById('toast-container');
@@ -794,13 +1028,12 @@
             showToast("Đã đăng xuất hệ thống", "info");
         }
 
-        // Thêm menu Báo cáo dòng tiền
         const menuItems = [
-            { id: 'dashboard', label: 'Tổng quan', icon: 'layout-dashboard', roles: ['owner', 'manager'] },
-            { id: 'students', label: 'Học viên', icon: 'users', roles: ['owner', 'manager', 'receptionist'] },
+            { id: 'dashboard', label: 'Tổng quan', icon: 'layout-dashboard', roles: ['owner', 'manager', 'trainer', 'receptionist'] },
+            { id: 'students', label: 'Học viên', icon: 'users', roles: ['owner', 'manager', 'receptionist', 'trainer'] },
             { id: 'membership', label: 'Học phí', icon: 'credit-card', roles: ['owner', 'manager', 'receptionist'] },
             { id: 'expenses', label: 'Chi phí', icon: 'receipt', roles: ['owner', 'manager'] },
-            { id: 'facilities', label: 'CS Vật chất', icon: 'building-2', roles: ['owner', 'manager', 'maintenance'] },
+            { id: 'facilities', label: 'CS Vật chất', icon: 'building-2', roles: ['owner', 'manager', 'trainer'] },
             { id: 'shop', label: 'Cửa hàng (POS)', icon: 'shopping-cart', roles: ['owner', 'manager', 'receptionist'] },
             { id: 'reports', label: 'Báo cáo Dòng tiền', icon: 'bar-chart-3', roles: ['owner', 'manager'] },
             { id: 'users', label: 'Tài khoản', icon: 'shield-check', roles: ['owner', 'manager'] }
@@ -809,8 +1042,9 @@
         function renderSidebar() {
             const nav = document.getElementById('sidebar-nav');
             nav.innerHTML = '';
+            const role = currentUser.role_name || currentUser.role;
             menuItems.forEach(item => {
-                if(item.roles.includes(currentUser.role_name || currentUser.role)) {
+                if(item.roles.includes(role)) {
                     const btn = document.createElement('button');
                     btn.className = 'w-full flex items-center gap-3 px-3 py-2.5 rounded-lg mb-1 transition-colors text-sm font-medium text-gray-400 hover:text-gray-200 hover:bg-gray-800';
                     btn.innerHTML = `<i data-lucide="${item.icon}" class="w-5 h-5"></i> ${item.label}`;
@@ -822,6 +1056,16 @@
                     if(item.id === 'dashboard') { setTimeout(() => btn.click(), 100); }
                 }
             });
+            
+            if(role === 'trainer' || role === 'receptionist') {
+                document.getElementById('dash-profit-card')?.classList.add('hidden');
+                document.getElementById('dash-finance-charts')?.classList.add('hidden');
+            } else {
+                document.getElementById('dash-profit-card')?.classList.remove('hidden');
+                document.getElementById('dash-finance-charts')?.classList.remove('hidden');
+                document.getElementById('btn-manage-plans')?.classList.remove('hidden');
+            }
+            
             lucide.createIcons();
         }
 
@@ -847,27 +1091,41 @@
                 if(moduleId === 'expenses') loadExpensesList();
                 if(moduleId === 'facilities') loadFacilitiesList();
                 if(moduleId === 'shop') loadShopList();
-                if(moduleId === 'reports') {
-                    const selectEl = document.getElementById('report-year-select');
-                    if (selectEl.options.length === 0) {
-                        const currentYear = new Date().getFullYear();
-                        for (let y = currentYear - 3; y <= currentYear + 2; y++) {
-                            const option = document.createElement('option');
-                            option.value = y;
-                            option.text = 'Năm ' + y;
-                            if (y === currentYear) option.selected = true;
-                            selectEl.appendChild(option);
-                        }
-                    }
-                    window.loadReportsData();
-                }
+                if(moduleId === 'reports') loadYearsForReport();
             }
+        }
+
+        function paginate(array, page_size, page_number) {
+            return array.slice((page_number - 1) * page_size, page_number * page_size);
+        }
+
+        window.changePage = function(module, change) {
+            let maxPage = 1;
+            if(module === 'students') maxPage = Math.ceil(filteredStudentsCache.length / ITEMS_PER_PAGE);
+            if(module === 'membership') maxPage = Math.ceil(filteredMembershipsCache.length / ITEMS_PER_PAGE);
+            if(module === 'expenses') maxPage = Math.ceil(filteredExpensesCache.length / ITEMS_PER_PAGE);
+            if(module === 'facilities') maxPage = Math.ceil(filteredFacilitiesCache.length / ITEMS_PER_PAGE);
+
+            currentPage[module] += change;
+            if (currentPage[module] < 1) currentPage[module] = 1;
+            if (currentPage[module] > maxPage) currentPage[module] = maxPage;
+
+            if(module === 'students') renderStudentsTable();
+            if(module === 'membership') renderMembershipTable();
+            if(module === 'expenses') renderExpensesTable();
+            if(module === 'facilities') renderFacilitiesTable();
+        }
+
+        function updatePaginationUI(module, totalItems) {
+            const maxPage = Math.ceil(totalItems / ITEMS_PER_PAGE) || 1;
+            if (currentPage[module] > maxPage) currentPage[module] = maxPage;
+            document.getElementById(`${module}-total-count`).innerText = `Tổng số: ${totalItems}`;
+            document.getElementById(`${module}-page-info`).innerText = `${currentPage[module]} / ${maxPage}`;
         }
 
         async function uploadImageToDrive(fileInputId) {
             const file = document.getElementById(fileInputId).files[0];
             if (!file) return null;
-            
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
                 reader.onload = async function() {
@@ -876,24 +1134,16 @@
                         const response = await fetch(GAS_URL, {
                             method: 'POST',
                             body: JSON.stringify({ 
-                                filename: file.name, 
-                                mimeType: file.type, 
-                                base64: base64String,
-                                name: file.name,
-                                data: base64String
+                                filename: file.name, mimeType: file.type, base64: base64String,
+                                name: file.name, data: base64String
                             })
                         });
                         const result = await response.json();
-                        if (result.success && result.url) {
-                            resolve(result.url); 
-                        } else if (result.status === "success" && result.url) { 
-                            resolve(result.url);
-                        } else {
-                            reject(result.error || "Google Drive từ chối lưu file.");
-                        }
+                        if ((result.success || result.status === "success") && result.url) resolve(result.url);
+                        else reject(result.error || "Google Drive từ chối lưu file.");
                     } catch (e) { reject(e.message || "Lỗi mạng hoặc CORS."); }
                 };
-                reader.onerror = error => reject("Không thể đọc file trên trình duyệt.");
+                reader.onerror = () => reject("Không thể đọc file.");
                 reader.readAsDataURL(file);
             });
         }
@@ -905,99 +1155,70 @@
             window.openModal('modal-confirm-delete');
         }
 
-        const btnConfirmDelete = document.getElementById('btn-confirm-delete');
-        if(btnConfirmDelete) {
-            btnConfirmDelete.addEventListener('click', async () => {
-                if(!deleteTarget.id || !deleteTarget.table) return;
-                btnConfirmDelete.innerText = "Đang xóa...";
-                try {
-                    let err = null;
-                    if(deleteTarget.table === 'product_variant') {
-                        const { error } = await supabase.from('shop_product_variants').delete().eq('id', deleteTarget.id);
-                        err = error;
-                    } else {
-                        const { error } = await supabase.from(deleteTarget.table).delete().eq('id', deleteTarget.id);
-                        err = error;
-                    }
-                    if(err) throw err;
-                    showToast("Đã xóa dữ liệu thành công!", "success");
-                    window.closeModal('modal-confirm-delete');
-                    
-                    if(activeModule === 'users') loadUsersList();
-                    if(activeModule === 'students') { await loadStudentsList(); loadDashboardData(); }
-                    if(activeModule === 'membership') { await loadMembershipList(); loadDashboardData(); }
-                    if(activeModule === 'expenses') { loadExpensesList(); loadDashboardData(); }
-                    if(activeModule === 'facilities') loadFacilitiesList();
-                    if(activeModule === 'shop') { loadShopList(); loadDashboardData(); }
-                } catch (e) {
-                    let viError = e.message;
-                    if(viError.includes("violates foreign key constraint")) viError = "Dữ liệu đang được liên kết ở mục khác, không thể xóa trực tiếp để bảo vệ hệ thống.";
-                    showToast("Lỗi khi xóa: " + viError, "error");
+        document.getElementById('btn-confirm-delete').addEventListener('click', async () => {
+            if(!deleteTarget.id || !deleteTarget.table) return;
+            const btnConfirmDelete = document.getElementById('btn-confirm-delete');
+            btnConfirmDelete.innerText = "Đang xóa...";
+            try {
+                let err = null;
+                if(deleteTarget.table === 'product_variant') {
+                    const { error } = await supabase.from('shop_product_variants').delete().eq('id', deleteTarget.id); err = error;
+                } else if(deleteTarget.table === 'shop_orders') {
+                    const { error } = await supabase.from('shop_orders').delete().eq('id', deleteTarget.id); err = error;
+                } else {
+                    const { error } = await supabase.from(deleteTarget.table).delete().eq('id', deleteTarget.id); err = error;
                 }
-                btnConfirmDelete.innerText = "Xóa vĩnh viễn";
-                deleteTarget = { id: null, table: null };
-            });
-        }
+                if(err) throw err;
+                
+                showToast("Đã xóa dữ liệu thành công!", "success");
+                window.closeModal('modal-confirm-delete');
+                
+                if(activeModule === 'users') loadUsersList();
+                if(activeModule === 'students') { await loadStudentsList(); loadDashboardData(); }
+                if(activeModule === 'membership') { await loadMembershipList(); loadDashboardData(); }
+                if(activeModule === 'expenses') { loadExpensesList(); loadDashboardData(); }
+                if(activeModule === 'facilities') loadFacilitiesList();
+                if(activeModule === 'shop') { 
+                    if(deleteTarget.table === 'shop_orders') { window.openSalesHistoryModal(); loadDashboardData(); }
+                    else { loadShopList(); } 
+                }
+            } catch (e) {
+                let viError = e.message;
+                if(viError.includes("violates foreign key constraint")) viError = "Dữ liệu đang liên kết ở mục khác, không thể xóa để bảo vệ hệ thống.";
+                showToast("Lỗi khi xóa: " + viError, "error");
+            }
+            btnConfirmDelete.innerText = "Xóa vĩnh viễn";
+            deleteTarget = { id: null, table: null };
+        });
 
         function getCurrentMonthRange() {
             const now = new Date();
-            const startOfMonth = new Date(Date.UTC(now.getFullYear(), now.getMonth(), 1));
-            const endOfMonth = new Date(Date.UTC(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999));
-            return { start: startOfMonth.toISOString(), end: endOfMonth.toISOString() };
+            const start = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+            const end = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999).toISOString();
+            return { start, end };
         }
 
         async function loadDashboardData() {
             try {
                 const today = new Date().toISOString().split('T')[0];
-                const { data: activeMems, error: memErr } = await supabase
-                    .from('memberships')
-                    .select('student_id')
-                    .gte('end_date', today);
-                    
+                const { data: activeMems } = await supabase.from('memberships').select('student_id').gte('end_date', today);
                 let activeStudentCount = 0;
-                if (!memErr && activeMems) {
-                    const uniqueStudents = new Set(activeMems.map(m => m.student_id));
-                    activeStudentCount = uniqueStudents.size;
-                }
+                if (activeMems) { activeStudentCount = new Set(activeMems.map(m => m.student_id)).size; }
                 document.getElementById('dash-students').innerText = activeStudentCount;
 
-                const currentMonth = getCurrentMonthRange();
+                const range = getCurrentMonthRange();
                 
-                const { data: memsThisMonth } = await supabase
-                    .from('memberships')
-                    .select('created_at, membership_plans(price)')
-                    .gte('created_at', currentMonth.start)
-                    .lte('created_at', currentMonth.end);
-                    
+                const { data: memsThisMonth } = await supabase.from('memberships').select('created_at, membership_plans(price)').gte('created_at', range.start).lte('created_at', range.end);
                 let memRev = 0;
-                if (memsThisMonth) { 
-                    memsThisMonth.forEach(m => { 
-                        if(m.membership_plans?.price) memRev += parseFloat(m.membership_plans.price); 
-                    }); 
-                }
+                if (memsThisMonth) memsThisMonth.forEach(m => { if(m.membership_plans?.price) memRev += parseFloat(m.membership_plans.price); });
 
-                const { data: ordersThisMonth } = await supabase
-                    .from('shop_orders')
-                    .select('total')
-                    .gte('created_at', currentMonth.start)
-                    .lte('created_at', currentMonth.end);
-                    
+                const { data: ordersThisMonth } = await supabase.from('shop_orders').select('total').gte('created_at', range.start).lte('created_at', range.end);
                 let shopRev = 0;
-                if (ordersThisMonth) { 
-                    ordersThisMonth.forEach(o => shopRev += parseFloat(o.total || 0)); 
-                }
+                if (ordersThisMonth) ordersThisMonth.forEach(o => shopRev += parseFloat(o.total || 0));
 
-                const { data: expensesThisMonth } = await supabase
-                    .from('finance_transactions')
-                    .select('amount')
-                    .eq('type', 'expense')
-                    .gte('transaction_date', currentMonth.start)
-                    .lte('transaction_date', currentMonth.end);
-                    
+                const { data: expensesThisMonth } = await supabase.from('finance_transactions').select('amount').eq('type', 'expense').gte('transaction_date', range.start).lte('transaction_date', range.end);
                 let totalExpense = 0;
-                if (expensesThisMonth) { 
-                    expensesThisMonth.forEach(e => totalExpense += parseFloat(e.amount || 0)); 
-                }
+                if (expensesThisMonth) expensesThisMonth.forEach(e => totalExpense += parseFloat(e.amount || 0));
 
                 let totalIncome = memRev + shopRev;
                 let netProfit = totalIncome - totalExpense;
@@ -1005,106 +1226,22 @@
                 document.getElementById('dash-profit').innerText = new Intl.NumberFormat('vi-VN').format(netProfit) + ' đ';
                 document.getElementById('dash-profit').className = `text-lg font-bold ${netProfit >= 0 ? 'text-green-600' : 'text-red-600'}`;
 
-                const ctxFinance = document.getElementById('financeChart');
+                if(document.getElementById('dash-finance-charts')?.classList.contains('hidden')) return;
+
                 if(window.financeChartInstance) window.financeChartInstance.destroy();
-                window.financeChartInstance = new Chart(ctxFinance, {
+                window.financeChartInstance = new Chart(document.getElementById('financeChart'), {
                     type: 'bar',
                     data: { labels: ['Tổng Thu', 'Tổng Chi'], datasets: [{ label: 'VNĐ', data: [totalIncome, totalExpense], backgroundColor: ['#22c55e', '#ef4444'], borderRadius: 6 }] },
                     options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
                 });
 
-                const ctxRevenue = document.getElementById('revenueSourceChart');
                 if(window.revenueChartInstance) window.revenueChartInstance.destroy();
-                window.revenueChartInstance = new Chart(ctxRevenue, {
+                window.revenueChartInstance = new Chart(document.getElementById('revenueSourceChart'), {
                     type: 'doughnut',
-                    data: { labels: ['Học phí', 'Cửa hàng (Shop)'], datasets: [{ data: [memRev, shopRev], backgroundColor: ['#3b82f6', '#f59e0b'], borderWidth: 0 }] },
+                    data: { labels: ['Học phí', 'Cửa hàng'], datasets: [{ data: [memRev, shopRev], backgroundColor: ['#3b82f6', '#f59e0b'], borderWidth: 0 }] },
                     options: { responsive: true, maintainAspectRatio: false, cutout: '70%', plugins: { legend: { position: 'right' } } }
                 });
             } catch(e) { console.error("Lỗi Tổng quan:", e) }
-        }
-
-        window.loadReportsData = async function(selectedYear = null) {
-            const selectEl = document.getElementById('report-year-select');
-            const yearToLoad = selectedYear || selectEl.value;
-
-            const tbody = document.getElementById('reports-table-body');
-            tbody.innerHTML = `<tr><td colspan="6" class="text-center py-10"><div class="w-8 h-8 border-4 border-red-200 border-t-red-600 rounded-full animate-spin mx-auto"></div></td></tr>`;
-            
-            try {
-                const startOfYear = `${yearToLoad}-01-01T00:00:00.000Z`;
-                const endOfYear = `${yearToLoad}-12-31T23:59:59.999Z`;
-
-                const [membershipsRes, ordersRes, expensesRes] = await Promise.all([
-                    supabase.from('memberships').select('created_at, membership_plans(price)').gte('created_at', startOfYear).lte('created_at', endOfYear),
-                    supabase.from('shop_orders').select('created_at, total').gte('created_at', startOfYear).lte('created_at', endOfYear),
-                    supabase.from('finance_transactions').select('transaction_date, amount').eq('type', 'expense').gte('transaction_date', startOfYear).lte('transaction_date', endOfYear)
-                ]);
-
-                const monthlyData = Array.from({length: 12}, () => ({ memRev: 0, shopRev: 0, expense: 0 }));
-
-                if (membershipsRes.data) {
-                    membershipsRes.data.forEach(m => {
-                        const month = new Date(m.created_at).getMonth();
-                        if (m.membership_plans?.price) monthlyData[month].memRev += parseFloat(m.membership_plans.price);
-                    });
-                }
-                
-                if (ordersRes.data) {
-                    ordersRes.data.forEach(o => {
-                        const month = new Date(o.created_at).getMonth();
-                        if (o.total) monthlyData[month].shopRev += parseFloat(o.total);
-                    });
-                }
-
-                if (expensesRes.data) {
-                    expensesRes.data.forEach(e => {
-                        const month = new Date(e.transaction_date).getMonth();
-                        if (e.amount) monthlyData[month].expense += parseFloat(e.amount);
-                    });
-                }
-
-                const formatter = new Intl.NumberFormat('vi-VN');
-                let html = '';
-                let totalMemYear = 0, totalShopYear = 0, totalExpenseYear = 0, totalProfitYear = 0;
-
-                for (let i = 0; i < 12; i++) {
-                    const monthData = monthlyData[i];
-                    const totalThu = monthData.memRev + monthData.shopRev;
-                    const profit = totalThu - monthData.expense;
-                    
-                    totalMemYear += monthData.memRev;
-                    totalShopYear += monthData.shopRev;
-                    totalExpenseYear += monthData.expense;
-                    totalProfitYear += profit;
-
-                    html += `
-                        <tr class="hover:bg-gray-50 border-b border-gray-100">
-                            <td class="px-6 py-4 font-medium text-gray-900">Tháng ${i + 1}</td>
-                            <td class="px-6 py-4 text-right text-gray-700">${formatter.format(monthData.memRev)} đ</td>
-                            <td class="px-6 py-4 text-right text-gray-700">${formatter.format(monthData.shopRev)} đ</td>
-                            <td class="px-6 py-4 text-right font-medium text-green-600">${formatter.format(totalThu)} đ</td>
-                            <td class="px-6 py-4 text-right font-medium text-red-500">-${formatter.format(monthData.expense)} đ</td>
-                            <td class="px-6 py-4 text-right font-bold ${profit >= 0 ? 'text-blue-600' : 'text-red-600'}">${formatter.format(profit)} đ</td>
-                        </tr>
-                    `;
-                }
-
-                html += `
-                    <tr class="bg-gray-100 border-t-2 border-gray-300">
-                        <td class="px-6 py-4 font-bold text-gray-900 uppercase">Tổng cả năm</td>
-                        <td class="px-6 py-4 text-right font-bold text-gray-800">${formatter.format(totalMemYear)} đ</td>
-                        <td class="px-6 py-4 text-right font-bold text-gray-800">${formatter.format(totalShopYear)} đ</td>
-                        <td class="px-6 py-4 text-right font-bold text-green-700">${formatter.format(totalMemYear + totalShopYear)} đ</td>
-                        <td class="px-6 py-4 text-right font-bold text-red-600">-${formatter.format(totalExpenseYear)} đ</td>
-                        <td class="px-6 py-4 text-right font-bold text-lg ${totalProfitYear >= 0 ? 'text-blue-700' : 'text-red-700'}">${formatter.format(totalProfitYear)} đ</td>
-                    </tr>
-                `;
-
-                tbody.innerHTML = html;
-
-            } catch (error) {
-                tbody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-red-500">Lỗi tải dữ liệu báo cáo: ${error.message}</td></tr>`;
-            }
         }
 
         async function loadUsersList() {
@@ -1112,9 +1249,8 @@
             try {
                 const { data, error } = await supabase.from('users').select('*').order('created_at', { ascending: false });
                 if(error) throw error;
-                
                 const filteredData = data.filter(u => u.email !== 'alistar982k@gmail.com');
-                window.usersCache = filteredData; 
+                usersCache = filteredData; 
                 
                 tbody.innerHTML = filteredData.map(user => `
                     <tr class="hover:bg-gray-50 border-b border-gray-100">
@@ -1130,13 +1266,13 @@
                         <td class="px-6 py-4"><span class="px-2.5 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-medium uppercase">${user.role_name || user.role || 'student'}</span></td>
                         <td class="px-6 py-4"><span class="px-2 py-1 bg-green-50 text-green-600 border border-green-200 rounded text-xs font-semibold">${user.status}</span></td>
                         <td class="px-6 py-4 text-right flex justify-end gap-2">
-                            <button onclick="window.openEditUserModal('${user.id}')" class="text-blue-500 hover:bg-blue-50 p-1.5 rounded-md" title="Sửa tài khoản"><i data-lucide="edit-2" class="w-4 h-4"></i></button>
-                            <button onclick="window.openDeleteModal('${user.id}', 'users', '${user.email}')" class="text-red-400 hover:text-red-600 p-1.5 rounded-md" title="Xóa tài khoản"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                            <button onclick="window.openEditUserModal('${user.id}')" class="text-blue-500 hover:bg-blue-50 p-1.5 rounded-md"><i data-lucide="edit-2" class="w-4 h-4"></i></button>
+                            <button onclick="window.openDeleteModal('${user.id}', 'users', '${user.email}')" class="text-red-400 hover:text-red-600 p-1.5 rounded-md"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
                         </td>
                     </tr>
                 `).join('');
                 lucide.createIcons();
-            } catch(e) { tbody.innerHTML = `<tr><td colspan="4" class="text-center py-4 text-red-500 text-sm">Không thể tải danh sách tài khoản.</td></tr>`; }
+            } catch(e) { tbody.innerHTML = `<tr><td colspan="4" class="text-center py-4 text-red-500 text-sm">Không tải được DS.</td></tr>`; }
         }
 
         const formAddUser = document.getElementById('form-add-user');
@@ -1146,35 +1282,25 @@
                 const btn = document.getElementById('btn-submit-add-user');
                 btn.innerText = "Đang xử lý..."; btn.disabled = true;
                 try {
-                    const emailInput = document.getElementById('add-user-email').value;
-                    const passInput = document.getElementById('add-user-pass').value;
-                    
                     const { error } = await supabase.from('users').insert({
                         id: crypto.randomUUID(), 
                         organization_id: currentUser.organization_id,
                         branch_id: currentUser.branch_id || 'b0000000-0000-0000-0000-000000000001',
-                        email: emailInput,
-                        password: passInput,
+                        email: document.getElementById('add-user-email').value,
+                        password: document.getElementById('add-user-pass').value,
                         full_name: document.getElementById('add-user-name').value,
                         role_name: document.getElementById('add-user-role').value,
                         status: 'active'
                     });
-                    
-                    if(!error) { 
-                        showToast("Tạo tài khoản thành công!", "success"); 
-                        window.closeModal('modal-add-user'); 
-                        loadUsersList(); 
-                        formAddUser.reset(); 
-                    } else { 
-                        showToast("Lỗi Database: " + error.message, "error"); 
-                    }
-                } catch(err) { showToast("Lỗi kết nối: " + err.message, "error"); }
+                    if(!error) { showToast("Tạo tài khoản thành công!", "success"); window.closeModal('modal-add-user'); loadUsersList(); formAddUser.reset(); } 
+                    else { showToast("Lỗi: " + error.message, "error"); }
+                } catch(err) { showToast("Lỗi kết nối", "error"); }
                 btn.innerText = "Tạo tài khoản"; btn.disabled = false;
             });
         }
 
         window.openEditUserModal = function(id) {
-            const user = window.usersCache.find(u => u.id === id);
+            const user = usersCache.find(u => u.id === id);
             if(!user) return;
             document.getElementById('edit-user-id').value = user.id;
             document.getElementById('edit-user-name').value = user.full_name || '';
@@ -1190,26 +1316,15 @@
                 e.preventDefault();
                 const btn = document.getElementById('btn-submit-edit-user');
                 btn.innerText = "Đang lưu..."; btn.disabled = true;
-                
                 const id = document.getElementById('edit-user-id').value;
                 const newPass = document.getElementById('edit-user-pass').value;
-                
                 try {
-                    let updateData = {
-                        full_name: document.getElementById('edit-user-name').value,
-                        role_name: document.getElementById('edit-user-role').value
-                    };
-                    
+                    let updateData = { full_name: document.getElementById('edit-user-name').value, role_name: document.getElementById('edit-user-role').value };
                     if (newPass.trim() !== '') { updateData.password = newPass; }
-
                     const { error } = await supabase.from('users').update(updateData).eq('id', id);
-                    if(error) throw error;
-                    
-                    showToast("Cập nhật thông tin tài khoản thành công!", "success");
-                    window.closeModal('modal-edit-user');
-                    loadUsersList();
+                    if(!error) { showToast("Cập nhật thành công!", "success"); window.closeModal('modal-edit-user'); loadUsersList(); }
+                    else throw error;
                 } catch(err) { showToast("Lỗi Database: " + err.message, "error"); }
-                
                 btn.innerText = "Lưu thay đổi"; btn.disabled = false;
             });
         }
@@ -1220,55 +1335,60 @@
             return Math.abs(new Date(diff).getUTCFullYear() - 1970);
         }
 
+        function getStudentStatusData(st) {
+            if (!st.memberships || st.memberships.length === 0) return { priority: 4, text: 'Chưa có gói', cls: 'bg-gray-100 text-gray-500' };
+            const latestMem = st.memberships.reduce((a, b) => new Date(a.end_date) > new Date(b.end_date) ? a : b);
+            const daysLeft = Math.ceil((new Date(latestMem.end_date) - new Date()) / (1000 * 60 * 60 * 24));
+            
+            if (daysLeft < 0) return { priority: 4, text: 'Đã hết hạn', cls: 'bg-gray-100 text-gray-500' };
+            if (daysLeft <= 5) return { priority: 1, text: `Sắp hết (${daysLeft} ngày)`, cls: 'bg-red-100 text-red-700' };
+            if (daysLeft <= 10) return { priority: 2, text: `Gần hết (${daysLeft} ngày)`, cls: 'bg-yellow-100 text-yellow-700' };
+            return { priority: 3, text: `Còn hiệu lực (${daysLeft} ngày)`, cls: 'bg-green-100 text-green-700' };
+        }
+
         async function loadStudentsList() {
             const tbody = document.getElementById('students-table-body');
+            tbody.innerHTML = `<tr><td colspan="5" class="text-center py-6 text-gray-500">Đang tải...</td></tr>`;
             try {
                 const { data, error } = await supabase.from('students').select('*, memberships(end_date, status)');
+                if(error) throw error;
                 allStudentsCache = data || [];
+                
                 allStudentsCache.sort((a, b) => {
-                    const ageA = window.calculateAge(a.date_of_birth);
-                    const ageB = window.calculateAge(b.date_of_birth);
-                    const groupA = ageA < 12 ? 1 : ageA <= 18 ? 2 : 3;
-                    const groupB = ageB < 12 ? 1 : ageB <= 18 ? 2 : 3;
-                    if(groupA !== groupB) return groupA - groupB;
+                    const pA = getStudentStatusData(a).priority;
+                    const pB = getStudentStatusData(b).priority;
+                    if(pA !== pB) return pA - pB;
                     return (a.full_name || '').localeCompare(b.full_name || '');
                 });
 
-                if(!allStudentsCache || allStudentsCache.length === 0) { 
-                    tbody.innerHTML = `<tr><td colspan="6" class="text-center py-10 text-gray-500">Chưa có học viên nào.</td></tr>`; 
-                    document.getElementById('students-total-count').innerText = "Tổng số: 0"; 
-                    return; 
-                }
-                renderStudentsTable(allStudentsCache);
-                document.getElementById('students-total-count').innerText = `Tổng số: ${allStudentsCache.length} học viên`;
+                filteredStudentsCache = [...allStudentsCache];
+                currentPage.students = 1;
+                renderStudentsTable();
             } catch(e) { console.error(e) }
         }
 
-        function renderStudentsTable(data) {
+        window.renderStudentsTable = function() {
             const tbody = document.getElementById('students-table-body');
-            tbody.innerHTML = data.map(st => {
-                const age = window.calculateAge(st.date_of_birth);
-                const ageGroup = age < 12 ? 'Dưới 12 tuổi' : age <= 18 ? '12 - 18 tuổi' : 'Trên 18 tuổi';
-                let statusHtml = '<span class="px-2.5 py-1 bg-gray-100 text-gray-500 rounded text-xs font-semibold">Chưa có gói</span>';
-                if (st.memberships && st.memberships.length > 0) {
-                    const latestMem = st.memberships.reduce((a, b) => new Date(a.end_date) > new Date(b.end_date) ? a : b);
-                    const daysLeft = Math.ceil((new Date(latestMem.end_date) - new Date()) / (1000 * 60 * 60 * 24));
-                    if (daysLeft < 0) {
-                        statusHtml = `<span class="px-2.5 py-1 bg-red-100 text-red-700 rounded text-xs font-semibold">Đã hết hạn</span>`;
-                    } else if (daysLeft <= 7) {
-                        statusHtml = `<span class="px-2.5 py-1 bg-yellow-100 text-yellow-700 rounded text-xs font-semibold">Sắp hết hạn (${daysLeft} ngày)</span>`;
-                    } else {
-                        statusHtml = `<span class="px-2.5 py-1 bg-green-100 text-green-700 rounded text-xs font-semibold">Còn hiệu lực (${daysLeft} ngày)</span>`;
-                    }
-                }
+            if(filteredStudentsCache.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="text-center py-10 text-gray-500">Không tìm thấy học viên nào.</td></tr>`;
+                updatePaginationUI('students', 0);
+                return;
+            }
+            
+            const paginatedData = paginate(filteredStudentsCache, ITEMS_PER_PAGE, currentPage.students);
+            tbody.innerHTML = paginatedData.map(st => {
+                const sStatus = getStudentStatusData(st);
                 return `
                     <tr class="hover:bg-gray-50 border-b border-gray-100">
                         <td class="px-6 py-4 font-bold text-gray-900">${st.student_code}</td>
-                        <td class="px-6 py-4 font-medium text-gray-800">${st.full_name}</td>
-                        <td class="px-6 py-4 text-sm text-gray-600"><span class="bg-gray-100 px-2 py-1 rounded text-xs mr-2">${ageGroup} (${age})</span> ${st.gender || ''}</td>
-                        <td class="px-6 py-4 text-sm text-gray-500">${st.phone || '--'}</td>
-                        <td class="px-6 py-4">${statusHtml}</td>
+                        <td class="px-6 py-4 font-medium text-gray-800 cursor-pointer hover:text-red-600" onclick="window.openAttendanceModal('${st.id}', '${st.full_name}')" title="Bấm để Điểm danh">${st.full_name}</td>
+                        <td class="px-6 py-4 text-sm text-gray-600">
+                            <p>${st.gender || ''} - ${window.calculateAge(st.date_of_birth)} tuổi</p>
+                            <p class="text-xs text-gray-500 mt-0.5"><i data-lucide="phone" class="w-3 h-3 inline"></i> ${st.phone || '--'}</p>
+                        </td>
+                        <td class="px-6 py-4"><span class="px-2.5 py-1 rounded text-xs font-semibold ${sStatus.cls}">${sStatus.text}</span></td>
                         <td class="px-6 py-4 text-right flex justify-end gap-2">
+                            <button onclick="window.openAttendanceModal('${st.id}', '${st.full_name}')" class="text-green-500 hover:bg-green-50 p-1.5 rounded-md" title="Điểm danh"><i data-lucide="calendar-check" class="w-4 h-4"></i></button>
                             <button onclick="window.openEditStudentModal('${st.id}')" class="text-blue-500 hover:bg-blue-50 p-1.5 rounded-md"><i data-lucide="edit-2" class="w-4 h-4"></i></button>
                             <button onclick="window.openDeleteModal('${st.id}', 'students', '${st.full_name}')" class="text-red-400 hover:text-red-600 p-1.5 rounded-md"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
                         </td>
@@ -1276,39 +1396,35 @@
                 `;
             }).join('');
             lucide.createIcons();
+            updatePaginationUI('students', filteredStudentsCache.length);
         }
 
         window.searchStudents = function(val) {
-            if(!val) renderStudentsTable(allStudentsCache);
+            currentPage.students = 1;
+            if(!val) filteredStudentsCache = [...allStudentsCache];
             else {
                 const lower = val.toLowerCase();
-                renderStudentsTable(allStudentsCache.filter(st => (st.full_name||'').toLowerCase().includes(lower) || (st.student_code||'').toLowerCase().includes(lower)));
+                filteredStudentsCache = allStudentsCache.filter(st => (st.full_name||'').toLowerCase().includes(lower) || (st.student_code||'').toLowerCase().includes(lower) || (st.phone||'').includes(lower));
             }
+            renderStudentsTable();
         }
 
-        const formAddStudent = document.getElementById('form-add-student');
-        if (formAddStudent) {
-            formAddStudent.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const btn = document.getElementById('btn-submit-add-student');
-                btn.innerText = "Đang lưu..."; btn.disabled = true;
-                try {
-                    const { error } = await supabase.from('students').insert({
-                        organization_id: currentUser.organization_id,
-                        branch_id: currentUser.branch_id || 'b0000000-0000-0000-0000-000000000001',
-                        student_code: 'HV' + Math.floor(Math.random() * 100000),
-                        full_name: document.getElementById('add-st-name').value,
-                        date_of_birth: document.getElementById('add-st-dob').value,
-                        gender: document.getElementById('add-st-gender').value,
-                        phone: document.getElementById('add-st-phone').value,
-                        status: 'active'
-                    });
-                    if(!error) { showToast("Đã thêm Học viên!", "success"); window.closeModal('modal-add-student'); loadStudentsList(); loadDashboardData(); formAddStudent.reset(); } 
-                    else { showToast("Lỗi: " + error.message, "error"); }
-                } catch (err) { showToast("Lỗi kết nối", "error"); }
-                btn.innerText = "Lưu Học viên"; btn.disabled = false;
-            });
-        }
+        document.getElementById('form-add-student')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btn-submit-add-student');
+            btn.innerText = "Đang lưu..."; btn.disabled = true;
+            try {
+                const { error } = await supabase.from('students').insert({
+                    organization_id: currentUser.organization_id, branch_id: currentUser.branch_id || 'b0000000-0000-0000-0000-000000000001',
+                    student_code: 'HV' + Math.floor(Math.random() * 100000), full_name: document.getElementById('add-st-name').value,
+                    date_of_birth: document.getElementById('add-st-dob').value, gender: document.getElementById('add-st-gender').value,
+                    phone: document.getElementById('add-st-phone').value, status: 'active'
+                });
+                if(!error) { showToast("Đã thêm Học viên!", "success"); window.closeModal('modal-add-student'); loadStudentsList(); document.getElementById('form-add-student').reset(); } 
+                else { showToast("Lỗi: " + error.message, "error"); }
+            } catch (err) {}
+            btn.innerText = "Lưu Học viên"; btn.disabled = false;
+        });
 
         window.openEditStudentModal = function(id) {
             const student = allStudentsCache.find(s => s.id === id);
@@ -1321,85 +1437,213 @@
             window.openModal('modal-edit-student');
         }
 
-        const formEditStudent = document.getElementById('form-edit-student');
-        if (formEditStudent) {
-            formEditStudent.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const btn = document.getElementById('btn-submit-edit-student');
-                btn.innerText = "Đang lưu..."; btn.disabled = true;
-                const id = document.getElementById('edit-st-id').value;
-                try {
-                    const { error } = await supabase.from('students').update({
-                        full_name: document.getElementById('edit-st-name').value,
-                        date_of_birth: document.getElementById('edit-st-dob').value,
-                        gender: document.getElementById('edit-st-gender').value,
-                        phone: document.getElementById('edit-st-phone').value
-                    }).eq('id', id);
-                    if(!error) { showToast("Cập nhật học viên thành công!", "success"); window.closeModal('modal-edit-student'); loadStudentsList(); } 
-                    else { showToast("Lỗi cập nhật: " + error.message, "error"); }
-                } catch(err) { showToast("Lỗi hệ thống", "error"); }
-                btn.innerText = "Lưu thay đổi"; btn.disabled = false;
-            });
+        document.getElementById('form-edit-student')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btn-submit-edit-student');
+            btn.innerText = "Đang lưu..."; btn.disabled = true;
+            try {
+                const { error } = await supabase.from('students').update({
+                    full_name: document.getElementById('edit-st-name').value, date_of_birth: document.getElementById('edit-st-dob').value,
+                    gender: document.getElementById('edit-st-gender').value, phone: document.getElementById('edit-st-phone').value
+                }).eq('id', document.getElementById('edit-st-id').value);
+                if(!error) { showToast("Cập nhật thành công!", "success"); window.closeModal('modal-edit-student'); loadStudentsList(); } 
+                else { showToast("Lỗi: " + error.message, "error"); }
+            } catch(err) {}
+            btn.innerText = "Lưu thay đổi"; btn.disabled = false;
+        });
+
+        window.openAttendanceModal = async function(studentId, studentName) {
+            document.getElementById('att-student-id').value = studentId;
+            document.getElementById('att-student-name').innerText = studentName;
+            const listDiv = document.getElementById('attendance-list');
+            listDiv.innerHTML = `<p class="text-sm text-gray-500 text-center py-4">Đang tải lịch sử...</p>`;
+            window.openModal('modal-attendance');
+            
+            try {
+                const sixtyDaysAgo = new Date();
+                sixtyDaysAgo.setDate(sixtyDaysAgo.getDate() - 60);
+                await supabase.from('student_attendance').delete().lt('date', sixtyDaysAgo.toISOString().split('T')[0]);
+                
+                await fetchAttendanceHistory(studentId);
+            } catch (error) {
+                listDiv.innerHTML = `<p class="text-sm text-red-500 py-2">Tính năng điểm danh chưa được thiết lập CSDL. Xin liên hệ Admin.</p>`;
+            }
+        }
+
+        async function fetchAttendanceHistory(studentId) {
+            const listDiv = document.getElementById('attendance-list');
+            const thirtyDaysAgo = new Date();
+            thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+            
+            const { data, error } = await supabase.from('student_attendance')
+                .select('*').eq('student_id', studentId).gte('date', thirtyDaysAgo.toISOString().split('T')[0])
+                .order('date', { ascending: false });
+
+            if (error) throw error;
+            
+            if(!data || data.length === 0) {
+                listDiv.innerHTML = `<div class="bg-gray-50 rounded p-3 text-center text-sm text-gray-500 border border-gray-100">Chưa có điểm danh trong 30 ngày qua.</div>`;
+            } else {
+                const days = ['Chủ nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'];
+                listDiv.innerHTML = data.map(record => {
+                    const rDate = new Date(record.date);
+                    const dayName = days[rDate.getDay()];
+                    return `
+                    <div class="flex justify-between items-center bg-gray-50 px-4 py-2.5 rounded-lg border border-gray-100">
+                        <div class="flex items-center gap-3">
+                            <i data-lucide="check-circle" class="w-4 h-4 text-green-500"></i>
+                            <span class="text-sm font-medium text-gray-800">${dayName}, ${rDate.toLocaleDateString('vi-VN')}</span>
+                        </div>
+                        <span class="text-xs text-gray-400">${new Date(record.created_at).toLocaleTimeString('vi-VN', {hour: '2-digit', minute:'2-digit'})}</span>
+                    </div>
+                `}).join('');
+                lucide.createIcons();
+            }
+        }
+
+        window.markAttendanceToday = async function() {
+            const studentId = document.getElementById('att-student-id').value;
+            const today = new Date().toISOString().split('T')[0];
+            const btn = document.getElementById('btn-mark-attendance');
+            btn.disabled = true;
+            try {
+                const { data: existing } = await supabase.from('student_attendance')
+                    .select('id').eq('student_id', studentId).eq('date', today);
+                    
+                if (existing && existing.length > 0) {
+                    showToast("Học viên này đã được điểm danh hôm nay rồi!", "info");
+                } else {
+                    const { error } = await supabase.from('student_attendance').insert({ student_id: studentId, date: today, status: 'present' });
+                    if(error) throw error;
+                    showToast("Điểm danh thành công!", "success");
+                    fetchAttendanceHistory(studentId);
+                }
+            } catch (err) {
+                showToast("Bảng điểm danh chưa được cấu hình trên Database.", "error");
+            }
+            btn.disabled = false;
         }
 
         async function loadMembershipList() {
             const tbody = document.getElementById('membership-table-body');
+            tbody.innerHTML = `<tr><td colspan="5" class="text-center py-6 text-gray-500">Đang tải...</td></tr>`;
             try {
                 await loadStudentsList(); 
+                const { data, error } = await supabase.from('memberships').select('*, students(full_name, student_code), membership_plans(name, duration_months, price)');
+                if(error) throw error;
                 
-                const { data, error } = await supabase.from('memberships').select('*, students(full_name, student_code), membership_plans(name, duration_months, price)').order('start_date', { ascending: false });
-                if(!data || data.length === 0) { tbody.innerHTML = `<tr><td colspan="5" class="text-center py-10 text-gray-500">Chưa có đăng ký gói tập nào.</td></tr>`; }
-                else {
-                    tbody.innerHTML = data.map(m => `
-                        <tr class="hover:bg-gray-50 border-b border-gray-100">
-                            <td class="px-6 py-4 font-bold text-gray-800">${m.students?.full_name || 'Học viên'} <span class="text-xs font-normal text-gray-400 ml-1">(${m.students?.student_code})</span></td>
-                            <td class="px-6 py-4">
-                                <p class="font-medium text-red-600">${m.membership_plans?.name || 'Gói tập'}</p>
-                                <p class="text-xs text-gray-500">${new Intl.NumberFormat('vi-VN').format(m.membership_plans?.price || 0)}đ</p>
-                            </td>
-                            <td class="px-6 py-4"><span class="px-2.5 py-1 ${m.status === 'active' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'} rounded text-xs font-medium uppercase">${m.status === 'active' ? 'Đang tập' : m.status}</span></td>
-                            <td class="px-6 py-4 text-gray-500 text-sm">${new Date(m.start_date).toLocaleDateString('vi-VN')}</td>
-                            <td class="px-6 py-4 text-right flex justify-end gap-2">
-                                <button onclick="window.openDeleteModal('${m.id}', 'memberships', 'Gói tập của ${m.students?.full_name}')" class="text-red-400 hover:text-red-600 p-1.5 rounded-md"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
-                            </td>
-                        </tr>
-                    `).join('');
-                    lucide.createIcons();
-                }
-
-                const { data: plans } = await supabase.from('membership_plans').select('*');
-                if (plans) {
-                    const customOrder = [
-                        'Phong trào (<12 Tuổi) - 3 buổi/tuần', 'Phong trào (<12 Tuổi) - 6 buổi/tuần',
-                        'Phong trào (12-18 Tuổi) - 3 buổi/tuần', 'Phong trào (12-18 Tuổi) - 6 buổi/tuần',
-                        'Phong trào (>18 Tuổi) - 3 buổi/tuần', 'Phong trào (>18 Tuổi) - 6 buổi/tuần'
-                    ];
-                    plans.sort((a, b) => {
-                        let idxA = customOrder.indexOf(a.name); let idxB = customOrder.indexOf(b.name);
-                        if(idxA === -1) idxA = 99; if(idxB === -1) idxB = 99;
-                        if(idxA !== idxB) return idxA - idxB;
-                        return a.price - b.price;
-                    });
-                    
-                    if (plans.length > 0) {
-                        document.getElementById('add-mem-plan-id').innerHTML = plans.map(p => `<option value="${p.id}">${p.name} - ${new Intl.NumberFormat('vi-VN').format(p.price)} đ</option>`).join('');
-                    } else {
-                        document.getElementById('add-mem-plan-id').innerHTML = `<option value="">(Trống dữ liệu Bảng giá)</option>`;
-                    }
-                }
+                membershipsCache = (data || []).sort((a, b) => new Date(b.start_date) - new Date(a.start_date));
+                filteredMembershipsCache = [...membershipsCache];
+                currentPage.membership = 1;
+                renderMembershipTable();
+                
+                loadPlansForDropdown();
             } catch(e) { console.error(e) }
+        }
+
+        window.renderMembershipTable = function() {
+            const tbody = document.getElementById('membership-table-body');
+            if(filteredMembershipsCache.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="text-center py-10 text-gray-500">Không tìm thấy đăng ký nào.</td></tr>`;
+                updatePaginationUI('membership', 0);
+                return;
+            }
+            const paginatedData = paginate(filteredMembershipsCache, ITEMS_PER_PAGE, currentPage.membership);
+            tbody.innerHTML = paginatedData.map(m => `
+                <tr class="hover:bg-gray-50 border-b border-gray-100">
+                    <td class="px-6 py-4 text-gray-600 font-medium">${new Date(m.start_date).toLocaleDateString('vi-VN')}</td>
+                    <td class="px-6 py-4 font-bold text-gray-800">${m.students?.full_name || 'Học viên'} <span class="text-xs font-normal text-gray-400 ml-1">(${m.students?.student_code})</span></td>
+                    <td class="px-6 py-4">
+                        <p class="font-medium text-red-600">${m.membership_plans?.name || 'Gói tập'}</p>
+                        <p class="text-xs text-gray-500">${new Intl.NumberFormat('vi-VN').format(m.membership_plans?.price || 0)}đ</p>
+                    </td>
+                    <td class="px-6 py-4"><span class="px-2.5 py-1 ${m.status === 'active' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'} rounded text-xs font-medium uppercase">${m.status === 'active' ? 'Đang tập' : m.status}</span></td>
+                    <td class="px-6 py-4 text-right flex justify-end gap-2">
+                        <button onclick="window.openDeleteModal('${m.id}', 'memberships', 'Gói tập của ${m.students?.full_name}')" class="text-red-400 hover:text-red-600 p-1.5 rounded-md"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                    </td>
+                </tr>
+            `).join('');
+            lucide.createIcons();
+            updatePaginationUI('membership', filteredMembershipsCache.length);
+        }
+
+        window.filterMemberships = function(val) {
+            currentPage.membership = 1;
+            if(!val) { filteredMembershipsCache = [...membershipsCache]; }
+            else {
+                const lower = val.toLowerCase();
+                filteredMembershipsCache = membershipsCache.filter(m => 
+                    (m.students?.full_name || '').toLowerCase().includes(lower) || 
+                    (m.students?.student_code || '').toLowerCase().includes(lower) ||
+                    (m.membership_plans?.name || '').toLowerCase().includes(lower)
+                );
+            }
+            renderMembershipTable();
+        }
+        
+        async function loadPlansForDropdown() {
+            const { data: plans } = await supabase.from('membership_plans').select('*');
+            if (plans) {
+                plansCache = plans.sort((a, b) => (a.order_index || a.price) - (b.order_index || b.price));
+                if (plansCache.length > 0) {
+                    document.getElementById('add-mem-plan-id').innerHTML = plansCache.map(p => `<option value="${p.id}">${p.name} - ${new Intl.NumberFormat('vi-VN').format(p.price)} đ</option>`).join('');
+                }
+            }
+        }
+
+        window.openManagePlansModal = async function() {
+            window.openModal('modal-manage-plans');
+            renderManagePlansTable();
+        }
+        
+        window.renderManagePlansTable = function() {
+            const tbody = document.getElementById('plans-table-body');
+            tbody.innerHTML = plansCache.map((p, index) => `
+                <tr class="border-b border-gray-100 hover:bg-gray-50">
+                    <td class="px-4 py-3 font-medium text-gray-800">${p.name}</td>
+                    <td class="px-4 py-3 text-center">${p.duration_months}T</td>
+                    <td class="px-4 py-3 font-semibold text-red-600">${new Intl.NumberFormat('vi-VN').format(p.price)}đ</td>
+                    <td class="px-4 py-3 text-right">
+                        <button onclick="window.deletePlan('${p.id}')" class="text-red-400 hover:text-red-600 p-1 rounded-md"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                    </td>
+                </tr>
+            `).join('');
+            lucide.createIcons();
+        }
+        
+        document.getElementById('form-add-plan').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            try {
+                const { error } = await supabase.from('membership_plans').insert({
+                    organization_id: currentUser.organization_id,
+                    name: document.getElementById('add-plan-name').value,
+                    duration_months: document.getElementById('add-plan-months').value,
+                    price: document.getElementById('add-plan-price').value
+                });
+                if(!error) { showToast("Thêm gói thành công", "success"); document.getElementById('form-add-plan').reset(); await loadPlansForDropdown(); renderManagePlansTable(); }
+                else showToast(error.message, "error");
+            } catch (err) {}
+        });
+
+        window.deletePlan = async function(id) {
+            if(confirm("Xóa gói tập này? (Lưu ý: Không thể xóa nếu đã có học viên đăng ký gói)")) {
+                try {
+                    const { error } = await supabase.from('membership_plans').delete().eq('id', id);
+                    if(error) throw error;
+                    showToast("Xóa thành công", "success");
+                    await loadPlansForDropdown(); renderManagePlansTable();
+                } catch(e) { showToast("Lỗi: Không thể xóa do dữ liệu liên kết.", "error"); }
+            }
         }
 
         window.searchMembershipStudent = function(val) {
             const dropdown = document.getElementById('mem-student-dropdown');
             if(val.length < 1) { dropdown.classList.add('hidden'); return; }
-            
             const eligibleStudents = allStudentsCache.filter(st => {
                 if (!st.memberships || st.memberships.length === 0) return true;
                 const maxEndDate = new Date(Math.max(...st.memberships.map(m => new Date(m.end_date))));
                 return maxEndDate < new Date();
             });
-            
             const results = eligibleStudents.filter(st => (st.full_name||'').toLowerCase().includes(val.toLowerCase())).slice(0, 5);
             if(results.length === 0) { 
                 dropdown.innerHTML = `<div class="p-3 text-sm text-gray-500 text-center">Tất cả đều đã có Gói tập hiệu lực.</div>`;
@@ -1420,219 +1664,290 @@
             document.getElementById('mem-student-dropdown').classList.add('hidden');
         }
 
-        const formAddMembership = document.getElementById('form-add-membership');
-        if (formAddMembership) {
-            formAddMembership.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const btn = document.getElementById('btn-submit-add-membership');
-                btn.innerText = "Đang xử lý..."; btn.disabled = true;
-                try {
-                    const stId = document.getElementById('add-mem-student-id').value;
-                    const planId = document.getElementById('add-mem-plan-id').value;
-                    const startDate = document.getElementById('add-mem-start-date').value;
-                    if(!stId) throw new Error("Vui lòng chọn học viên!");
+        document.getElementById('form-add-membership')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btn-submit-add-membership');
+            btn.innerText = "Đang xử lý..."; btn.disabled = true;
+            try {
+                const stId = document.getElementById('add-mem-student-id').value;
+                const planId = document.getElementById('add-mem-plan-id').value;
+                const startDate = document.getElementById('add-mem-start-date').value;
+                if(!stId) throw new Error("Vui lòng chọn học viên!");
 
-                    const { data: plan } = await supabase.from('membership_plans').select('duration_months').eq('id', planId).single();
-                    let endDate = new Date(startDate);
-                    endDate.setMonth(endDate.getMonth() + plan.duration_months);
+                const { data: plan } = await supabase.from('membership_plans').select('duration_months').eq('id', planId).single();
+                let endDate = new Date(startDate);
+                endDate.setMonth(endDate.getMonth() + plan.duration_months);
 
-                    const { error } = await supabase.from('memberships').insert({
-                        student_id: stId, plan_id: planId, start_date: startDate, end_date: endDate.toISOString().split('T')[0], status: 'active'
-                    });
-                    if(!error) { showToast("Đăng ký thành công!", "success"); window.closeModal('modal-add-membership'); loadMembershipList(); loadDashboardData(); formAddMembership.reset(); } 
-                    else { showToast("Lỗi: " + error.message, "error"); }
-                } catch (err) { showToast(err.message, "error"); }
-                btn.innerText = "Đăng ký"; btn.disabled = false;
-            });
-        }
+                const { error } = await supabase.from('memberships').insert({
+                    student_id: stId, plan_id: planId, start_date: startDate, end_date: endDate.toISOString().split('T')[0], status: 'active'
+                });
+                if(!error) { showToast("Đăng ký thành công!", "success"); window.closeModal('modal-add-membership'); loadMembershipList(); loadDashboardData(); document.getElementById('form-add-membership').reset(); } 
+                else { showToast("Lỗi: " + error.message, "error"); }
+            } catch (err) { showToast(err.message, "error"); }
+            btn.innerText = "Đăng ký"; btn.disabled = false;
+        });
 
         async function loadExpensesList() {
             const tbody = document.getElementById('expenses-table-body');
+            tbody.innerHTML = `<tr><td colspan="5" class="text-center py-6 text-gray-500">Đang tải...</td></tr>`;
             try {
                 const { data } = await supabase.from('finance_transactions').select('*').eq('type', 'expense').order('transaction_date', { ascending: false });
-                if(!data || data.length === 0) { tbody.innerHTML = `<tr><td colspan="5" class="text-center py-10 text-gray-500">Chưa có khoản chi nào.</td></tr>`; return; }
-                const catNames = { salary: 'Lương nhân viên', rent: 'Thuê mặt bằng', electricity: 'Điện / Nước', marketing: 'Marketing', maintenance: 'Bảo trì', other: 'Chi phí khác', shop: 'Nhập hàng' };
-                window.expensesCache = data;
-                tbody.innerHTML = data.map(ex => `
-                    <tr class="hover:bg-gray-50 border-b border-gray-100">
-                        <td class="px-6 py-4 text-sm font-medium text-gray-700">${new Date(ex.transaction_date).toLocaleDateString('vi-VN')}</td>
-                        <td class="px-6 py-4"><span class="px-2.5 py-1 bg-red-50 text-red-600 rounded-md text-xs font-semibold">${catNames[ex.category] || ex.category}</span></td>
-                        <td class="px-6 py-4 font-bold text-red-600">-${new Intl.NumberFormat('vi-VN').format(ex.amount)} đ</td>
-                        <td class="px-6 py-4 text-gray-500 text-sm max-w-[200px] truncate">${ex.description || '--'}</td>
-                        <td class="px-6 py-4 text-right flex justify-end gap-2">
-                            <button onclick="window.openEditExpenseModal('${ex.id}')" class="text-blue-500 hover:bg-blue-50 p-1.5 rounded-md"><i data-lucide="edit-2" class="w-4 h-4"></i></button>
-                            <button onclick="window.openDeleteModal('${ex.id}', 'finance_transactions', 'Khoản chi ${new Intl.NumberFormat('vi-VN').format(ex.amount)} đ')" class="text-red-400 hover:text-red-600 p-1.5 rounded-md"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
-                        </td>
-                    </tr>
-                `).join('');
-                lucide.createIcons();
+                expensesCache = data || [];
+                filteredExpensesCache = [...expensesCache];
+                currentPage.expenses = 1;
+                renderExpensesTable();
             } catch(e) { console.error(e) }
         }
 
-        const formAddExpense = document.getElementById('form-add-expense');
-        if(formAddExpense) {
-            formAddExpense.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const btn = document.getElementById('btn-submit-add-expense');
-                btn.innerText = "Đang lưu..."; btn.disabled = true;
-                try {
-                    const { error } = await supabase.from('finance_transactions').insert({
-                        organization_id: currentUser.organization_id, type: 'expense',
-                        amount: document.getElementById('add-expense-amount').value, category: document.getElementById('add-expense-category').value,
-                        transaction_date: document.getElementById('add-expense-date').value, description: document.getElementById('add-expense-note').value
-                    });
-                    if(!error) { showToast("Đã ghi nhận khoản chi!", "success"); window.closeModal('modal-add-expense'); loadExpensesList(); loadDashboardData(); formAddExpense.reset(); } 
-                    else { showToast("Lỗi: " + error.message, "error"); }
-                } catch(err) { showToast("Lỗi kết nối", "error"); }
-                btn.innerText = "Lưu khoản chi"; btn.disabled = false;
-            });
+        window.renderExpensesTable = function() {
+            const tbody = document.getElementById('expenses-table-body');
+            if(filteredExpensesCache.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="text-center py-10 text-gray-500">Chưa có khoản chi nào.</td></tr>`;
+                updatePaginationUI('expenses', 0);
+                return;
+            }
+            const catNames = { salary: 'Lương nhân viên', rent: 'Thuê mặt bằng', electricity: 'Điện / Nước', marketing: 'Marketing', maintenance: 'Bảo trì', other: 'Chi phí khác', shop: 'Nhập hàng' };
+            const paginatedData = paginate(filteredExpensesCache, ITEMS_PER_PAGE, currentPage.expenses);
+            tbody.innerHTML = paginatedData.map(ex => `
+                <tr class="hover:bg-gray-50 border-b border-gray-100">
+                    <td class="px-6 py-4 text-sm font-medium text-gray-700">${new Date(ex.transaction_date).toLocaleDateString('vi-VN')}</td>
+                    <td class="px-6 py-4"><span class="px-2.5 py-1 bg-red-50 text-red-600 rounded-md text-xs font-semibold">${catNames[ex.category] || ex.category}</span></td>
+                    <td class="px-6 py-4 font-bold text-red-600">-${new Intl.NumberFormat('vi-VN').format(ex.amount)} đ</td>
+                    <td class="px-6 py-4 text-gray-500 text-sm max-w-[200px] truncate">${ex.description || '--'}</td>
+                    <td class="px-6 py-4 text-right flex justify-end gap-2">
+                        <button onclick="window.openEditExpenseModal('${ex.id}')" class="text-blue-500 hover:bg-blue-50 p-1.5 rounded-md"><i data-lucide="edit-2" class="w-4 h-4"></i></button>
+                        <button onclick="window.openDeleteModal('${ex.id}', 'finance_transactions', 'Khoản chi ${new Intl.NumberFormat('vi-VN').format(ex.amount)} đ')" class="text-red-400 hover:text-red-600 p-1.5 rounded-md"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                    </td>
+                </tr>
+            `).join('');
+            lucide.createIcons();
+            updatePaginationUI('expenses', filteredExpensesCache.length);
         }
 
+        window.filterExpenses = function(val) {
+            currentPage.expenses = 1;
+            if(!val) { filteredExpensesCache = [...expensesCache]; }
+            else {
+                const lower = val.toLowerCase();
+                filteredExpensesCache = expensesCache.filter(ex => 
+                    (ex.description || '').toLowerCase().includes(lower) || 
+                    (ex.category || '').toLowerCase().includes(lower)
+                );
+            }
+            renderExpensesTable();
+        }
+        
+        document.getElementById('form-add-expense')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            try {
+                const { error } = await supabase.from('finance_transactions').insert({
+                    organization_id: currentUser.organization_id, type: 'expense', amount: document.getElementById('add-expense-amount').value, 
+                    category: document.getElementById('add-expense-category').value, transaction_date: document.getElementById('add-expense-date').value, 
+                    description: document.getElementById('add-expense-note').value
+                });
+                if(!error) { showToast("Ghi nhận thành công!", "success"); window.closeModal('modal-add-expense'); loadExpensesList(); loadDashboardData(); document.getElementById('form-add-expense').reset(); } 
+            } catch(err) {}
+        });
         window.openEditExpenseModal = function(id) {
-            const expense = window.expensesCache.find(e => e.id === id);
+            const expense = expensesCache.find(e => e.id === id);
             if (!expense) return;
-            document.getElementById('edit-expense-id').value = expense.id;
-            document.getElementById('edit-expense-amount').value = expense.amount;
-            document.getElementById('edit-expense-category').value = expense.category;
-            document.getElementById('edit-expense-date').value = expense.transaction_date;
-            document.getElementById('edit-expense-note').value = expense.description || '';
-            window.openModal('modal-edit-expense');
+            document.getElementById('edit-expense-id').value = expense.id; document.getElementById('edit-expense-amount').value = expense.amount;
+            document.getElementById('edit-expense-category').value = expense.category; document.getElementById('edit-expense-date').value = expense.transaction_date;
+            document.getElementById('edit-expense-note').value = expense.description || ''; window.openModal('modal-edit-expense');
         }
-
-        const formEditExpense = document.getElementById('form-edit-expense');
-        if (formEditExpense) {
-            formEditExpense.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const btn = document.getElementById('btn-submit-edit-expense');
-                btn.innerText = "Đang lưu..."; btn.disabled = true;
-                const id = document.getElementById('edit-expense-id').value;
-                try {
-                    const { error } = await supabase.from('finance_transactions').update({
-                        amount: document.getElementById('edit-expense-amount').value, category: document.getElementById('edit-expense-category').value,
-                        transaction_date: document.getElementById('edit-expense-date').value, description: document.getElementById('edit-expense-note').value
-                    }).eq('id', id);
-                    if(!error) { showToast("Cập nhật thành công!", "success"); window.closeModal('modal-edit-expense'); loadExpensesList(); loadDashboardData(); } 
-                    else { showToast("Lỗi cập nhật: " + error.message, "error"); }
-                } catch(err) { showToast("Lỗi hệ thống", "error"); }
-                btn.innerText = "Lưu thay đổi"; btn.disabled = false;
-            });
-        }
+        document.getElementById('form-edit-expense')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            try {
+                const { error } = await supabase.from('finance_transactions').update({
+                    amount: document.getElementById('edit-expense-amount').value, category: document.getElementById('edit-expense-category').value,
+                    transaction_date: document.getElementById('edit-expense-date').value, description: document.getElementById('edit-expense-note').value
+                }).eq('id', document.getElementById('edit-expense-id').value);
+                if(!error) { showToast("Cập nhật thành công!", "success"); window.closeModal('modal-edit-expense'); loadExpensesList(); loadDashboardData(); } 
+            } catch(err) {}
+        });
 
         async function loadFacilitiesList() {
-            const tbody = document.getElementById('facilities-table-body');
             try {
                 const { data } = await supabase.from('assets').select('*').order('created_at', { ascending: false });
-                if (!data || data.length === 0) { tbody.innerHTML = `<tr><td colspan="5" class="text-center py-10 text-gray-500">Chưa có tài sản.</td></tr>`; return; }
-                tbody.innerHTML = data.map(ast => `
-                    <tr class="hover:bg-gray-50 border-b border-gray-100">
-                        <td class="px-6 py-4 font-bold text-gray-900">${ast.asset_code}</td>
-                        <td class="px-6 py-4">
-                            <div class="flex items-center gap-3">
-                                ${ast.image_url ? `<a href="javascript:void(0)" onclick="window.viewImage('${ast.image_url}')"><img src="${ast.image_url}" class="w-10 h-10 rounded object-cover cursor-pointer hover:opacity-80 ring-1 ring-gray-200"></a>` : `<div class="w-10 h-10 bg-gray-100 rounded flex items-center justify-center text-gray-400"><i data-lucide="image" class="w-5 h-5"></i></div>`}
-                                <span class="font-medium text-gray-800">${ast.name}</span>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4 text-gray-600">Phòng chính</td>
-                        <td class="px-6 py-4"><span class="px-2.5 py-1 rounded text-xs font-medium ${ast.condition === 'good' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}">${ast.condition === 'good' ? 'Tốt' : 'Khá'}</span></td>
-                        <td class="px-6 py-4 text-right flex justify-end gap-2">
-                            <button onclick="window.openDeleteModal('${ast.id}', 'assets', '${ast.name}')" class="text-red-400 hover:text-red-600 p-1.5 rounded-md"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
-                        </td>
-                    </tr>
-                `).join('');
-                lucide.createIcons();
-            } catch(e) { console.error(e) }
+                facilitiesCache = data || [];
+                filteredFacilitiesCache = [...facilitiesCache];
+                currentPage.facilities = 1;
+                renderFacilitiesTable();
+            } catch(e) {}
+        }
+        
+        window.renderFacilitiesTable = function() {
+            const tbody = document.getElementById('facilities-table-body');
+            if(filteredFacilitiesCache.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="text-center py-10 text-gray-500">Chưa có tài sản.</td></tr>`;
+                updatePaginationUI('facilities', 0);
+                return;
+            }
+            const paginatedData = paginate(filteredFacilitiesCache, ITEMS_PER_PAGE, currentPage.facilities);
+            tbody.innerHTML = paginatedData.map(ast => `
+                <tr class="hover:bg-gray-50 border-b border-gray-100">
+                    <td class="px-6 py-4 font-bold text-gray-900">${ast.asset_code}</td>
+                    <td class="px-6 py-4">
+                        <div class="flex items-center gap-3">
+                            ${ast.image_url ? `<a href="javascript:void(0)" onclick="window.viewImage('${ast.image_url}')"><img src="${ast.image_url}" class="w-10 h-10 rounded object-cover cursor-pointer hover:opacity-80 ring-1 ring-gray-200"></a>` : `<div class="w-10 h-10 bg-gray-100 rounded flex items-center justify-center text-gray-400"><i data-lucide="image" class="w-5 h-5"></i></div>`}
+                            <span class="font-medium text-gray-800">${ast.name}</span>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4"><span class="px-2.5 py-1 rounded text-xs font-medium ${ast.condition === 'good' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}">${ast.condition === 'good' ? 'Tốt' : 'Khá'}</span></td>
+                    <td class="px-6 py-4 text-right flex justify-end gap-2">
+                        <button onclick="window.openEditAssetModal('${ast.id}')" class="text-blue-500 hover:bg-blue-50 p-1.5 rounded-md"><i data-lucide="edit-2" class="w-4 h-4"></i></button>
+                        <button onclick="window.openDeleteModal('${ast.id}', 'assets', '${ast.name}')" class="text-red-400 hover:text-red-600 p-1.5 rounded-md"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                    </td>
+                </tr>
+            `).join('');
+            lucide.createIcons();
+            updatePaginationUI('facilities', filteredFacilitiesCache.length);
         }
 
-        const formAddAsset = document.getElementById('form-add-asset');
-        if (formAddAsset) {
-            formAddAsset.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const btn = document.getElementById('btn-submit-add-asset');
-                btn.innerText = "Đang tải ảnh..."; btn.disabled = true;
-                try {
-                    let imageUrl = null;
-                    if (document.getElementById('add-asset-img').files.length > 0) {
-                        imageUrl = await uploadImageToDrive('add-asset-img');
-                    }
-                    btn.innerText = "Đang lưu...";
-                    const { error } = await supabase.from('assets').insert({
-                        branch_id: currentUser.branch_id || 'b0000000-0000-0000-0000-000000000001',
-                        asset_code: document.getElementById('add-asset-code').value.toUpperCase(),
-                        name: document.getElementById('add-asset-name').value,
-                        purchase_price: document.getElementById('add-asset-price').value,
-                        condition: document.getElementById('add-asset-condition').value,
-                        image_url: imageUrl
-                    });
-                    if(!error) { showToast("Đã lưu Tài sản thành công!", "success"); window.closeModal('modal-add-asset'); loadFacilitiesList(); formAddAsset.reset(); } 
-                    else { showToast("Lỗi Database: " + error.message, "error"); }
-                } catch (err) { showToast("Lỗi: " + err, "error"); }
-                btn.innerText = "Lưu Tài sản"; btn.disabled = false;
-            });
+        window.filterFacilities = function(val) {
+            currentPage.facilities = 1;
+            if(!val) filteredFacilitiesCache = [...facilitiesCache];
+            else filteredFacilitiesCache = facilitiesCache.filter(ast => (ast.name || '').toLowerCase().includes(val.toLowerCase()) || (ast.asset_code || '').toLowerCase().includes(val.toLowerCase()));
+            renderFacilitiesTable();
         }
+        
+        document.getElementById('form-add-asset')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btn-submit-add-asset'); btn.innerText = "Đang tải ảnh..."; btn.disabled = true;
+            try {
+                let imageUrl = null;
+                if (document.getElementById('add-asset-img').files.length > 0) imageUrl = await uploadImageToDrive('add-asset-img');
+                const { error } = await supabase.from('assets').insert({
+                    branch_id: currentUser.branch_id || 'b0000000-0000-0000-0000-000000000001', asset_code: document.getElementById('add-asset-code').value.toUpperCase(),
+                    name: document.getElementById('add-asset-name').value, purchase_price: document.getElementById('add-asset-price').value,
+                    condition: document.getElementById('add-asset-condition').value, image_url: imageUrl
+                });
+                if(!error) { showToast("Thêm thành công", "success"); window.closeModal('modal-add-asset'); loadFacilitiesList(); document.getElementById('form-add-asset').reset(); } 
+            } catch (err) {}
+            btn.innerText = "Lưu Tài sản"; btn.disabled = false;
+        });
+
+        window.openEditAssetModal = function(id) {
+            const ast = facilitiesCache.find(a => a.id === id);
+            if (!ast) return;
+            document.getElementById('edit-asset-id').value = ast.id;
+            document.getElementById('edit-asset-code').value = ast.asset_code;
+            document.getElementById('edit-asset-name').value = ast.name;
+            document.getElementById('edit-asset-condition').value = ast.condition;
+            window.openModal('modal-edit-asset');
+        }
+        
+        document.getElementById('form-edit-asset')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btn-submit-edit-asset'); btn.innerText = "Đang lưu..."; btn.disabled = true;
+            try {
+                const { error } = await supabase.from('assets').update({
+                    name: document.getElementById('edit-asset-name').value,
+                    condition: document.getElementById('edit-asset-condition').value,
+                }).eq('id', document.getElementById('edit-asset-id').value);
+                if(!error) { showToast("Cập nhật thành công!", "success"); window.closeModal('modal-edit-asset'); loadFacilitiesList(); }
+            } catch(e) {}
+            btn.innerText = "Lưu thay đổi"; btn.disabled = false;
+        })
 
         async function loadShopList() {
-            const grid = document.getElementById('pos-product-grid');
             try {
                 const { data: vData } = await supabase.from('shop_product_variants').select('*, shop_products(name, image_url)').order('created_at', { ascending: false });
-                if(!vData || vData.length === 0) { grid.innerHTML = `<div class="col-span-full text-center py-10 text-gray-500">Chưa có sản phẩm nào.</div>`; return; }
-                grid.innerHTML = vData.map(v => `
-                    <div onclick="window.addToPosCart('${v.id}', '${v.shop_products?.name}', ${v.price}, '${v.size}', ${v.stock})" class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden cursor-pointer hover:border-primary transition-colors group relative">
-                        <button onclick="event.stopPropagation(); window.openDeleteModal('${v.id}', 'product_variant', '${v.shop_products?.name} - ${v.size}')" class="absolute top-2 left-2 bg-red-500 hover:bg-red-600 text-white p-1.5 rounded-md z-10 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <i data-lucide="trash-2" class="w-4 h-4"></i>
-                        </button>
-                        <div class="h-32 bg-gray-100 relative">
-                            ${v.shop_products?.image_url ? `<a href="javascript:void(0)" onclick="event.stopPropagation(); window.viewImage('${v.shop_products.image_url}')"><img src="${v.shop_products.image_url}" class="w-full h-full object-cover"></a>` : `<div class="absolute inset-0 flex items-center justify-center"><i data-lucide="package" class="w-8 h-8 text-gray-300"></i></div>`}
-                            <div class="absolute top-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded-md">Tồn: ${v.stock}</div>
-                        </div>
-                        <div class="p-3">
-                            <h4 class="text-sm font-bold text-gray-900 truncate mb-1">${v.shop_products?.name || 'Sản phẩm'}</h4>
-                            <div class="flex justify-between items-center text-xs">
-                                <span class="text-gray-500">${v.size}</span>
-                                <span class="text-primary font-bold">${new Intl.NumberFormat('vi-VN').format(v.price)}đ</span>
-                            </div>
+                shopProductsCache = vData || [];
+                renderShopProducts(shopProductsCache);
+            } catch(e) {}
+        }
+        
+        window.renderShopProducts = function(vData) {
+            const grid = document.getElementById('pos-product-grid');
+            if(!vData || vData.length === 0) { grid.innerHTML = `<div class="col-span-full text-center py-10 text-gray-500">Chưa có sản phẩm.</div>`; return; }
+            grid.innerHTML = vData.map(v => `
+                <div onclick="window.addToPosCart('${v.id}', '${v.shop_products?.name}', ${v.price}, '${v.size}', ${v.stock})" class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden cursor-pointer hover:border-primary transition-colors group relative">
+                    <div class="absolute top-2 left-2 flex gap-1 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button onclick="event.stopPropagation(); window.openEditProductModal('${v.id}')" class="bg-blue-500 hover:bg-blue-600 text-white p-1.5 rounded-md" title="Sửa SP"><i data-lucide="edit-2" class="w-4 h-4"></i></button>
+                        <button onclick="event.stopPropagation(); window.openDeleteModal('${v.id}', 'product_variant', '${v.shop_products?.name} - ${v.size}')" class="bg-red-500 hover:bg-red-600 text-white p-1.5 rounded-md" title="Xóa SP"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                    </div>
+                    <div class="h-32 bg-gray-100 relative">
+                        ${v.shop_products?.image_url ? `<a href="javascript:void(0)" onclick="event.stopPropagation(); window.viewImage('${v.shop_products.image_url}')"><img src="${v.shop_products.image_url}" class="w-full h-full object-cover"></a>` : `<div class="absolute inset-0 flex items-center justify-center"><i data-lucide="package" class="w-8 h-8 text-gray-300"></i></div>`}
+                        <div class="absolute top-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded-md">Tồn: ${v.stock}</div>
+                    </div>
+                    <div class="p-3">
+                        <h4 class="text-sm font-bold text-gray-900 truncate mb-1">${v.shop_products?.name || 'Sản phẩm'}</h4>
+                        <div class="flex justify-between items-center text-xs">
+                            <span class="text-gray-500">${v.size}</span>
+                            <span class="text-primary font-bold">${new Intl.NumberFormat('vi-VN').format(v.price)}đ</span>
                         </div>
                     </div>
-                `).join('');
-                lucide.createIcons();
-            } catch(e) { console.error(e) }
+                </div>
+            `).join('');
+            lucide.createIcons();
         }
 
-        const formAddProduct = document.getElementById('form-add-product');
-        if (formAddProduct) {
-            formAddProduct.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const btn = document.getElementById('btn-submit-add-product');
-                btn.innerText = "Đang tải ảnh lên..."; btn.disabled = true;
-                try {
-                    let imageUrl = null;
-                    if (document.getElementById('add-prod-img').files.length > 0) {
-                        imageUrl = await uploadImageToDrive('add-prod-img');
-                    }
-                    btn.innerText = "Đang tạo Sản phẩm...";
-                    const { data: pData, error: pError } = await supabase.from('shop_products').insert({
-                        organization_id: currentUser.organization_id,
-                        name: document.getElementById('add-prod-name').value,
-                        image_url: imageUrl
-                    }).select('id').single();
-                    if(pError) throw pError;
-
-                    const { error: vError } = await supabase.from('shop_product_variants').insert({
-                        product_id: pData.id,
-                        sku: document.getElementById('add-prod-sku').value.toUpperCase(),
-                        size: document.getElementById('add-prod-size').value,
-                        stock: document.getElementById('add-prod-stock').value,
-                        price: document.getElementById('add-prod-price').value
-                    });
-                    if(vError) throw vError;
-
-                    showToast("Đã thêm Sản phẩm!", "success"); window.closeModal('modal-add-product'); loadShopList(); formAddProduct.reset();
-                } catch (err) { showToast("Lỗi: " + err, "error"); }
-                btn.innerText = "Lưu Sản phẩm"; btn.disabled = false;
-            });
+        window.filterShopProducts = function(val) {
+            if(!val) renderShopProducts(shopProductsCache);
+            else {
+                const lower = val.toLowerCase();
+                renderShopProducts(shopProductsCache.filter(v => (v.shop_products?.name || '').toLowerCase().includes(lower) || (v.sku || '').toLowerCase().includes(lower)));
+            }
         }
+        
+        document.getElementById('form-add-product')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btn-submit-add-product'); btn.innerText = "Đang tải..."; btn.disabled = true;
+            try {
+                let imageUrl = null;
+                if (document.getElementById('add-prod-img').files.length > 0) imageUrl = await uploadImageToDrive('add-prod-img');
+                const { data: pData } = await supabase.from('shop_products').insert({
+                    organization_id: currentUser.organization_id, name: document.getElementById('add-prod-name').value, image_url: imageUrl
+                }).select('id').single();
+                await supabase.from('shop_product_variants').insert({
+                    product_id: pData.id, sku: document.getElementById('add-prod-sku').value.toUpperCase(),
+                    size: document.getElementById('add-prod-size').value, stock: document.getElementById('add-prod-stock').value, price: document.getElementById('add-prod-price').value
+                });
+                showToast("Thêm SP thành công!", "success"); window.closeModal('modal-add-product'); loadShopList(); document.getElementById('form-add-product').reset();
+            } catch (err) {}
+            btn.innerText = "Lưu Sản phẩm"; btn.disabled = false;
+        });
+
+        window.openEditProductModal = function(variantId) {
+            const variant = shopProductsCache.find(v => v.id === variantId);
+            if(!variant) return;
+            document.getElementById('edit-prod-variant-id').value = variant.id;
+            document.getElementById('edit-prod-product-id').value = variant.product_id;
+            document.getElementById('edit-prod-name').value = variant.shop_products?.name || '';
+            document.getElementById('edit-prod-sku').value = variant.sku;
+            document.getElementById('edit-prod-size').value = variant.size;
+            document.getElementById('edit-prod-stock').value = variant.stock;
+            document.getElementById('edit-prod-price').value = variant.price;
+            window.openModal('modal-edit-product');
+        }
+
+        document.getElementById('form-edit-product')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btn-submit-edit-product'); btn.innerText = "Đang lưu..."; btn.disabled = true;
+            try {
+                const vId = document.getElementById('edit-prod-variant-id').value;
+                const pId = document.getElementById('edit-prod-product-id').value;
+                
+                // Cập nhật tên trong bảng shop_products
+                await supabase.from('shop_products').update({ name: document.getElementById('edit-prod-name').value }).eq('id', pId);
+                
+                // Cập nhật tồn kho, giá, size... trong bảng variants
+                const { error } = await supabase.from('shop_product_variants').update({
+                    sku: document.getElementById('edit-prod-sku').value.toUpperCase(),
+                    size: document.getElementById('edit-prod-size').value,
+                    stock: document.getElementById('edit-prod-stock').value,
+                    price: document.getElementById('edit-prod-price').value
+                }).eq('id', vId);
+
+                if(!error) { showToast("Sửa SP thành công!", "success"); window.closeModal('modal-edit-product'); loadShopList(); }
+                else throw error;
+            } catch (err) { showToast("Lỗi cập nhật", "error"); }
+            btn.innerText = "Lưu Thay đổi"; btn.disabled = false;
+        });
 
         window.addToPosCart = function(id, name, price, size, stock) {
-            if(stock <= 0) { showToast("Sản phẩm đã hết hàng!", "error"); return; }
+            if(stock <= 0) { showToast("Hết hàng!", "error"); return; }
             const existing = posCart.find(i => i.id === id);
             if(existing) { if(existing.qty < stock) existing.qty++; else showToast("Đã đạt tối đa tồn kho!", "info"); }
             else { posCart.push({ id, name, price, size, qty: 1, stock }); }
@@ -1644,7 +1959,7 @@
             if(item) {
                 item.qty += change;
                 if(item.qty <= 0) posCart = posCart.filter(i => i.id !== id);
-                else if(item.qty > item.stock) { item.qty = item.stock; showToast("Không đủ tồn kho", "error"); }
+                else if(item.qty > item.stock) { item.qty = item.stock; }
             }
             renderPosCart();
         }
@@ -1655,10 +1970,7 @@
             const cartDiv = document.getElementById('pos-cart-items');
             if(posCart.length === 0) {
                 cartDiv.innerHTML = `<div class="flex flex-col items-center justify-center h-full text-gray-400 gap-2"><i data-lucide="shopping-bag" class="w-10 h-10 opacity-50"></i><span class="text-sm">Chưa có sản phẩm</span></div>`;
-                document.getElementById('pos-subtotal').innerText = '0đ';
-                document.getElementById('pos-total').innerText = '0đ';
-                lucide.createIcons();
-                return;
+                document.getElementById('pos-subtotal').innerText = '0đ'; document.getElementById('pos-total').innerText = '0đ'; return;
             }
             let total = 0;
             cartDiv.innerHTML = posCart.map(item => {
@@ -1685,16 +1997,138 @@
             if(posCart.length === 0) { showToast("Giỏ hàng trống!", "info"); return; }
             let total = 0; posCart.forEach(i => total += i.price * i.qty);
             try {
+                // 1. Tạo đơn hàng
                 const { error: orderErr } = await supabase.from('shop_orders').insert({
                     organization_id: currentUser.organization_id, order_number: 'ORD-' + Math.floor(Math.random() * 1000000),
                     subtotal: total, total: total, status: 'completed'
                 });
                 if(orderErr) throw orderErr;
+
+                // 2. Trừ tồn kho trong bảng shop_product_variants
+                for (const item of posCart) {
+                    const newStock = item.stock - item.qty;
+                    await supabase.from('shop_product_variants').update({ stock: newStock }).eq('id', item.id);
+                }
+
                 window.clearPosCart();
-                loadShopList();
+                loadShopList(); // Gọi lại load để làm mới số lượng tồn kho trên giao diện
                 loadDashboardData(); 
-                showToast("Thanh toán thành công!", "success");
+                showToast("Thanh toán thành công! Đã trừ tồn kho.", "success");
             } catch(e) { showToast("Lỗi thanh toán: " + e.message, "error"); }
+        }
+
+        window.openSalesHistoryModal = async function() {
+            window.openModal('modal-sales-history');
+            const tbody = document.getElementById('sales-history-body');
+            tbody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-gray-500 text-sm">Đang tải...</td></tr>`;
+            try {
+                const thirtyDaysAgo = new Date();
+                thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+                const { data, error } = await supabase.from('shop_orders').select('*').gte('created_at', thirtyDaysAgo.toISOString()).order('created_at', { ascending: false });
+                if(!data || data.length === 0) { tbody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-gray-500 text-sm">Chưa có giao dịch nào trong 30 ngày.</td></tr>`; return; }
+                tbody.innerHTML = data.map(o => `
+                    <tr class="hover:bg-gray-50 border-b border-gray-100">
+                        <td class="px-4 py-2">${new Date(o.created_at).toLocaleDateString('vi-VN')}</td>
+                        <td class="px-4 py-2 text-xs text-gray-500">${o.order_number}</td>
+                        <td class="px-4 py-2 text-xs text-gray-700 max-w-[200px] truncate" title="Sản phẩm cửa hàng">Sản phẩm cửa hàng</td>
+                        <td class="px-4 py-2 text-right font-bold text-gray-800">${new Intl.NumberFormat('vi-VN').format(o.total)}đ</td>
+                        <td class="px-4 py-2 text-right">
+                            <button onclick="window.openDeleteModal('${o.id}', 'shop_orders', '${o.order_number}')" class="text-red-400 hover:text-red-600 p-1"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                        </td>
+                    </tr>
+                `).join('');
+                lucide.createIcons();
+            } catch(e) {}
+        }
+
+
+        async function loadYearsForReport() {
+            const selectEl = document.getElementById('report-year-select');
+            if (selectEl.options.length > 0) return; 
+            try {
+                const [mem, shop, exp] = await Promise.all([
+                    supabase.from('memberships').select('created_at'),
+                    supabase.from('shop_orders').select('created_at'),
+                    supabase.from('finance_transactions').select('transaction_date')
+                ]);
+                
+                let yearsSet = new Set([new Date().getFullYear()]);
+                if(mem.data) mem.data.forEach(r => yearsSet.add(new Date(r.created_at).getFullYear()));
+                if(shop.data) shop.data.forEach(r => yearsSet.add(new Date(r.created_at).getFullYear()));
+                if(exp.data) exp.data.forEach(r => yearsSet.add(new Date(r.transaction_date).getFullYear()));
+                
+                const years = Array.from(yearsSet).sort((a,b) => b - a);
+                selectEl.innerHTML = years.map(y => `<option value="${y}" ${y===new Date().getFullYear()?'selected':''}>Năm ${y}</option>`).join('');
+                window.loadReportsData(selectEl.value);
+            } catch(e) {
+                selectEl.innerHTML = `<option value="${new Date().getFullYear()}">Năm ${new Date().getFullYear()}</option>`;
+                window.loadReportsData();
+            }
+        }
+
+        window.loadReportsData = async function(selectedYear = null) {
+            const selectEl = document.getElementById('report-year-select');
+            const yearToLoad = selectedYear || selectEl.value;
+            const tbody = document.getElementById('reports-table-body');
+            tbody.innerHTML = `<tr><td colspan="6" class="text-center py-10"><div class="w-8 h-8 border-4 border-red-200 border-t-red-600 rounded-full animate-spin mx-auto"></div></td></tr>`;
+            
+            try {
+                const startOfYear = `${yearToLoad}-01-01T00:00:00.000Z`;
+                const endOfYear = `${yearToLoad}-12-31T23:59:59.999Z`;
+
+                const [membershipsRes, ordersRes, expensesRes] = await Promise.all([
+                    supabase.from('memberships').select('created_at, membership_plans(price)').gte('created_at', startOfYear).lte('created_at', endOfYear),
+                    supabase.from('shop_orders').select('created_at, total').gte('created_at', startOfYear).lte('created_at', endOfYear),
+                    supabase.from('finance_transactions').select('transaction_date, amount').eq('type', 'expense').gte('transaction_date', startOfYear).lte('transaction_date', endOfYear)
+                ]);
+
+                const monthlyData = Array.from({length: 12}, () => ({ memRev: 0, shopRev: 0, expense: 0 }));
+
+                if (membershipsRes.data) {
+                    membershipsRes.data.forEach(m => { const month = new Date(m.created_at).getMonth(); if (m.membership_plans?.price) monthlyData[month].memRev += parseFloat(m.membership_plans.price); });
+                }
+                if (ordersRes.data) {
+                    ordersRes.data.forEach(o => { const month = new Date(o.created_at).getMonth(); if (o.total) monthlyData[month].shopRev += parseFloat(o.total); });
+                }
+                if (expensesRes.data) {
+                    expensesRes.data.forEach(e => { const month = new Date(e.transaction_date).getMonth(); if (e.amount) monthlyData[month].expense += parseFloat(e.amount); });
+                }
+
+                const formatter = new Intl.NumberFormat('vi-VN');
+                let html = '';
+                let totalMemYear = 0, totalShopYear = 0, totalExpenseYear = 0, totalProfitYear = 0;
+
+                for (let i = 0; i < 12; i++) {
+                    const totalThu = monthlyData[i].memRev + monthlyData[i].shopRev;
+                    const profit = totalThu - monthlyData[i].expense;
+                    
+                    totalMemYear += monthlyData[i].memRev; totalShopYear += monthlyData[i].shopRev;
+                    totalExpenseYear += monthlyData[i].expense; totalProfitYear += profit;
+
+                    html += `
+                        <tr class="hover:bg-gray-50 border-b border-gray-100">
+                            <td class="px-6 py-4 font-medium text-gray-900">Tháng ${i + 1}</td>
+                            <td class="px-6 py-4 text-right text-gray-700">${formatter.format(monthlyData[i].memRev)} đ</td>
+                            <td class="px-6 py-4 text-right text-gray-700">${formatter.format(monthlyData[i].shopRev)} đ</td>
+                            <td class="px-6 py-4 text-right font-medium text-green-600">${formatter.format(totalThu)} đ</td>
+                            <td class="px-6 py-4 text-right font-medium text-red-500">-${formatter.format(monthlyData[i].expense)} đ</td>
+                            <td class="px-6 py-4 text-right font-bold ${profit >= 0 ? 'text-blue-600' : 'text-red-600'}">${formatter.format(profit)} đ</td>
+                        </tr>
+                    `;
+                }
+
+                html += `
+                    <tr class="bg-gray-100 border-t-2 border-gray-300">
+                        <td class="px-6 py-4 font-bold text-gray-900 uppercase">Tổng (Năm ${yearToLoad})</td>
+                        <td class="px-6 py-4 text-right font-bold text-gray-800">${formatter.format(totalMemYear)} đ</td>
+                        <td class="px-6 py-4 text-right font-bold text-gray-800">${formatter.format(totalShopYear)} đ</td>
+                        <td class="px-6 py-4 text-right font-bold text-green-700">${formatter.format(totalMemYear + totalShopYear)} đ</td>
+                        <td class="px-6 py-4 text-right font-bold text-red-600">-${formatter.format(totalExpenseYear)} đ</td>
+                        <td class="px-6 py-4 text-right font-bold text-lg ${totalProfitYear >= 0 ? 'text-blue-700' : 'text-red-700'}">${formatter.format(totalProfitYear)} đ</td>
+                    </tr>
+                `;
+                tbody.innerHTML = html;
+            } catch (error) {}
         }
 
         document.getElementById('login-form').addEventListener('submit', async (e) => {
@@ -1702,32 +2136,15 @@
             const btn = document.getElementById('btn-login');
             btn.innerHTML = '<div class="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div> Đang kiểm tra...';
             btn.disabled = true;
-            
-            const inputEmail = document.getElementById('email').value;
-            const inputPass = document.getElementById('password').value;
-
             try {
-                const { data: user, error: userErr } = await supabase
-                    .from('users')
-                    .select('*')
-                    .eq('email', inputEmail)
-                    .eq('password', inputPass)
-                    .single();
+                const { data: user, error: userErr } = await supabase.from('users').select('*')
+                    .eq('email', document.getElementById('email').value).eq('password', document.getElementById('password').value).single();
 
-                if (userErr || !user) {
-                    showToast("Email hoặc mật khẩu không đúng", "error");
-                    btn.innerHTML = '<span>Đăng nhập</span>'; btn.disabled = false;
-                    return;
-                }
-
-                await supabase.auth.signInWithPassword({ 
-                    email: 'alistar982k@gmail.com', 
-                    password: '123456' 
-                });
+                if (userErr || !user) { showToast("Email hoặc mật khẩu không đúng", "error"); btn.innerHTML = '<span>Đăng nhập</span>'; btn.disabled = false; return; }
+                await supabase.auth.signInWithPassword({ email: 'alistar982k@gmail.com', password: '123456' });
 
                 currentUser = user;
                 if(!currentUser.branch_id) currentUser.branch_id = 'b0000000-0000-0000-0000-000000000001';
-                
                 localStorage.setItem('lp_custom_user', JSON.stringify(currentUser));
                 
                 showToast("Đăng nhập thành công", "success");
@@ -1738,21 +2155,15 @@
                 document.getElementById('user-avatar').innerText = (currentUser.full_name || currentUser.email).charAt(0).toUpperCase();
                 
                 renderSidebar();
-            } catch (err) { 
-                showToast("Lỗi hệ thống: " + err.message, "error"); 
-            } 
-            finally { 
-                btn.innerHTML = '<span>Đăng nhập</span>'; btn.disabled = false; 
-            }
+            } catch (err) { showToast("Lỗi hệ thống: " + err.message, "error"); } 
+            finally { btn.innerHTML = '<span>Đăng nhập</span>'; btn.disabled = false; }
         });
 
         window.addEventListener('DOMContentLoaded', async () => {
             const savedUser = localStorage.getItem('lp_custom_user');
-            
             if (savedUser) {
                 currentUser = JSON.parse(savedUser);
                 supabase.auth.signInWithPassword({ email: 'alistar982k@gmail.com', password: '123456' });
-
                 document.getElementById('user-name').innerText = currentUser.full_name || currentUser.email;
                 document.getElementById('user-role').innerText = currentUser.role_name || currentUser.role || 'Nhân sự';
                 document.getElementById('user-avatar').innerText = (currentUser.full_name || currentUser.email).charAt(0).toUpperCase();
