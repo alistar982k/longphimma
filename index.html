@@ -2124,12 +2124,13 @@
             if(posCart.length === 0) { showToast("Giỏ hàng trống!", "info"); return; }
             let total = 0; posCart.forEach(i => total += i.price * i.qty);
             try {
+                // Remove saving JSON description to avoid schema cache error
                 const orderNumber = 'ORD-' + Math.floor(Math.random() * 1000000);
                 const { error: orderErr } = await supabase.from('shop_orders').insert({
                     organization_id: currentUser.organization_id, order_number: orderNumber,
-                    subtotal: total, total: total, status: 'completed',
-                    description: JSON.stringify(posCart) // Lưu giỏ hàng vào Database để in lại
+                    subtotal: total, total: total, status: 'completed'
                 });
+                
                 if(orderErr) throw orderErr;
 
                 for (const item of posCart) {
@@ -2137,11 +2138,13 @@
                     await supabase.from('shop_product_variants').update({ stock: newStock }).eq('id', item.id);
                 }
                 
+                // Pass posCart array directly to print function
                 window.printShopReceipt(orderNumber, posCart, total);
+                
                 window.clearPosCart();
                 loadShopList(); 
                 loadDashboardData(); 
-                showToast("Thanh toán thành công! Đã trừ tồn kho.", "success");
+                showToast("Thanh toán & in hóa đơn thành công!", "success");
             } catch(e) { showToast("Lỗi thanh toán: " + e.message, "error"); }
         }
 
@@ -2156,15 +2159,10 @@
                 if(!data || data.length === 0) { tbody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-gray-500 text-sm">Chưa có giao dịch nào trong 30 ngày.</td></tr>`; return; }
                 
                 tbody.innerHTML = data.map(o => {
-                    let itemsHtml = 'Sản phẩm cửa hàng';
-                    let itemsData = [];
-                    if(o.description) {
-                        try {
-                            itemsData = JSON.parse(o.description);
-                            itemsHtml = itemsData.map(i => `${i.name} (x${i.qty})`).join(', ');
-                        } catch(e) {}
-                    }
-                    const encodedCartItems = encodeURIComponent(JSON.stringify(itemsData));
+                    // Because we removed description from DB, history will just show default text
+                    const itemsHtml = 'Sản phẩm cửa hàng';
+                    // Pass empty array string to print function as fallback
+                    const encodedCartItems = encodeURIComponent(JSON.stringify([]));
 
                     return `
                     <tr class="hover:bg-gray-50 border-b border-gray-100">
