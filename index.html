@@ -38,13 +38,19 @@
         @media print {
             body * { visibility: hidden; }
             #print-area, #print-area * { visibility: visible; }
-            #print-area { position: absolute; left: 0; top: 0; width: 100%; color: #000; font-family: monospace; }
+            #print-area { position: absolute; left: 0; top: 0; width: 100%; font-family: 'Courier New', Courier, monospace; color: #000; }
             @page { margin: 0; }
-            .pos-receipt { width: 80mm; padding: 10px; margin: 0 auto; font-size: 14px; line-height: 1.4; }
+            .pos-receipt { width: 80mm; padding: 15px 10px; margin: 0 auto; font-size: 13px; line-height: 1.5; }
             .pos-center { text-align: center; }
+            .pos-right { text-align: right; }
             .pos-bold { font-weight: bold; }
-            .pos-line { border-bottom: 1px dashed #000; margin: 6px 0; }
-            .pos-row { display: flex; justify-content: space-between; }
+            .pos-title { font-size: 18px; font-weight: bold; text-align: center; margin-bottom: 2px; }
+            .pos-subtitle { font-size: 14px; text-align: center; margin-bottom: 8px; }
+            .pos-line { border-bottom: 1px dashed #000; margin: 8px 0; width: 100%; }
+            .pos-row { display: flex; justify-content: space-between; align-items: flex-start; }
+            .pos-item-name { max-width: 60%; word-break: break-word; }
+            .pos-totals { margin-top: 10px; }
+            .pos-total-row { display: flex; justify-content: space-between; font-size: 15px; font-weight: bold; margin-top: 5px; }
         }
     </style>
 </head>
@@ -89,7 +95,7 @@
         <aside class="w-64 bg-secondary text-gray-300 flex flex-col flex-shrink-0 transition-all duration-300 relative z-20 shadow-xl hidden md:flex">
             <div class="h-16 flex items-center px-6 bg-slate-900 border-b border-slate-700/50">
                 <img src="https://obrcrvquowgwewobljxe.supabase.co/storage/v1/object/public/Public/logo.png" alt="Logo" class="w-8 h-8 object-contain mr-3">
-                <h1 class="text-white font-bold tracking-wider text-lg">LONG PHI MMA HO NAI</h1>
+                <h1 class="text-white font-bold tracking-wider text-lg">LONG PHI MMA HỐ NAI</h1>
             </div>
             
             <div class="p-4 border-b border-slate-700/50">
@@ -963,7 +969,7 @@
                                 <th class="px-4 py-3">Mã đơn</th>
                                 <th class="px-4 py-3">Sản phẩm</th>
                                 <th class="px-4 py-3 text-right">Tổng tiền</th>
-                                <th class="px-4 py-3 text-right w-16">Xóa</th>
+                                <th class="px-4 py-3 text-right w-24">Thao tác</th>
                             </tr>
                         </thead>
                         <tbody id="sales-history-body" class="divide-y divide-gray-100"></tbody>
@@ -1006,45 +1012,50 @@
         let currentPage = { students: 1, membership: 1, expenses: 1, facilities: 1 };
 
         // --- CÁC HÀM IN HÓA ĐƠN ---
-        window.printShopReceipt = function(orderNumber, cartItems, total) {
+        window.printShopReceipt = function(orderNumber, cartItems, total, dateString = null) {
             const printArea = document.getElementById('print-area');
-            const date = new Date().toLocaleString('vi-VN');
+            const date = dateString ? new Date(dateString).toLocaleString('vi-VN') : new Date().toLocaleString('vi-VN');
             
-            let itemsHtml = cartItems.map(item => `
-                <div style="margin-bottom: 5px;">
-                    <div>${item.name} (${item.size})</div>
+            let items = [];
+            try { items = typeof cartItems === 'string' ? JSON.parse(cartItems) : cartItems; } 
+            catch(e) { items = [{name: 'Sản phẩm', size: '-', qty: 1, price: total}]; } 
+
+            let itemsHtml = items.map(item => `
+                <div style="margin-bottom: 6px;">
                     <div class="pos-row">
-                        <span>${item.qty} x ${new Intl.NumberFormat('vi-VN').format(item.price)}</span>
-                        <span>${new Intl.NumberFormat('vi-VN').format(item.qty * item.price)}đ</span>
+                        <span class="pos-item-name">${item.name} (${item.size || '-'})</span>
+                        <span>${new Intl.NumberFormat('vi-VN').format(item.price * item.qty)}đ</span>
                     </div>
+                    <div style="font-size: 11px; color: #555;">${item.qty} x ${new Intl.NumberFormat('vi-VN').format(item.price)}</div>
                 </div>
             `).join('');
 
             printArea.innerHTML = `
                 <div class="pos-receipt">
-                    <div class="pos-center pos-bold" style="font-size: 18px; margin-bottom: 5px;">LONG PHI MMA</div>
-                    <div class="pos-center pos-bold" style="font-size: 14px;">HÓA ĐƠN BÁN HÀNG</div>
-                    <div class="pos-center" style="font-size: 12px; margin-top: 5px;">Ngày: ${date}</div>
-                    <div class="pos-center" style="font-size: 12px;">Số HĐ: ${orderNumber}</div>
+                    <div class="pos-title">LONG PHI MMA HỐ NAI</div>
+                    <div class="pos-subtitle">HÓA ĐƠN BÁN HÀNG</div>
+                    <div class="pos-row" style="font-size: 12px;">
+                        <span>Mã HĐ: ${orderNumber}</span>
+                        <span>${date}</span>
+                    </div>
                     <div class="pos-line"></div>
-                    <div class="pos-row pos-bold">
+                    <div class="pos-row pos-bold" style="margin-bottom: 5px;">
                         <span>Sản phẩm</span>
                         <span>Thành tiền</span>
                     </div>
-                    <div class="pos-line"></div>
                     ${itemsHtml}
                     <div class="pos-line"></div>
-                    <div class="pos-row pos-bold" style="font-size: 16px; margin-top: 5px;">
-                        <span>TỔNG CỘNG:</span>
-                        <span>${new Intl.NumberFormat('vi-VN').format(total)}đ</span>
+                    <div class="pos-totals">
+                        <div class="pos-total-row">
+                            <span>TỔNG CỘNG:</span>
+                            <span>${new Intl.NumberFormat('vi-VN').format(total)}đ</span>
+                        </div>
                     </div>
-                    <div class="pos-center" style="margin-top: 15px; font-size: 12px;">Cảm ơn quý khách!</div>
-                    <div class="pos-center" style="font-size: 12px;">---------------------</div>
+                    <div class="pos-line" style="margin-top: 15px;"></div>
+                    <div class="pos-center" style="margin-top: 5px; font-size: 12px; font-style: italic;">Cảm ơn quý khách! Hẹn gặp lại.</div>
                 </div>
             `;
-            
-            window.print();
-            printArea.innerHTML = ''; // Clear sau khi in
+            setTimeout(() => { window.print(); printArea.innerHTML = ''; }, 100);
         };
 
         window.printMembershipReceipt = function(studentName, planName, startDate, endDate, price) {
@@ -1053,26 +1064,37 @@
             
             printArea.innerHTML = `
                 <div class="pos-receipt">
-                    <div class="pos-center pos-bold" style="font-size: 18px; margin-bottom: 5px;">LONG PHI MMA</div>
-                    <div class="pos-center pos-bold" style="font-size: 14px;">HÓA ĐƠN HỌC PHÍ</div>
-                    <div class="pos-center" style="font-size: 12px; margin-top: 5px;">Ngày in: ${date}</div>
+                    <div class="pos-title">LONG PHI MMA HỐ NAI</div>
+                    <div class="pos-subtitle">HÓA ĐƠN THU HỌC PHÍ</div>
+                    <div class="pos-center" style="font-size: 12px; margin-bottom: 10px;">Ngày in: ${date}</div>
+                    
                     <div class="pos-line"></div>
-                    <div style="margin-bottom: 4px;"><span class="pos-bold">Học viên:</span> ${studentName}</div>
-                    <div style="margin-bottom: 4px;"><span class="pos-bold">Gói tập:</span> ${planName}</div>
-                    <div style="margin-bottom: 4px;"><span class="pos-bold">Ngày ĐK:</span> ${new Date(startDate).toLocaleDateString('vi-VN')}</div>
-                    <div style="margin-bottom: 4px;"><span class="pos-bold">Ngày HH:</span> ${new Date(endDate).toLocaleDateString('vi-VN')}</div>
+                    <div class="pos-row" style="margin-bottom: 5px;">
+                        <span style="min-width: 65px;">Học viên:</span>
+                        <span class="pos-bold pos-right">${studentName}</span>
+                    </div>
+                    <div class="pos-row" style="margin-bottom: 5px;">
+                        <span style="min-width: 65px;">Gói tập:</span>
+                        <span class="pos-bold pos-right">${planName}</span>
+                    </div>
+                    <div class="pos-row" style="margin-bottom: 5px; font-size: 12px;">
+                        <span style="min-width: 65px;">Ngày ĐK:</span>
+                        <span class="pos-right">${new Date(startDate).toLocaleDateString('vi-VN')}</span>
+                    </div>
+                    <div class="pos-row" style="margin-bottom: 5px; font-size: 12px;">
+                        <span style="min-width: 65px;">Ngày hết:</span>
+                        <span class="pos-right">${new Date(endDate).toLocaleDateString('vi-VN')}</span>
+                    </div>
                     <div class="pos-line"></div>
-                    <div class="pos-row pos-bold" style="font-size: 16px; margin-top: 5px;">
-                        <span>TỔNG TIỀN:</span>
+                    <div class="pos-total-row" style="margin-top: 10px;">
+                        <span>TỔNG THU:</span>
                         <span>${new Intl.NumberFormat('vi-VN').format(price)}đ</span>
                     </div>
-                    <div class="pos-center" style="margin-top: 15px; font-size: 12px;">Chúc bạn tập luyện hiệu quả!</div>
-                    <div class="pos-center" style="font-size: 12px;">---------------------</div>
+                    <div class="pos-line" style="margin-top: 20px;"></div>
+                    <div class="pos-center" style="margin-top: 5px; font-size: 12px; font-style: italic;">Chúc bạn tập luyện đạt hiệu quả cao!</div>
                 </div>
             `;
-            
-            window.print();
-            printArea.innerHTML = '';
+            setTimeout(() => { window.print(); printArea.innerHTML = ''; }, 100);
         };
         // -----------------------------
 
@@ -1646,6 +1668,7 @@
                     </td>
                     <td class="px-6 py-4"><span class="px-2.5 py-1 ${m.status === 'active' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'} rounded text-xs font-medium uppercase">${m.status === 'active' ? 'Đang tập' : m.status}</span></td>
                     <td class="px-6 py-4 text-right flex justify-end gap-2">
+                        <button onclick="window.printMembershipReceipt('${m.students?.full_name}', '${m.membership_plans?.name}', '${m.start_date}', '${m.end_date}', ${m.membership_plans?.price})" class="text-blue-500 hover:bg-blue-50 p-1.5 rounded-md" title="In hóa đơn"><i data-lucide="printer" class="w-4 h-4"></i></button>
                         <button onclick="window.openDeleteModal('${m.id}', 'memberships', 'Gói tập của ${m.students?.full_name}')" class="text-red-400 hover:text-red-600 p-1.5 rounded-md"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
                     </td>
                 </tr>
@@ -2101,25 +2124,22 @@
             if(posCart.length === 0) { showToast("Giỏ hàng trống!", "info"); return; }
             let total = 0; posCart.forEach(i => total += i.price * i.qty);
             try {
-                // 1. Tạo đơn hàng
                 const orderNumber = 'ORD-' + Math.floor(Math.random() * 1000000);
                 const { error: orderErr } = await supabase.from('shop_orders').insert({
                     organization_id: currentUser.organization_id, order_number: orderNumber,
-                    subtotal: total, total: total, status: 'completed'
+                    subtotal: total, total: total, status: 'completed',
+                    description: JSON.stringify(posCart) // Lưu giỏ hàng vào Database để in lại
                 });
                 if(orderErr) throw orderErr;
 
-                // 2. Trừ tồn kho trong bảng shop_product_variants
                 for (const item of posCart) {
                     const newStock = item.stock - item.qty;
                     await supabase.from('shop_product_variants').update({ stock: newStock }).eq('id', item.id);
                 }
                 
-                // IN HÓA ĐƠN
                 window.printShopReceipt(orderNumber, posCart, total);
-
                 window.clearPosCart();
-                loadShopList(); // Gọi lại load để làm mới số lượng tồn kho trên giao diện
+                loadShopList(); 
                 loadDashboardData(); 
                 showToast("Thanh toán thành công! Đã trừ tồn kho.", "success");
             } catch(e) { showToast("Lỗi thanh toán: " + e.message, "error"); }
@@ -2134,17 +2154,30 @@
                 thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
                 const { data, error } = await supabase.from('shop_orders').select('*').gte('created_at', thirtyDaysAgo.toISOString()).order('created_at', { ascending: false });
                 if(!data || data.length === 0) { tbody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-gray-500 text-sm">Chưa có giao dịch nào trong 30 ngày.</td></tr>`; return; }
-                tbody.innerHTML = data.map(o => `
+                
+                tbody.innerHTML = data.map(o => {
+                    let itemsHtml = 'Sản phẩm cửa hàng';
+                    let itemsData = [];
+                    if(o.description) {
+                        try {
+                            itemsData = JSON.parse(o.description);
+                            itemsHtml = itemsData.map(i => `${i.name} (x${i.qty})`).join(', ');
+                        } catch(e) {}
+                    }
+                    const encodedCartItems = encodeURIComponent(JSON.stringify(itemsData));
+
+                    return `
                     <tr class="hover:bg-gray-50 border-b border-gray-100">
                         <td class="px-4 py-2">${new Date(o.created_at).toLocaleDateString('vi-VN')}</td>
                         <td class="px-4 py-2 text-xs text-gray-500">${o.order_number}</td>
-                        <td class="px-4 py-2 text-xs text-gray-700 max-w-[200px] truncate" title="Sản phẩm cửa hàng">Sản phẩm cửa hàng</td>
+                        <td class="px-4 py-2 text-xs text-gray-700 max-w-[200px] truncate" title="${itemsHtml}">${itemsHtml}</td>
                         <td class="px-4 py-2 text-right font-bold text-gray-800">${new Intl.NumberFormat('vi-VN').format(o.total)}đ</td>
-                        <td class="px-4 py-2 text-right">
-                            <button onclick="window.openDeleteModal('${o.id}', 'shop_orders', '${o.order_number}')" class="text-red-400 hover:text-red-600 p-1"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                        <td class="px-4 py-2 text-right flex justify-end gap-1">
+                            <button onclick="window.printShopReceipt('${o.order_number}', decodeURIComponent('${encodedCartItems}'), ${o.total}, '${o.created_at}')" class="text-blue-500 hover:bg-blue-50 p-1 rounded" title="In lại"><i data-lucide="printer" class="w-4 h-4"></i></button>
+                            <button onclick="window.openDeleteModal('${o.id}', 'shop_orders', '${o.order_number}')" class="text-red-400 hover:text-red-600 p-1" title="Xóa"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
                         </td>
                     </tr>
-                `).join('');
+                `}).join('');
                 lucide.createIcons();
             } catch(e) {}
         }
