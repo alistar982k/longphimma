@@ -34,7 +34,7 @@
         .module-view { animation: fadeIn 0.3s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-/* --- CSS DÀNH CHO IN HÓA ĐƠN POS --- */
+        /* --- CSS DÀNH CHO IN HÓA ĐƠN POS --- */
         @media print {
             body * { visibility: hidden; }
             #print-area, #print-area * { visibility: visible; }
@@ -1011,7 +1011,90 @@
         const ITEMS_PER_PAGE = 20;
         let currentPage = { students: 1, membership: 1, expenses: 1, facilities: 1 };
 
-// --- CÁC HÀM IN HÓA ĐƠN ---
+        // --- CÁC HÀM IN HÓA ĐƠN GẮN VÀO WINDOW ĐỂ GỌI TỪ MỌI NƠI ---
+        window.printShopReceipt = function(orderNumber, cartItems, total, dateString = null) {
+            const printArea = document.getElementById('print-area');
+            const date = dateString ? new Date(dateString).toLocaleString('vi-VN') : new Date().toLocaleString('vi-VN');
+            
+            // Xử lý dữ liệu giỏ hàng
+            let items = [];
+            try { items = typeof cartItems === 'string' ? JSON.parse(cartItems) : cartItems; } 
+            catch(e) { items = [{name: 'SẢN PHẨM', size: '-', qty: 1, price: total}]; } 
+
+            let itemsHtml = items.map(item => `
+                <div style="margin-bottom: 4px;">
+                    <div class="pos-item-name pos-bold">${item.name} (${item.size || '-'})</div>
+                    <div class="pos-row">
+                        <span>${item.qty} x ${new Intl.NumberFormat('vi-VN').format(item.price)}</span>
+                        <span class="pos-bold">${new Intl.NumberFormat('vi-VN').format(item.price * item.qty)}</span>
+                    </div>
+                </div>
+            `).join('');
+
+            printArea.innerHTML = `
+                <div class="pos-receipt">
+                    <div class="pos-title">HÓA ĐƠN LONG PHI MMA</div>
+                    <div class="pos-subtitle">BÁN HÀNG (SHOP)</div>
+                    <div class="pos-center" style="font-size: 10px; margin-bottom: 2px;">Ngày: ${date}</div>
+                    <div class="pos-center" style="font-size: 10px;">Mã HĐ: ${orderNumber}</div>
+                    
+                    <div class="pos-line" style="margin-top: 8px;"></div>
+                    <div class="pos-row pos-bold" style="margin-bottom: 5px;">
+                        <span>SẢN PHẨM</span>
+                        <span>T.TIỀN</span>
+                    </div>
+                    <div class="pos-line" style="margin-bottom: 8px;"></div>
+                    
+                    ${itemsHtml}
+                    
+                    <div class="pos-line" style="margin-top: 8px;"></div>
+                    <div class="pos-total-row">
+                        <span>TỔNG CỘNG:</span>
+                        <span>${new Intl.NumberFormat('vi-VN').format(total)}</span>
+                    </div>
+                    <div class="pos-line"></div>
+                    
+                    <div class="pos-center" style="margin-top: 10px; font-size: 11px;">CẢM ƠN QUÝ KHÁCH!</div>
+                </div>
+            `;
+            setTimeout(() => { window.print(); printArea.innerHTML = ''; }, 100);
+        };
+
+        window.printMembershipReceipt = function(studentName, planName, startDate, endDate, price) {
+            const printArea = document.getElementById('print-area');
+            const date = new Date().toLocaleString('vi-VN');
+            
+            printArea.innerHTML = `
+                <div class="pos-receipt">
+                    <div class="pos-title">HÓA ĐƠN LONG PHI MMA</div>
+                    <div class="pos-subtitle">THU HỌC PHÍ</div>
+                    <div class="pos-center" style="font-size: 10px; margin-bottom: 8px;">Ngày in: ${date}</div>
+                    
+                    <div class="pos-line"></div>
+                    
+                    <div style="margin-bottom: 4px;">
+                        <div><span class="pos-bold">HỌC VIÊN:</span></div>
+                        <div class="pos-bold pos-right" style="font-size: 14px;">${studentName}</div>
+                    </div>
+                    <div style="margin-bottom: 4px;">
+                        <div><span class="pos-bold">GÓI TẬP:</span></div>
+                        <div class="pos-bold pos-right" style="font-size: 14px;">${planName}</div>
+                    </div>
+                    
+                    <div class="pos-line"></div>
+                    
+                    <div class="pos-total-row" style="margin-top: 8px;">
+                        <span>TỔNG THU:</span>
+                        <span>${new Intl.NumberFormat('vi-VN').format(price)}</span>
+                    </div>
+                    <div class="pos-line"></div>
+                    
+                    <div class="pos-center" style="margin-top: 10px; font-size: 11px;">CHÚC BẠN TẬP LUYỆN TỐT!</div>
+                </div>
+            `;
+            setTimeout(() => { window.print(); printArea.innerHTML = ''; }, 100);
+        };
+        // -----------------------------
 
         // Đóng modal khi bấm phím ESC
         document.addEventListener('keydown', function(event) {
@@ -2039,7 +2122,6 @@
             if(posCart.length === 0) { showToast("Giỏ hàng trống!", "info"); return; }
             let total = 0; posCart.forEach(i => total += i.price * i.qty);
             try {
-                // Remove saving JSON description to avoid schema cache error
                 const orderNumber = 'ORD-' + Math.floor(Math.random() * 1000000);
                 const { error: orderErr } = await supabase.from('shop_orders').insert({
                     organization_id: currentUser.organization_id, order_number: orderNumber,
@@ -2053,7 +2135,6 @@
                     await supabase.from('shop_product_variants').update({ stock: newStock }).eq('id', item.id);
                 }
                 
-                // Pass posCart array directly to print function
                 window.printShopReceipt(orderNumber, posCart, total);
                 
                 window.clearPosCart();
@@ -2074,9 +2155,7 @@
                 if(!data || data.length === 0) { tbody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-gray-500 text-sm">Chưa có giao dịch nào trong 30 ngày.</td></tr>`; return; }
                 
                 tbody.innerHTML = data.map(o => {
-                    // Because we removed description from DB, history will just show default text
                     const itemsHtml = 'Sản phẩm cửa hàng';
-                    // Pass empty array string to print function as fallback
                     const encodedCartItems = encodeURIComponent(JSON.stringify([]));
 
                     return `
@@ -2238,4 +2317,3 @@
     </script>
 </body>
 </html>
-```eof
