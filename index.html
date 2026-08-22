@@ -33,9 +33,25 @@
         @keyframes slideOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(100%); opacity: 0; } }
         .module-view { animation: fadeIn 0.3s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- CSS DÀNH CHO IN HÓA ĐƠN POS --- */
+        @media print {
+            body * { visibility: hidden; }
+            #print-area, #print-area * { visibility: visible; }
+            #print-area { position: absolute; left: 0; top: 0; width: 100%; color: #000; font-family: monospace; }
+            @page { margin: 0; }
+            .pos-receipt { width: 80mm; padding: 10px; margin: 0 auto; font-size: 14px; line-height: 1.4; }
+            .pos-center { text-align: center; }
+            .pos-bold { font-weight: bold; }
+            .pos-line { border-bottom: 1px dashed #000; margin: 6px 0; }
+            .pos-row { display: flex; justify-content: space-between; }
+        }
     </style>
 </head>
 <body class="h-screen flex overflow-hidden antialiased">
+
+    <!-- VÙNG IN HÓA ĐƠN (ẨN TRÊN WEB) -->
+    <div id="print-area" class="hidden"></div>
 
     <!-- Loading Screen -->
     <div id="loading-screen" class="fixed inset-0 bg-white z-[9999] flex flex-col items-center justify-center transition-opacity duration-300">
@@ -73,7 +89,7 @@
         <aside class="w-64 bg-secondary text-gray-300 flex flex-col flex-shrink-0 transition-all duration-300 relative z-20 shadow-xl hidden md:flex">
             <div class="h-16 flex items-center px-6 bg-slate-900 border-b border-slate-700/50">
                 <img src="https://obrcrvquowgwewobljxe.supabase.co/storage/v1/object/public/Public/logo.png" alt="Logo" class="w-8 h-8 object-contain mr-3">
-                <h1 class="text-white font-bold tracking-wider text-lg">LONG PHI</h1>
+                <h1 class="text-white font-bold tracking-wider text-lg">LONG PHI MMA HO NAI</h1>
             </div>
             
             <div class="p-4 border-b border-slate-700/50">
@@ -373,7 +389,7 @@
                                     <span>Tổng thanh toán</span><span class="text-red-600" id="pos-total">0đ</span>
                                 </div>
                                 <button onclick="window.checkoutPos()" class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2.5 rounded-lg transition-colors flex justify-center items-center gap-2 shadow-sm">
-                                    <i data-lucide="credit-card" class="w-4 h-4"></i> Thanh toán
+                                    <i data-lucide="credit-card" class="w-4 h-4"></i> Thanh toán & In HD
                                 </button>
                             </div>
                         </div>
@@ -643,7 +659,7 @@
                 </div>
                 <div class="pt-4 flex gap-3 justify-end">
                     <button type="button" onclick="window.closeModal('modal-add-membership')" class="px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-lg">Hủy</button>
-                    <button type="submit" id="btn-submit-add-membership" class="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg">Đăng ký</button>
+                    <button type="submit" id="btn-submit-add-membership" class="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg">Đăng ký & In Hóa đơn</button>
                 </div>
             </form>
         </div>
@@ -988,6 +1004,77 @@
         // Pagination State
         const ITEMS_PER_PAGE = 20;
         let currentPage = { students: 1, membership: 1, expenses: 1, facilities: 1 };
+
+        // --- CÁC HÀM IN HÓA ĐƠN ---
+        window.printShopReceipt = function(orderNumber, cartItems, total) {
+            const printArea = document.getElementById('print-area');
+            const date = new Date().toLocaleString('vi-VN');
+            
+            let itemsHtml = cartItems.map(item => `
+                <div style="margin-bottom: 5px;">
+                    <div>${item.name} (${item.size})</div>
+                    <div class="pos-row">
+                        <span>${item.qty} x ${new Intl.NumberFormat('vi-VN').format(item.price)}</span>
+                        <span>${new Intl.NumberFormat('vi-VN').format(item.qty * item.price)}đ</span>
+                    </div>
+                </div>
+            `).join('');
+
+            printArea.innerHTML = `
+                <div class="pos-receipt">
+                    <div class="pos-center pos-bold" style="font-size: 18px; margin-bottom: 5px;">LONG PHI MMA</div>
+                    <div class="pos-center pos-bold" style="font-size: 14px;">HÓA ĐƠN BÁN HÀNG</div>
+                    <div class="pos-center" style="font-size: 12px; margin-top: 5px;">Ngày: ${date}</div>
+                    <div class="pos-center" style="font-size: 12px;">Số HĐ: ${orderNumber}</div>
+                    <div class="pos-line"></div>
+                    <div class="pos-row pos-bold">
+                        <span>Sản phẩm</span>
+                        <span>Thành tiền</span>
+                    </div>
+                    <div class="pos-line"></div>
+                    ${itemsHtml}
+                    <div class="pos-line"></div>
+                    <div class="pos-row pos-bold" style="font-size: 16px; margin-top: 5px;">
+                        <span>TỔNG CỘNG:</span>
+                        <span>${new Intl.NumberFormat('vi-VN').format(total)}đ</span>
+                    </div>
+                    <div class="pos-center" style="margin-top: 15px; font-size: 12px;">Cảm ơn quý khách!</div>
+                    <div class="pos-center" style="font-size: 12px;">---------------------</div>
+                </div>
+            `;
+            
+            window.print();
+            printArea.innerHTML = ''; // Clear sau khi in
+        };
+
+        window.printMembershipReceipt = function(studentName, planName, startDate, endDate, price) {
+            const printArea = document.getElementById('print-area');
+            const date = new Date().toLocaleString('vi-VN');
+            
+            printArea.innerHTML = `
+                <div class="pos-receipt">
+                    <div class="pos-center pos-bold" style="font-size: 18px; margin-bottom: 5px;">LONG PHI MMA</div>
+                    <div class="pos-center pos-bold" style="font-size: 14px;">HÓA ĐƠN HỌC PHÍ</div>
+                    <div class="pos-center" style="font-size: 12px; margin-top: 5px;">Ngày in: ${date}</div>
+                    <div class="pos-line"></div>
+                    <div style="margin-bottom: 4px;"><span class="pos-bold">Học viên:</span> ${studentName}</div>
+                    <div style="margin-bottom: 4px;"><span class="pos-bold">Gói tập:</span> ${planName}</div>
+                    <div style="margin-bottom: 4px;"><span class="pos-bold">Ngày ĐK:</span> ${new Date(startDate).toLocaleDateString('vi-VN')}</div>
+                    <div style="margin-bottom: 4px;"><span class="pos-bold">Ngày HH:</span> ${new Date(endDate).toLocaleDateString('vi-VN')}</div>
+                    <div class="pos-line"></div>
+                    <div class="pos-row pos-bold" style="font-size: 16px; margin-top: 5px;">
+                        <span>TỔNG TIỀN:</span>
+                        <span>${new Intl.NumberFormat('vi-VN').format(price)}đ</span>
+                    </div>
+                    <div class="pos-center" style="margin-top: 15px; font-size: 12px;">Chúc bạn tập luyện hiệu quả!</div>
+                    <div class="pos-center" style="font-size: 12px;">---------------------</div>
+                </div>
+            `;
+            
+            window.print();
+            printArea.innerHTML = '';
+        };
+        // -----------------------------
 
         // Đóng modal khi bấm phím ESC
         document.addEventListener('keydown', function(event) {
@@ -1674,17 +1761,34 @@
                 const startDate = document.getElementById('add-mem-start-date').value;
                 if(!stId) throw new Error("Vui lòng chọn học viên!");
 
-                const { data: plan } = await supabase.from('membership_plans').select('duration_months').eq('id', planId).single();
+                const { data: plan } = await supabase.from('membership_plans').select('duration_months, price').eq('id', planId).single();
                 let endDate = new Date(startDate);
                 endDate.setMonth(endDate.getMonth() + plan.duration_months);
+                const endDateString = endDate.toISOString().split('T')[0];
 
                 const { error } = await supabase.from('memberships').insert({
-                    student_id: stId, plan_id: planId, start_date: startDate, end_date: endDate.toISOString().split('T')[0], status: 'active'
+                    student_id: stId, plan_id: planId, start_date: startDate, end_date: endDateString, status: 'active'
                 });
-                if(!error) { showToast("Đăng ký thành công!", "success"); window.closeModal('modal-add-membership'); loadMembershipList(); loadDashboardData(); document.getElementById('form-add-membership').reset(); } 
+                
+                if(!error) { 
+                    showToast("Đăng ký thành công!", "success"); 
+                    
+                    // Lấy thông tin Tên học viên và Gói tập để in
+                    const studentInputVal = document.getElementById('mem-search-student').value;
+                    const studentName = studentInputVal.split(' (')[0];
+                    const planSelect = document.getElementById('add-mem-plan-id');
+                    const planName = planSelect.options[planSelect.selectedIndex].text.split(' - ')[0];
+
+                    window.printMembershipReceipt(studentName, planName, startDate, endDateString, plan.price);
+
+                    window.closeModal('modal-add-membership'); 
+                    loadMembershipList(); 
+                    loadDashboardData(); 
+                    document.getElementById('form-add-membership').reset(); 
+                } 
                 else { showToast("Lỗi: " + error.message, "error"); }
             } catch (err) { showToast(err.message, "error"); }
-            btn.innerText = "Đăng ký"; btn.disabled = false;
+            btn.innerText = "Đăng ký & In Hóa đơn"; btn.disabled = false;
         });
 
         async function loadExpensesList() {
@@ -1998,8 +2102,9 @@
             let total = 0; posCart.forEach(i => total += i.price * i.qty);
             try {
                 // 1. Tạo đơn hàng
+                const orderNumber = 'ORD-' + Math.floor(Math.random() * 1000000);
                 const { error: orderErr } = await supabase.from('shop_orders').insert({
-                    organization_id: currentUser.organization_id, order_number: 'ORD-' + Math.floor(Math.random() * 1000000),
+                    organization_id: currentUser.organization_id, order_number: orderNumber,
                     subtotal: total, total: total, status: 'completed'
                 });
                 if(orderErr) throw orderErr;
@@ -2009,6 +2114,9 @@
                     const newStock = item.stock - item.qty;
                     await supabase.from('shop_product_variants').update({ stock: newStock }).eq('id', item.id);
                 }
+                
+                // IN HÓA ĐƠN
+                window.printShopReceipt(orderNumber, posCart, total);
 
                 window.clearPosCart();
                 loadShopList(); // Gọi lại load để làm mới số lượng tồn kho trên giao diện
@@ -2184,3 +2292,4 @@
     </script>
 </body>
 </html>
+```eof
