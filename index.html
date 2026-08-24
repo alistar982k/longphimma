@@ -395,7 +395,7 @@
                                     <span>Tổng thanh toán</span><span class="text-red-600" id="pos-total">0đ</span>
                                 </div>
                                 <button onclick="window.checkoutPos()" class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2.5 rounded-lg transition-colors flex justify-center items-center gap-2 shadow-sm">
-                                    <i data-lucide="credit-card" class="w-4 h-4"></i> Thanh toán & In HD
+                                    <i data-lucide="credit-card" class="w-4 h-4"></i> Thanh toán
                                 </button>
                             </div>
                         </div>
@@ -2135,12 +2135,12 @@
                     await supabase.from('shop_product_variants').update({ stock: newStock }).eq('id', item.id);
                 }
                 
-                window.printShopReceipt(orderNumber, posCart, total);
+                // Đã loại bỏ dòng window.printShopReceipt(orderNumber, posCart, total);
                 
                 window.clearPosCart();
                 loadShopList(); 
                 loadDashboardData(); 
-                showToast("Thanh toán & in hóa đơn thành công!", "success");
+                showToast("Thanh toán thành công!", "success"); // Đã cập nhật câu thông báo
             } catch(e) { showToast("Lỗi thanh toán: " + e.message, "error"); }
         }
 
