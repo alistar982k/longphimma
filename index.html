@@ -56,17 +56,17 @@
 </head>
 <body class="h-screen flex overflow-hidden antialiased">
 
-    <!-- VÙNG IN HÓA ĐƠN (ẨN TRÊN WEB) -->
+    <!-- -->
     <div id="print-area" class="hidden"></div>
 
-    <!-- Loading Screen -->
+    <!-- -->
     <div id="loading-screen" class="fixed inset-0 bg-white z-[9999] flex flex-col items-center justify-center transition-opacity duration-300">
         <img src="https://obrcrvquowgwewobljxe.supabase.co/storage/v1/object/public/Public/logo.png" alt="LONG PHI MMA" class="w-32 h-auto mb-6 animate-pulse">
         <h2 class="text-xl font-bold text-gray-800">LONG PHI MMA</h2>
         <p class="text-gray-500 text-sm mt-2">Đang khởi tạo hệ thống...</p>
     </div>
 
-    <!-- Login Screen -->
+    <!-- -->
     <div id="login-screen" class="hidden fixed inset-0 bg-gray-900 z-[9990] flex items-center justify-center p-4">
         <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md">
             <div class="text-center mb-8">
@@ -90,6 +90,7 @@
         </div>
     </div>
 
+    <!-- -->
     <div id="app-shell" class="hidden w-full h-full flex flex-col md:flex-row">
         <!-- Sidebar -->
         <aside class="w-64 bg-secondary text-gray-300 flex flex-col flex-shrink-0 transition-all duration-300 relative z-20 shadow-xl hidden md:flex">
@@ -119,6 +120,7 @@
             </div>
         </aside>
 
+        <!-- -->
         <main class="flex-1 flex flex-col h-screen overflow-hidden relative">
             <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6 flex-shrink-0 z-10">
                 <h2 id="page-title" class="text-xl font-semibold text-gray-800 flex items-center gap-2">
@@ -131,7 +133,7 @@
 
             <div id="module-container" class="flex-1 overflow-y-auto p-4 md:p-6 bg-gray-50">
                 
-                <!-- TỔNG QUAN -->
+                <!-- -->
                 <div id="view-dashboard" class="module-view h-full">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-6">
                         <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 flex items-center gap-4">
@@ -162,7 +164,7 @@
                     </div>
                 </div>
 
-                <!-- BÁO CÁO DÒNG TIỀN -->
+                <!-- -->
                 <div id="view-reports" class="module-view hidden flex-col h-full">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
                         <h3 class="text-lg font-bold text-gray-800">Báo cáo Dòng tiền</h3>
@@ -192,7 +194,7 @@
                     </div>
                 </div>
 
-                <!-- HỌC VIÊN -->
+                <!-- -->
                 <div id="view-students" class="module-view hidden flex-col h-full">
                     <div class="flex flex-col sm:flex-row justify-between gap-4 mb-6">
                         <div class="flex gap-2">
@@ -231,7 +233,7 @@
                     </div>
                 </div>
 
-                <!-- HỌC PHÍ -->
+                <!-- -->
                 <div id="view-membership" class="module-view hidden flex-col h-full">
                     <div class="flex flex-col sm:flex-row justify-between gap-4 mb-6">
                         <div class="flex gap-2 w-full sm:w-auto">
@@ -275,7 +277,7 @@
                     </div>
                 </div>
 
-                <!-- CHI PHÍ -->
+                <!-- -->
                 <div id="view-expenses" class="module-view hidden flex-col h-full">
                     <div class="flex flex-col sm:flex-row justify-between gap-4 mb-6">
                         <div class="flex gap-2 w-full sm:w-auto">
@@ -314,7 +316,7 @@
                     </div>
                 </div>
 
-                <!-- CS VẬT CHẤT -->
+                <!-- -->
                 <div id="view-facilities" class="module-view hidden flex-col h-full">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
                         <div class="relative w-full sm:w-72">
@@ -350,7 +352,7 @@
                     </div>
                 </div>
 
-                <!-- CỬA HÀNG -->
+                <!-- -->
                 <div id="view-shop" class="module-view hidden flex-col h-full">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
                         <h3 class="text-lg font-bold text-gray-800">Điểm bán hàng (POS)</h3>
@@ -402,7 +404,7 @@
                     </div>
                 </div>
 
-                <!-- TÀI KHOẢN -->
+                <!-- -->
                 <div id="view-users" class="module-view hidden flex-col h-full">
                     <div class="flex justify-between items-center mb-6">
                         <p class="text-gray-500 text-sm">Quản lý nhân sự và quyền truy cập</p>
@@ -430,6 +432,7 @@
         </main>
     </div>
 
+    <!-- -->
     <!-- CÁC MODALS (Thêm sự kiện click ra ngoài để đóng) -->
     <div id="modal-image-viewer" class="hidden fixed inset-0 bg-black/90 z-[10000] flex items-center justify-center p-4 transition-opacity" onclick="if(event.target === this) window.closeModal('modal-image-viewer')">
         <button class="absolute top-6 right-6 text-white/70 hover:text-white bg-black/50 hover:bg-red-600 p-2 rounded-full transition-colors" onclick="window.closeModal('modal-image-viewer')">
@@ -468,7 +471,7 @@
         </div>
     </div>
 
-    <!-- User Modals -->
+    <!-- -->
     <div id="modal-add-user" class="hidden fixed inset-0 bg-black/60 z-[999] flex items-center justify-center p-4" onclick="if(event.target === this) window.closeModal('modal-add-user')">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
@@ -540,7 +543,7 @@
         </div>
     </div>
 
-    <!-- Student Modals -->
+    <!-- -->
     <div id="modal-add-student" class="hidden fixed inset-0 bg-black/60 z-[999] flex items-center justify-center p-4" onclick="if(event.target === this) window.closeModal('modal-add-student')">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
@@ -639,7 +642,7 @@
         </div>
     </div>
 
-    <!-- Membership Modals -->
+    <!-- -->
     <div id="modal-add-membership" class="hidden fixed inset-0 bg-black/60 z-[999] flex items-center justify-center p-4" onclick="if(event.target === this) window.closeModal('modal-add-membership')">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
@@ -714,7 +717,7 @@
         </div>
     </div>
 
-    <!-- Expenses Modals -->
+    <!-- -->
     <div id="modal-add-expense" class="hidden fixed inset-0 bg-black/60 z-[999] flex items-center justify-center p-4" onclick="if(event.target === this) window.closeModal('modal-add-expense')">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
@@ -794,7 +797,7 @@
         </div>
     </div>
 
-    <!-- Asset Modals -->
+    <!-- -->
     <div id="modal-add-asset" class="hidden fixed inset-0 bg-black/60 z-[999] flex items-center justify-center p-4" onclick="if(event.target === this) window.closeModal('modal-add-asset')">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
@@ -836,7 +839,6 @@
         </div>
     </div>
     
-    <!-- MODAL SỬA TÀI SẢN -->
     <div id="modal-edit-asset" class="hidden fixed inset-0 bg-black/60 z-[999] flex items-center justify-center p-4" onclick="if(event.target === this) window.closeModal('modal-edit-asset')">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-blue-50">
@@ -871,7 +873,7 @@
         </div>
     </div>
 
-    <!-- Shop Modals -->
+    <!-- -->
     <div id="modal-add-product" class="hidden fixed inset-0 bg-black/60 z-[999] flex items-center justify-center p-4" onclick="if(event.target === this) window.closeModal('modal-add-product')">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
@@ -913,7 +915,6 @@
         </div>
     </div>
 
-    <!-- MODAL: SỬA SẢN PHẨM SHOP -->
     <div id="modal-edit-product" class="hidden fixed inset-0 bg-black/60 z-[999] flex items-center justify-center p-4" onclick="if(event.target === this) window.closeModal('modal-edit-product')">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-blue-50">
@@ -953,7 +954,6 @@
         </div>
     </div>
 
-    <!-- MODAL LỊCH SỬ BÁN HÀNG -->
     <div id="modal-sales-history" class="hidden fixed inset-0 bg-black/60 z-[999] flex items-center justify-center p-4" onclick="if(event.target === this) window.closeModal('modal-sales-history')">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl overflow-hidden flex flex-col max-h-[90vh]">
             <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50 shrink-0">
@@ -1280,12 +1280,16 @@
                 showToast("Đã xóa dữ liệu thành công!", "success");
                 window.closeModal('modal-confirm-delete');
                 
-                if(activeModule === 'users') loadUsersList();
-                if(activeModule === 'students') { await loadStudentsList(); loadDashboardData(); }
-                if(activeModule === 'membership') { await loadMembershipList(); loadDashboardData(); }
-                if(activeModule === 'expenses') { loadExpensesList(); loadDashboardData(); }
-                if(activeModule === 'facilities') loadFacilitiesList();
-                if(activeModule === 'shop') { 
+                // Cập nhật lại giao diện tương ứng
+                if(deleteTarget.table === 'student_attendance') {
+                    const studentId = document.getElementById('att-student-id').value;
+                    if(studentId) fetchAttendanceHistory(studentId); // Làm mới danh sách điểm danh
+                } else if(activeModule === 'users') { loadUsersList();
+                } else if(activeModule === 'students') { await loadStudentsList(); loadDashboardData(); 
+                } else if(activeModule === 'membership') { await loadMembershipList(); loadDashboardData(); 
+                } else if(activeModule === 'expenses') { loadExpensesList(); loadDashboardData(); 
+                } else if(activeModule === 'facilities') { loadFacilitiesList();
+                } else if(activeModule === 'shop') { 
                     if(deleteTarget.table === 'shop_orders') { window.openSalesHistoryModal(); loadDashboardData(); }
                     else { loadShopList(); } 
                 }
@@ -1596,12 +1600,15 @@
                     const rDate = new Date(record.date);
                     const dayName = days[rDate.getDay()];
                     return `
-                    <div class="flex justify-between items-center bg-gray-50 px-4 py-2.5 rounded-lg border border-gray-100">
+                    <div class="flex justify-between items-center bg-gray-50 px-4 py-2.5 rounded-lg border border-gray-100 group hover:bg-gray-100 transition-colors">
                         <div class="flex items-center gap-3">
                             <i data-lucide="check-circle" class="w-4 h-4 text-green-500"></i>
                             <span class="text-sm font-medium text-gray-800">${dayName}, ${rDate.toLocaleDateString('vi-VN')}</span>
                         </div>
-                        <span class="text-xs text-gray-400">${new Date(record.created_at).toLocaleTimeString('vi-VN', {hour: '2-digit', minute:'2-digit'})}</span>
+                        <div class="flex items-center gap-3">
+                            <span class="text-xs text-gray-400">${new Date(record.created_at).toLocaleTimeString('vi-VN', {hour: '2-digit', minute:'2-digit'})}</span>
+                            <button onclick="window.openDeleteModal('${record.id}', 'student_attendance', 'Điểm danh ngày ${rDate.toLocaleDateString('vi-VN')}')" class="text-red-400 hover:text-red-600 p-1 rounded-md opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity bg-white border border-gray-200 md:bg-transparent md:border-transparent shadow-sm md:shadow-none" title="Xóa lịch sử này"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                        </div>
                     </div>
                 `}).join('');
                 lucide.createIcons();
@@ -1794,7 +1801,6 @@
                 if(!error) { 
                     showToast("Đăng ký thành công!", "success"); 
                     
-                    // Lấy thông tin Tên học viên và Gói tập để in
                     const studentInputVal = document.getElementById('mem-search-student').value;
                     const studentName = studentInputVal.split(' (')[0];
                     const planSelect = document.getElementById('add-mem-plan-id');
@@ -2135,12 +2141,10 @@
                     await supabase.from('shop_product_variants').update({ stock: newStock }).eq('id', item.id);
                 }
                 
-                // Đã loại bỏ dòng window.printShopReceipt(orderNumber, posCart, total);
-                
                 window.clearPosCart();
                 loadShopList(); 
                 loadDashboardData(); 
-                showToast("Thanh toán thành công!", "success"); // Đã cập nhật câu thông báo
+                showToast("Thanh toán thành công!", "success");
             } catch(e) { showToast("Lỗi thanh toán: " + e.message, "error"); }
         }
 
