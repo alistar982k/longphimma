@@ -1544,15 +1544,26 @@
                     imageUrl = await uploadImageToDrive('add-st-img');
                 }
 
-                const { error } = await supabase.from('students').insert({
+                // CHỈ THÊM TRƯỜNG image_url VÀO DATA KHI THỰC SỰ CÓ ẢNH
+                let insertData = {
                     organization_id: currentUser.organization_id, branch_id: currentUser.branch_id || 'b0000000-0000-0000-0000-000000000001',
                     student_code: 'HV' + Math.floor(Math.random() * 100000), full_name: document.getElementById('add-st-name').value,
                     date_of_birth: document.getElementById('add-st-dob').value, gender: document.getElementById('add-st-gender').value,
-                    phone: document.getElementById('add-st-phone').value, status: 'active', image_url: imageUrl
-                });
+                    phone: document.getElementById('add-st-phone').value, status: 'active'
+                };
+                
+                // Nếu upload thành công hoặc có URL thì mới thêm trường image_url
+                if (imageUrl) {
+                    insertData.image_url = imageUrl;
+                }
+
+                const { error } = await supabase.from('students').insert(insertData);
+                
                 if(!error) { showToast("Đã thêm Học viên!", "success"); window.closeModal('modal-add-student'); loadStudentsList(); document.getElementById('form-add-student').reset(); } 
-                else { showToast("Lỗi: " + error.message, "error"); }
-            } catch (err) {}
+                else { showToast("Lỗi Supabase: " + error.message + " - Hãy đảm bảo bảng students có cột image_url kiểu text", "error"); }
+            } catch (err) {
+                 showToast("Lỗi hệ thống: " + err, "error");
+            }
             btn.innerText = "Lưu Học viên"; btn.disabled = false;
         });
 
@@ -1564,7 +1575,7 @@
             document.getElementById('edit-st-dob').value = student.date_of_birth || '';
             document.getElementById('edit-st-gender').value = student.gender || 'Nam';
             document.getElementById('edit-st-phone').value = student.phone || '';
-            document.getElementById('edit-st-img').value = ''; // Reset file input
+            document.getElementById('edit-st-img').value = ''; 
             window.openModal('modal-edit-student');
         }
 
@@ -1580,13 +1591,18 @@
 
                 if (document.getElementById('edit-st-img').files.length > 0) {
                     btn.innerText = "Đang tải ảnh...";
-                    updateData.image_url = await uploadImageToDrive('edit-st-img');
+                    let newImageUrl = await uploadImageToDrive('edit-st-img');
+                    if(newImageUrl) {
+                        updateData.image_url = newImageUrl;
+                    }
                 }
 
                 const { error } = await supabase.from('students').update(updateData).eq('id', document.getElementById('edit-st-id').value);
                 if(!error) { showToast("Cập nhật thành công!", "success"); window.closeModal('modal-edit-student'); loadStudentsList(); } 
-                else { showToast("Lỗi: " + error.message, "error"); }
-            } catch(err) {}
+                else { showToast("Lỗi Supabase: " + error.message, "error"); }
+            } catch(err) {
+                showToast("Lỗi hệ thống: " + err, "error");
+            }
             btn.innerText = "Lưu thay đổi"; btn.disabled = false;
         });
 
