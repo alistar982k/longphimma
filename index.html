@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LONG PHI MMA | Quản lý Phòng tập</title>
-    <!-- Favicon Logo -->
     <link rel="icon" href="https://obrcrvquowgwewobljxe.supabase.co/storage/v1/object/public/Public/logo.png" type="image/png">
     
     <script src="https://cdn.tailwindcss.com"></script>
@@ -33,40 +32,16 @@
         @keyframes slideOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(100%); opacity: 0; } }
         .module-view { animation: fadeIn 0.3s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* --- CSS DÀNH CHO IN HÓA ĐƠN POS --- */
-        @media print {
-            body * { visibility: hidden; }
-            #print-area, #print-area * { visibility: visible; }
-            #print-area { position: absolute; left: 0; top: 0; width: 100%; font-family: monospace; color: #000; }
-            @page { margin: 0; }
-            /* Cấu hình cho khổ giấy 58mm (có thể đổi thành 80mm) */
-            .pos-receipt { width: 58mm; padding: 5px; margin: 0 auto; font-size: 12px; line-height: 1.4; text-transform: uppercase;}
-            .pos-center { text-align: center; }
-            .pos-right { text-align: right; }
-            .pos-bold { font-weight: bold; }
-            .pos-title { font-size: 16px; font-weight: bold; text-align: center; margin-bottom: 5px; }
-            .pos-subtitle { font-size: 13px; font-weight: bold; text-align: center; margin-bottom: 8px; }
-            .pos-line { border-bottom: 1px dashed #000; margin: 5px 0; width: 100%; }
-            .pos-row { display: flex; justify-content: space-between; align-items: flex-start; }
-            .pos-item-name { max-width: 65%; word-break: break-word; }
-            .pos-total-row { display: flex; justify-content: space-between; font-size: 14px; font-weight: bold; margin-top: 5px; }
-        }
     </style>
 </head>
 <body class="h-screen flex overflow-hidden antialiased">
 
-    <!-- -->
-    <div id="print-area" class="hidden"></div>
-
-    <!-- -->
     <div id="loading-screen" class="fixed inset-0 bg-white z-[9999] flex flex-col items-center justify-center transition-opacity duration-300">
         <img src="https://obrcrvquowgwewobljxe.supabase.co/storage/v1/object/public/Public/logo.png" alt="LONG PHI MMA" class="w-32 h-auto mb-6 animate-pulse">
         <h2 class="text-xl font-bold text-gray-800">LONG PHI MMA</h2>
         <p class="text-gray-500 text-sm mt-2">Đang khởi tạo hệ thống...</p>
     </div>
 
-    <!-- -->
     <div id="login-screen" class="hidden fixed inset-0 bg-gray-900 z-[9990] flex items-center justify-center p-4">
         <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md">
             <div class="text-center mb-8">
@@ -90,7 +65,6 @@
         </div>
     </div>
 
-    <!-- -->
     <div id="app-shell" class="hidden w-full h-full flex flex-col md:flex-row">
         <!-- Sidebar -->
         <aside class="w-64 bg-secondary text-gray-300 flex flex-col flex-shrink-0 transition-all duration-300 relative z-20 shadow-xl hidden md:flex">
@@ -120,20 +94,19 @@
             </div>
         </aside>
 
-        <!-- -->
+        <!-- Main Content Area -->
         <main class="flex-1 flex flex-col h-screen overflow-hidden relative">
-            <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6 flex-shrink-0 z-10">
+            <header class="h-16 bg-white border-b border-gray-200 flex items-center px-4 md:px-6 flex-shrink-0 z-10">
+                <button class="md:hidden text-gray-500 hover:text-red-600 mr-4" onclick="document.querySelector('aside').classList.toggle('hidden')">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
                 <h2 id="page-title" class="text-xl font-semibold text-gray-800 flex items-center gap-2">
                     <i data-lucide="layout-dashboard" class="w-5 h-5 text-gray-500"></i> Tổng quan
                 </h2>
-                <button class="md:hidden text-gray-500 hover:text-red-600" onclick="document.querySelector('aside').classList.toggle('hidden')">
-                    <i data-lucide="menu" class="w-6 h-6"></i>
-                </button>
             </header>
 
             <div id="module-container" class="flex-1 overflow-y-auto p-4 md:p-6 bg-gray-50">
                 
-                <!-- -->
                 <div id="view-dashboard" class="module-view h-full">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-6">
                         <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 flex items-center gap-4">
@@ -164,7 +137,6 @@
                     </div>
                 </div>
 
-                <!-- -->
                 <div id="view-reports" class="module-view hidden flex-col h-full">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
                         <h3 class="text-lg font-bold text-gray-800">Báo cáo Dòng tiền</h3>
@@ -194,7 +166,6 @@
                     </div>
                 </div>
 
-                <!-- -->
                 <div id="view-students" class="module-view hidden flex-col h-full">
                     <div class="flex flex-col sm:flex-row justify-between gap-4 mb-6">
                         <div class="flex gap-2">
@@ -222,7 +193,7 @@
                                 <tbody id="students-table-body" class="divide-y divide-gray-100"></tbody>
                             </table>
                         </div>
-                        <div class="border-t border-gray-200 p-4 bg-gray-50 flex items-center justify-between text-sm text-gray-500">
+                        <div class="border-t border-gray-200 p-4 bg-gray-50 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-gray-500">
                             <span id="students-total-count">Đang tải...</span>
                             <div class="flex gap-2 items-center">
                                 <button onclick="changePage('students', -1)" class="px-3 py-1.5 rounded border border-gray-300 bg-white hover:bg-gray-50 disabled:opacity-50">Trước</button>
@@ -233,7 +204,6 @@
                     </div>
                 </div>
 
-                <!-- -->
                 <div id="view-membership" class="module-view hidden flex-col h-full">
                     <div class="flex flex-col sm:flex-row justify-between gap-4 mb-6">
                         <div class="flex gap-2 w-full sm:w-auto">
@@ -256,7 +226,7 @@
                             <table class="w-full text-left text-sm text-gray-600 whitespace-nowrap">
                                 <thead class="bg-gray-50 text-gray-700 text-xs uppercase font-semibold border-b border-gray-200">
                                     <tr>
-                                        <th class="px-6 py-4">Ngày đăng ký</th>
+                                        <th class="px-6 py-4">Ngày bắt đầu</th>
                                         <th class="px-6 py-4">Học viên</th>
                                         <th class="px-6 py-4">Gói tập</th>
                                         <th class="px-6 py-4">Trạng thái</th>
@@ -266,7 +236,7 @@
                                 <tbody id="membership-table-body" class="divide-y divide-gray-100"></tbody>
                             </table>
                         </div>
-                        <div class="border-t border-gray-200 p-4 bg-gray-50 flex items-center justify-between text-sm text-gray-500">
+                        <div class="border-t border-gray-200 p-4 bg-gray-50 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-gray-500">
                             <span id="membership-total-count">...</span>
                             <div class="flex gap-2 items-center">
                                 <button onclick="changePage('membership', -1)" class="px-3 py-1.5 rounded border border-gray-300 bg-white hover:bg-gray-50 disabled:opacity-50">Trước</button>
@@ -277,7 +247,6 @@
                     </div>
                 </div>
 
-                <!-- -->
                 <div id="view-expenses" class="module-view hidden flex-col h-full">
                     <div class="flex flex-col sm:flex-row justify-between gap-4 mb-6">
                         <div class="flex gap-2 w-full sm:w-auto">
@@ -305,7 +274,7 @@
                                 <tbody id="expenses-table-body" class="divide-y divide-gray-100"></tbody>
                             </table>
                         </div>
-                        <div class="border-t border-gray-200 p-4 bg-gray-50 flex items-center justify-between text-sm text-gray-500">
+                        <div class="border-t border-gray-200 p-4 bg-gray-50 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-gray-500">
                             <span id="expenses-total-count">...</span>
                             <div class="flex gap-2 items-center">
                                 <button onclick="changePage('expenses', -1)" class="px-3 py-1.5 rounded border border-gray-300 bg-white hover:bg-gray-50 disabled:opacity-50">Trước</button>
@@ -316,7 +285,6 @@
                     </div>
                 </div>
 
-                <!-- -->
                 <div id="view-facilities" class="module-view hidden flex-col h-full">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
                         <div class="relative w-full sm:w-72">
@@ -341,7 +309,7 @@
                                 <tbody id="facilities-table-body" class="divide-y divide-gray-100"></tbody>
                             </table>
                         </div>
-                        <div class="border-t border-gray-200 p-4 bg-gray-50 flex items-center justify-between text-sm text-gray-500">
+                        <div class="border-t border-gray-200 p-4 bg-gray-50 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-gray-500">
                             <span id="facilities-total-count">...</span>
                             <div class="flex gap-2 items-center">
                                 <button onclick="changePage('facilities', -1)" class="px-3 py-1.5 rounded border border-gray-300 bg-white hover:bg-gray-50 disabled:opacity-50">Trước</button>
@@ -352,7 +320,6 @@
                     </div>
                 </div>
 
-                <!-- -->
                 <div id="view-shop" class="module-view hidden flex-col h-full">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
                         <h3 class="text-lg font-bold text-gray-800">Điểm bán hàng (POS)</h3>
@@ -404,7 +371,6 @@
                     </div>
                 </div>
 
-                <!-- -->
                 <div id="view-users" class="module-view hidden flex-col h-full">
                     <div class="flex justify-between items-center mb-6">
                         <p class="text-gray-500 text-sm">Quản lý nhân sự và quyền truy cập</p>
@@ -432,8 +398,6 @@
         </main>
     </div>
 
-    <!-- -->
-    <!-- CÁC MODALS (Thêm sự kiện click ra ngoài để đóng) -->
     <div id="modal-image-viewer" class="hidden fixed inset-0 bg-black/90 z-[10000] flex items-center justify-center p-4 transition-opacity" onclick="if(event.target === this) window.closeModal('modal-image-viewer')">
         <button class="absolute top-6 right-6 text-white/70 hover:text-white bg-black/50 hover:bg-red-600 p-2 rounded-full transition-colors" onclick="window.closeModal('modal-image-viewer')">
             <i data-lucide="x" class="w-8 h-8"></i>
@@ -455,7 +419,6 @@
         </div>
     </div>
 
-    <!-- Cảnh báo xóa z-index rất cao để đè lên mọi modal khác -->
     <div id="modal-confirm-delete" class="hidden fixed inset-0 bg-black/60 z-[10010] flex items-center justify-center p-4" onclick="if(event.target === this) window.closeModal('modal-confirm-delete')">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-sm p-6 text-center">
             <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -466,12 +429,11 @@
             <p class="text-gray-800 font-semibold mb-6 truncate px-4" id="delete-item-name">--</p>
             <div class="flex gap-3 justify-center">
                 <button type="button" onclick="window.closeModal('modal-confirm-delete')" class="px-6 py-2.5 text-sm font-medium text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg">Hủy bỏ</button>
-                <button type="button" id="btn-confirm-delete" class="px-6 py-2.5 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg">Xóa vĩnh viễn</button>
+                <button type="button" id="btn-confirm-delete" class="px-6 py-2.5 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg">Xác nhận Xóa</button>
             </div>
         </div>
     </div>
 
-    <!-- -->
     <div id="modal-add-user" class="hidden fixed inset-0 bg-black/60 z-[999] flex items-center justify-center p-4" onclick="if(event.target === this) window.closeModal('modal-add-user')">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
@@ -543,7 +505,6 @@
         </div>
     </div>
 
-    <!-- -->
     <div id="modal-add-student" class="hidden fixed inset-0 bg-black/60 z-[999] flex items-center justify-center p-4" onclick="if(event.target === this) window.closeModal('modal-add-student')">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
@@ -650,7 +611,6 @@
         </div>
     </div>
 
-    <!-- -->
     <div id="modal-add-membership" class="hidden fixed inset-0 bg-black/60 z-[999] flex items-center justify-center p-4" onclick="if(event.target === this) window.closeModal('modal-add-membership')">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
@@ -676,7 +636,7 @@
                 </div>
                 <div class="pt-4 flex gap-3 justify-end">
                     <button type="button" onclick="window.closeModal('modal-add-membership')" class="px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-lg">Hủy</button>
-                    <button type="submit" id="btn-submit-add-membership" class="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg">Đăng ký & In Hóa đơn</button>
+                    <button type="submit" id="btn-submit-add-membership" class="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg">Đăng ký</button>
                 </div>
             </form>
         </div>
@@ -725,7 +685,6 @@
         </div>
     </div>
 
-    <!-- -->
     <div id="modal-add-expense" class="hidden fixed inset-0 bg-black/60 z-[999] flex items-center justify-center p-4" onclick="if(event.target === this) window.closeModal('modal-add-expense')">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
@@ -881,7 +840,6 @@
         </div>
     </div>
 
-    <!-- -->
     <div id="modal-add-product" class="hidden fixed inset-0 bg-black/60 z-[999] flex items-center justify-center p-4" onclick="if(event.target === this) window.closeModal('modal-add-product')">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
@@ -1018,91 +976,6 @@
         // Pagination State
         const ITEMS_PER_PAGE = 20;
         let currentPage = { students: 1, membership: 1, expenses: 1, facilities: 1 };
-
-        // --- CÁC HÀM IN HÓA ĐƠN GẮN VÀO WINDOW ĐỂ GỌI TỪ MỌI NƠI ---
-        window.printShopReceipt = function(orderNumber, cartItems, total, dateString = null) {
-            const printArea = document.getElementById('print-area');
-            const date = dateString ? new Date(dateString).toLocaleString('vi-VN') : new Date().toLocaleString('vi-VN');
-            
-            // Xử lý dữ liệu giỏ hàng
-            let items = [];
-            try { items = typeof cartItems === 'string' ? JSON.parse(cartItems) : cartItems; } 
-            catch(e) { items = [{name: 'SẢN PHẨM', size: '-', qty: 1, price: total}]; } 
-
-            let itemsHtml = items.map(item => `
-                <div style="margin-bottom: 4px;">
-                    <div class="pos-item-name pos-bold">${item.name} (${item.size || '-'})</div>
-                    <div class="pos-row">
-                        <span>${item.qty} x ${new Intl.NumberFormat('vi-VN').format(item.price)}</span>
-                        <span class="pos-bold">${new Intl.NumberFormat('vi-VN').format(item.price * item.qty)}</span>
-                    </div>
-                </div>
-            `).join('');
-
-            printArea.innerHTML = `
-                <div class="pos-receipt">
-                    <div class="pos-title">HÓA ĐƠN LONG PHI MMA</div>
-                    <div class="pos-subtitle">BÁN HÀNG (SHOP)</div>
-                    <div class="pos-center" style="font-size: 10px; margin-bottom: 2px;">Ngày: ${date}</div>
-                    <div class="pos-center" style="font-size: 10px;">Mã HĐ: ${orderNumber}</div>
-                    
-                    <div class="pos-line" style="margin-top: 8px;"></div>
-                    <div class="pos-row pos-bold" style="margin-bottom: 5px;">
-                        <span>SẢN PHẨM</span>
-                        <span>T.TIỀN</span>
-                    </div>
-                    <div class="pos-line" style="margin-bottom: 8px;"></div>
-                    
-                    ${itemsHtml}
-                    
-                    <div class="pos-line" style="margin-top: 8px;"></div>
-                    <div class="pos-total-row">
-                        <span>TỔNG CỘNG:</span>
-                        <span>${new Intl.NumberFormat('vi-VN').format(total)}</span>
-                    </div>
-                    <div class="pos-line"></div>
-                    
-                    <div class="pos-center" style="margin-top: 10px; font-size: 11px;">CẢM ƠN QUÝ KHÁCH!</div>
-                </div>
-            `;
-            setTimeout(() => { window.print(); printArea.innerHTML = ''; }, 100);
-        };
-
-        window.printMembershipReceipt = function(studentName, planName, startDate, endDate, price) {
-            const printArea = document.getElementById('print-area');
-            const date = new Date().toLocaleString('vi-VN');
-            
-            printArea.innerHTML = `
-                <div class="pos-receipt">
-                    <div class="pos-title">HÓA ĐƠN LONG PHI MMA</div>
-                    <div class="pos-subtitle">THU HỌC PHÍ</div>
-                    <div class="pos-center" style="font-size: 10px; margin-bottom: 8px;">Ngày in: ${date}</div>
-                    
-                    <div class="pos-line"></div>
-                    
-                    <div style="margin-bottom: 4px;">
-                        <div><span class="pos-bold">HỌC VIÊN:</span></div>
-                        <div class="pos-bold pos-right" style="font-size: 14px;">${studentName}</div>
-                    </div>
-                    <div style="margin-bottom: 4px;">
-                        <div><span class="pos-bold">GÓI TẬP:</span></div>
-                        <div class="pos-bold pos-right" style="font-size: 14px;">${planName}</div>
-                    </div>
-                    
-                    <div class="pos-line"></div>
-                    
-                    <div class="pos-total-row" style="margin-top: 8px;">
-                        <span>TỔNG THU:</span>
-                        <span>${new Intl.NumberFormat('vi-VN').format(price)}</span>
-                    </div>
-                    <div class="pos-line"></div>
-                    
-                    <div class="pos-center" style="margin-top: 10px; font-size: 11px;">CHÚC BẠN TẬP LUYỆN TỐT!</div>
-                </div>
-            `;
-            setTimeout(() => { window.print(); printArea.innerHTML = ''; }, 100);
-        };
-        // -----------------------------
 
         // Đóng modal khi bấm phím ESC
         document.addEventListener('keydown', function(event) {
@@ -1291,10 +1164,12 @@
                 // Cập nhật lại giao diện tương ứng
                 if(deleteTarget.table === 'student_attendance') {
                     const studentId = document.getElementById('att-student-id').value;
-                    if(studentId) fetchAttendanceHistory(studentId); // Làm mới danh sách điểm danh
+                    if(studentId) fetchAttendanceHistory(studentId);
                 } else if(activeModule === 'users') { loadUsersList();
                 } else if(activeModule === 'students') { await loadStudentsList(); loadDashboardData(); 
-                } else if(activeModule === 'membership') { await loadMembershipList(); loadDashboardData(); 
+                } else if(activeModule === 'membership' || deleteTarget.table === 'membership_plans') { 
+                    if (deleteTarget.table === 'membership_plans') { await loadPlansForDropdown(); renderManagePlansTable(); }
+                    else { await loadMembershipList(); loadDashboardData(); }
                 } else if(activeModule === 'expenses') { loadExpensesList(); loadDashboardData(); 
                 } else if(activeModule === 'facilities') { loadFacilitiesList();
                 } else if(activeModule === 'shop') { 
@@ -1306,7 +1181,7 @@
                 if(viError.includes("violates foreign key constraint")) viError = "Dữ liệu đang liên kết ở mục khác, không thể xóa để bảo vệ hệ thống.";
                 showToast("Lỗi khi xóa: " + viError, "error");
             }
-            btnConfirmDelete.innerText = "Xóa vĩnh viễn";
+            btnConfirmDelete.innerText = "Xác nhận Xóa";
             deleteTarget = { id: null, table: null };
         });
 
@@ -1327,7 +1202,8 @@
 
                 const range = getCurrentMonthRange();
                 
-                const { data: memsThisMonth } = await supabase.from('memberships').select('created_at, membership_plans(price)').gte('created_at', range.start).lte('created_at', range.end);
+                // Học phí: Lọc dựa trên start_date
+                const { data: memsThisMonth } = await supabase.from('memberships').select('start_date, membership_plans(price)').gte('start_date', range.start).lte('start_date', range.end);
                 let memRev = 0;
                 if (memsThisMonth) memsThisMonth.forEach(m => { if(m.membership_plans?.price) memRev += parseFloat(m.membership_plans.price); });
 
@@ -1544,7 +1420,6 @@
                     imageUrl = await uploadImageToDrive('add-st-img');
                 }
 
-                // CHỈ THÊM TRƯỜNG image_url VÀO DATA KHI THỰC SỰ CÓ ẢNH
                 let insertData = {
                     organization_id: currentUser.organization_id, branch_id: currentUser.branch_id || 'b0000000-0000-0000-0000-000000000001',
                     student_code: 'HV' + Math.floor(Math.random() * 100000), full_name: document.getElementById('add-st-name').value,
@@ -1552,15 +1427,12 @@
                     phone: document.getElementById('add-st-phone').value, status: 'active'
                 };
                 
-                // Nếu upload thành công hoặc có URL thì mới thêm trường image_url
-                if (imageUrl) {
-                    insertData.image_url = imageUrl;
-                }
+                if (imageUrl) { insertData.image_url = imageUrl; }
 
                 const { error } = await supabase.from('students').insert(insertData);
                 
                 if(!error) { showToast("Đã thêm Học viên!", "success"); window.closeModal('modal-add-student'); loadStudentsList(); document.getElementById('form-add-student').reset(); } 
-                else { showToast("Lỗi Supabase: " + error.message + " - Hãy đảm bảo bảng students có cột image_url kiểu text", "error"); }
+                else { showToast("Lỗi Supabase: " + error.message, "error"); }
             } catch (err) {
                  showToast("Lỗi hệ thống: " + err, "error");
             }
@@ -1592,9 +1464,7 @@
                 if (document.getElementById('edit-st-img').files.length > 0) {
                     btn.innerText = "Đang tải ảnh...";
                     let newImageUrl = await uploadImageToDrive('edit-st-img');
-                    if(newImageUrl) {
-                        updateData.image_url = newImageUrl;
-                    }
+                    if(newImageUrl) { updateData.image_url = newImageUrl; }
                 }
 
                 const { error } = await supabase.from('students').update(updateData).eq('id', document.getElementById('edit-st-id').value);
@@ -1716,7 +1586,6 @@
                     </td>
                     <td class="px-6 py-4"><span class="px-2.5 py-1 ${m.status === 'active' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'} rounded text-xs font-medium uppercase">${m.status === 'active' ? 'Đang tập' : m.status}</span></td>
                     <td class="px-6 py-4 text-right flex justify-end gap-2">
-                        <button onclick="window.printMembershipReceipt('${m.students?.full_name}', '${m.membership_plans?.name}', '${m.start_date}', '${m.end_date}', ${m.membership_plans?.price})" class="text-blue-500 hover:bg-blue-50 p-1.5 rounded-md" title="In hóa đơn"><i data-lucide="printer" class="w-4 h-4"></i></button>
                         <button onclick="window.openDeleteModal('${m.id}', 'memberships', 'Gói tập của ${m.students?.full_name}')" class="text-red-400 hover:text-red-600 p-1.5 rounded-md"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
                     </td>
                 </tr>
@@ -1783,15 +1652,8 @@
             } catch (err) {}
         });
 
-        window.deletePlan = async function(id) {
-            if(confirm("Xóa gói tập này? (Lưu ý: Không thể xóa nếu đã có học viên đăng ký gói)")) {
-                try {
-                    const { error } = await supabase.from('membership_plans').delete().eq('id', id);
-                    if(error) throw error;
-                    showToast("Xóa thành công", "success");
-                    await loadPlansForDropdown(); renderManagePlansTable();
-                } catch(e) { showToast("Lỗi: Không thể xóa do dữ liệu liên kết.", "error"); }
-            }
+        window.deletePlan = function(id) {
+            window.openDeleteModal(id, 'membership_plans', 'Gói tập này');
         }
 
         window.searchMembershipStudent = function(val) {
@@ -1843,14 +1705,6 @@
                 
                 if(!error) { 
                     showToast("Đăng ký thành công!", "success"); 
-                    
-                    const studentInputVal = document.getElementById('mem-search-student').value;
-                    const studentName = studentInputVal.split(' (')[0];
-                    const planSelect = document.getElementById('add-mem-plan-id');
-                    const planName = planSelect.options[planSelect.selectedIndex].text.split(' - ')[0];
-
-                    window.printMembershipReceipt(studentName, planName, startDate, endDateString, plan.price);
-
                     window.closeModal('modal-add-membership'); 
                     loadMembershipList(); 
                     loadDashboardData(); 
@@ -1858,7 +1712,7 @@
                 } 
                 else { showToast("Lỗi: " + error.message, "error"); }
             } catch (err) { showToast(err.message, "error"); }
-            btn.innerText = "Đăng ký & In Hóa đơn"; btn.disabled = false;
+            btn.innerText = "Đăng ký"; btn.disabled = false;
         });
 
         async function loadExpensesList() {
@@ -2103,10 +1957,8 @@
                 const vId = document.getElementById('edit-prod-variant-id').value;
                 const pId = document.getElementById('edit-prod-product-id').value;
                 
-                // Cập nhật tên trong bảng shop_products
                 await supabase.from('shop_products').update({ name: document.getElementById('edit-prod-name').value }).eq('id', pId);
                 
-                // Cập nhật tồn kho, giá, size... trong bảng variants
                 const { error } = await supabase.from('shop_product_variants').update({
                     sku: document.getElementById('edit-prod-sku').value.toUpperCase(),
                     size: document.getElementById('edit-prod-size').value,
@@ -2203,8 +2055,6 @@
                 
                 tbody.innerHTML = data.map(o => {
                     const itemsHtml = 'Sản phẩm cửa hàng';
-                    const encodedCartItems = encodeURIComponent(JSON.stringify([]));
-
                     return `
                     <tr class="hover:bg-gray-50 border-b border-gray-100">
                         <td class="px-4 py-2">${new Date(o.created_at).toLocaleDateString('vi-VN')}</td>
@@ -2212,7 +2062,6 @@
                         <td class="px-4 py-2 text-xs text-gray-700 max-w-[200px] truncate" title="${itemsHtml}">${itemsHtml}</td>
                         <td class="px-4 py-2 text-right font-bold text-gray-800">${new Intl.NumberFormat('vi-VN').format(o.total)}đ</td>
                         <td class="px-4 py-2 text-right flex justify-end gap-1">
-                            <button onclick="window.printShopReceipt('${o.order_number}', decodeURIComponent('${encodedCartItems}'), ${o.total}, '${o.created_at}')" class="text-blue-500 hover:bg-blue-50 p-1 rounded" title="In lại"><i data-lucide="printer" class="w-4 h-4"></i></button>
                             <button onclick="window.openDeleteModal('${o.id}', 'shop_orders', '${o.order_number}')" class="text-red-400 hover:text-red-600 p-1" title="Xóa"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
                         </td>
                     </tr>
@@ -2221,21 +2070,21 @@
             } catch(e) {}
         }
 
-
         async function loadYearsForReport() {
             const selectEl = document.getElementById('report-year-select');
             if (selectEl.options.length > 0) return; 
             try {
                 const [mem, shop, exp] = await Promise.all([
-                    supabase.from('memberships').select('created_at'),
+                    // Tính theo ngày bắt đầu đăng ký
+                    supabase.from('memberships').select('start_date'),
                     supabase.from('shop_orders').select('created_at'),
                     supabase.from('finance_transactions').select('transaction_date')
                 ]);
                 
                 let yearsSet = new Set([new Date().getFullYear()]);
-                if(mem.data) mem.data.forEach(r => yearsSet.add(new Date(r.created_at).getFullYear()));
-                if(shop.data) shop.data.forEach(r => yearsSet.add(new Date(r.created_at).getFullYear()));
-                if(exp.data) exp.data.forEach(r => yearsSet.add(new Date(r.transaction_date).getFullYear()));
+                if(mem.data) mem.data.forEach(r => { if(r.start_date) yearsSet.add(new Date(r.start_date).getFullYear()); });
+                if(shop.data) shop.data.forEach(r => { if(r.created_at) yearsSet.add(new Date(r.created_at).getFullYear()); });
+                if(exp.data) exp.data.forEach(r => { if(r.transaction_date) yearsSet.add(new Date(r.transaction_date).getFullYear()); });
                 
                 const years = Array.from(yearsSet).sort((a,b) => b - a);
                 selectEl.innerHTML = years.map(y => `<option value="${y}" ${y===new Date().getFullYear()?'selected':''}>Năm ${y}</option>`).join('');
@@ -2257,7 +2106,8 @@
                 const endOfYear = `${yearToLoad}-12-31T23:59:59.999Z`;
 
                 const [membershipsRes, ordersRes, expensesRes] = await Promise.all([
-                    supabase.from('memberships').select('created_at, membership_plans(price)').gte('created_at', startOfYear).lte('created_at', endOfYear),
+                    // Lấy dữ liệu học phí theo start_date
+                    supabase.from('memberships').select('start_date, membership_plans(price)').gte('start_date', startOfYear).lte('start_date', endOfYear),
                     supabase.from('shop_orders').select('created_at, total').gte('created_at', startOfYear).lte('created_at', endOfYear),
                     supabase.from('finance_transactions').select('transaction_date, amount').eq('type', 'expense').gte('transaction_date', startOfYear).lte('transaction_date', endOfYear)
                 ]);
@@ -2265,13 +2115,28 @@
                 const monthlyData = Array.from({length: 12}, () => ({ memRev: 0, shopRev: 0, expense: 0 }));
 
                 if (membershipsRes.data) {
-                    membershipsRes.data.forEach(m => { const month = new Date(m.created_at).getMonth(); if (m.membership_plans?.price) monthlyData[month].memRev += parseFloat(m.membership_plans.price); });
+                    membershipsRes.data.forEach(m => { 
+                        if(m.start_date) {
+                            const month = new Date(m.start_date).getMonth(); 
+                            if (m.membership_plans?.price) monthlyData[month].memRev += parseFloat(m.membership_plans.price); 
+                        }
+                    });
                 }
                 if (ordersRes.data) {
-                    ordersRes.data.forEach(o => { const month = new Date(o.created_at).getMonth(); if (o.total) monthlyData[month].shopRev += parseFloat(o.total); });
+                    ordersRes.data.forEach(o => { 
+                        if(o.created_at) {
+                            const month = new Date(o.created_at).getMonth(); 
+                            if (o.total) monthlyData[month].shopRev += parseFloat(o.total); 
+                        }
+                    });
                 }
                 if (expensesRes.data) {
-                    expensesRes.data.forEach(e => { const month = new Date(e.transaction_date).getMonth(); if (e.amount) monthlyData[month].expense += parseFloat(e.amount); });
+                    expensesRes.data.forEach(e => { 
+                        if(e.transaction_date) {
+                            const month = new Date(e.transaction_date).getMonth(); 
+                            if (e.amount) monthlyData[month].expense += parseFloat(e.amount); 
+                        }
+                    });
                 }
 
                 const formatter = new Intl.NumberFormat('vi-VN');
